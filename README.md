@@ -1,3 +1,31 @@
+# 고영이 가계부
+
+## 기획
+
+- 월별 가계부 작성
+- 카테고리별로 내역을 정리, 통계
+- 편리함
+- 카카오로 편리하게 로그인
+- 주별, 월별 목표치를 한눈에 보여줌
+- 모바일 UI
+- 머티어리얼 디자인
+
+## 환경
+
+- 리액트
+- 타입스크립트
+- 리액트쿼리
+- 이모션
+- 깃헙페이지(FE)
+- 헤로쿠(BE)
+- 몽고디비(DB)
+
+### 노트
+
+- 220711 기획, 개발 시작. 리액트, 타입스크립트, 리액트쿼리, 이모션을 기반으로 FE 프로젝트 작성
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
