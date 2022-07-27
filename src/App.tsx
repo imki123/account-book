@@ -47,6 +47,8 @@ const MobileWrapper = styled.div`
   margin: auto;
   border: 1px solid #eee;
   padding: 10px 20px;
+  overflow: auto;
+  font-size: 14px;
 `
 const FallBackDiv = styled.div`
   display: flex;

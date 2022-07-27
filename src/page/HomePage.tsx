@@ -2,12 +2,13 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 import { data } from '../dummy/sheetData'
+import Header from '../component/Header/Header'
 
 export default function HomePage() {
   const lists = data
   return (
     <StyledHomePage>
-      <Title>고영이 가계부</Title>
+      <Header title='고영이 가계부' />
       <ListWrapper>
         {React.Children.toArray(
           lists.map((list) => (

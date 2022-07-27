@@ -5,6 +5,8 @@ import styled from '@emotion/styled'
 import { getKakaoUser, kakaoAppLogin } from '../util/kakaoSdk'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
+import Header from '../component/Header/Header'
+import { css } from '@emotion/react'
 
 export default function HomePage() {
   const navigate = useNavigate()
@@ -14,8 +16,9 @@ export default function HomePage() {
   useEffect(() => {
     if (kakaoUser) {
       console.log('kakaoUser:', kakaoUser)
-      navigate('/')
-    } else if (loginUser) {
+      // navigate('/')
+    }
+    if (loginUser) {
       console.log('loginUser:', loginUser)
       navigate('/')
     }
@@ -37,31 +40,36 @@ export default function HomePage() {
 
   return (
     <StyledHomePage>
-      {!kakaoUser && !loginUser ? (
-        <>
-          <TitleMessage>
-            <Title>고영이 가계부</Title>
-            <Message>카카오 로그인이 필요해요</Message>
-          </TitleMessage>
-          <Button
-            buttonType='kakao'
-            onClick={() => kakaoAppLogin(loginCallback)}
-          >
-            <img src={kakao_login_medium_narrow} alt='kakaoLogin' />
-          </Button>
+      <>
+        <Header title='고영이 가계부' />
+        <TitleMessage>
+          <Message>카카오 로그인이 필요해요</Message>
+        </TitleMessage>
+        <Button buttonType='kakao' onClick={() => kakaoAppLogin(loginCallback)}>
+          <img src={kakao_login_medium_narrow} alt='kakaoLogin' />
+        </Button>
+        <div>
+          {kakaoUser &&
+            React.Children.toArray(
+              JSON.stringify(kakaoUser)
+                //.replace(/[{|}]/g, '')
+                .split(',')
+                .map((i) => <div>{i}</div>),
+            )}
+        </div>
+        {kakaoUser && (
           <div>
-            {loginUser &&
-              React.Children.toArray(
-                JSON.stringify(loginUser)
-                  //.replace(/[{|}]/g, '')
-                  .split(',')
-                  .map((i) => <div>{i}</div>),
-              )}
+            <Button
+              onClick={() => navigate('/')}
+              styles={css`
+                width: 120px;
+              `}
+            >
+              홈으로
+            </Button>
           </div>
-        </>
-      ) : (
-        <div>로딩중</div>
-      )}
+        )}
+      </>
     </StyledHomePage>
   )
 }
@@ -77,9 +85,6 @@ const StyledHomePage = styled.div`
 `
 const TitleMessage = styled.div`
   text-align: center;
-`
-const Title = styled.div`
-  font-size: 30px;
 `
 const Message = styled.div`
   margin-top: 20px;
