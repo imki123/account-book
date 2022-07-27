@@ -22,8 +22,10 @@ export default function Header({
 const HeaderWrapper = styled.div`
   position: fixed;
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
+  max-width: 500px;
 
   display: flex;
   justify-content: flex-start;
@@ -33,6 +35,10 @@ const HeaderWrapper = styled.div`
   margin-bottom: 10px;
   border-bottom: 1px solid #cec;
   background: white;
+  @media (min-width: 500px) {
+    border: 1px solid #cec;
+    border-top: 0;
+  }
 `
 
 const BackIcon = styled(ArrowBackIosNewIcon)`

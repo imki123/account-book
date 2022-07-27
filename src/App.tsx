@@ -45,10 +45,12 @@ const MobileWrapper = styled.div`
   height: 100%;
   max-width: 500px;
   margin: auto;
-  border: 1px solid #eee;
   padding: calc(27.5px + 20px) 20px 10px;
   overflow: auto;
   font-size: 14px;
+  @media (min-width: 500px) {
+    border: 1px solid #cec;
+  }
 `
 const FallBackDiv = styled.div`
   display: flex;

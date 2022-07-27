@@ -92,7 +92,11 @@ export default function SheetPage() {
                 <td onClick={() => addRow(i + 1)}>
                   <AddIcon fontSize='small' />
                 </td>
-                <td onClick={() => removeRow(i + 1)}>
+                <td
+                  onClick={() => {
+                    if (window.confirm(`${i + 1}번 행 삭제?`)) removeRow(i + 1)
+                  }}
+                >
                   <RemoveIcon fontSize='small' />
                 </td>
                 <td>{i + 1}</td>
@@ -157,8 +161,8 @@ const TableWrapper = styled.table`
   th:nth-of-type(3) {
     width: 10px;
   }
-  td:nth-of-type(4),
-  td:nth-of-type(5) {
+  td:nth-of-type(6),
+  td:nth-of-type(7) {
     text-align: right;
   }
 `
