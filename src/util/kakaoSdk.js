@@ -1,7 +1,6 @@
 let Kakao = window.Kakao
 
 const KAKAO_JS_KEY = process.env.REACT_APP_KAKAO_JS_KEY
-console.log(KAKAO_JS_KEY, process.env)
 const SDK_URL = 'https://developers.kakao.com/sdk/js/kakao.js'
 
 // 카카오 SDK 로드하기
