@@ -72,7 +72,7 @@ export default function SheetPage() {
 
   return (
     <>
-      <Header title={`${sheetData?.name}`} />
+      <Header title={`${sheetData?.name}`} backButton />
       <TableWrapper>
         <tbody>
           <tr>

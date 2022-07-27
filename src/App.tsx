@@ -46,7 +46,7 @@ const MobileWrapper = styled.div`
   max-width: 500px;
   margin: auto;
   border: 1px solid #eee;
-  padding: 10px 20px;
+  padding: calc(27.5px + 20px) 20px 10px;
   overflow: auto;
   font-size: 14px;
 `

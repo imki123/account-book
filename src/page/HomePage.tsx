@@ -24,13 +24,9 @@ export default function HomePage() {
 
 const StyledHomePage = styled.div`
   height: 100%;
-  padding: 40px 20px;
-`
-const Title = styled.div`
-  font-size: 30px;
 `
 const ListWrapper = styled.ul`
   width: 100%;
   text-align: left;
-  margin-top: 30px;
+  padding-inline-start: 20px;
 `

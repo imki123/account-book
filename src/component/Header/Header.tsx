@@ -11,20 +11,14 @@ export default function Header({
 }) {
   const navigate = useNavigate()
   return (
-    <SpaceDiv>
-      <HeaderWrapper>
-        {backButton && (
-          <BackIcon fontSize='inherit' onClick={() => navigate(-1)} />
-        )}
-        <TitleSpan>{title}</TitleSpan>
-      </HeaderWrapper>
-    </SpaceDiv>
+    <HeaderWrapper>
+      {backButton && (
+        <BackIcon fontSize='inherit' onClick={() => navigate(-1)} />
+      )}
+      <TitleSpan>{title}</TitleSpan>
+    </HeaderWrapper>
   )
 }
-const SpaceDiv = styled.div`
-  height: calc(27.5px + 20px);
-  position: relative;
-`
 const HeaderWrapper = styled.div`
   position: fixed;
   top: 0;
@@ -35,8 +29,10 @@ const HeaderWrapper = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 20px;
-  padding: 10px 20px 0;
-  margin-bottom: 20px;
+  padding: 10px 20px 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #cec;
+  background: white;
 `
 
 const BackIcon = styled(ArrowBackIosNewIcon)`
