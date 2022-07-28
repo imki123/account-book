@@ -2,12 +2,14 @@ import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Header from '../component/Header/Header'
-import { data } from '../dummy/sheetData'
+// import { data } from '../dummy/sheetData'
 import produce from 'immer'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
+import { getSheet } from '../api/sheet'
+import { AxiosResponse } from 'axios'
 
-interface sheetDataInterface {
+export interface SheetDataInterface {
   sheetId: number
   name: string
   table?: (string | number)[][]
@@ -17,13 +19,18 @@ const animationDuration = 300
 
 export default function SheetPage() {
   const params = useParams()
-  const [sheetData, setSheetData] = useState<sheetDataInterface>()
+  const [sheetData, setSheetData] = useState<SheetDataInterface>()
   const [addedRow, setAddedRow] = useState<number>()
   const [removedRow, setRemovedRow] = useState<number>()
   let sum = 0
 
   useEffect(() => {
-    setSheetData(data.filter((i) => i.sheetId === Number(params?.sheetId))[0])
+    if (params.sheetId) {
+      getSheet(Number(params.sheetId)).then((res) => {
+        if (res) setSheetData(res.data)
+      })
+    }
+    //setSheetData(data.filter((i) => i.sheetId === Number(params?.sheetId))[0])
   }, [params])
 
   // addRow 액션

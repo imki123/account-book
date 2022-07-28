@@ -1,21 +1,30 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
-import { data } from '../dummy/sheetData'
+// import { data } from '../dummy/sheetData'
 import Header from '../component/Header/Header'
+import { getSheets } from '../api/sheet'
+import { SheetDataInterface } from './SheetPage'
 
 export default function HomePage() {
-  const lists = data
+  const [lists, setLists] = useState<SheetDataInterface[]>()
+  useEffect(() => {
+    getSheets().then((res) => {
+      if (res) setLists(res.data)
+    })
+  }, [])
+
   return (
     <StyledHomePage>
       <Header title='고영이 가계부' />
       <ListWrapper>
         {React.Children.toArray(
-          lists.map((list) => (
-            <li>
-              <Link to={`sheet/${list.sheetId}`}>{list.name}</Link>
-            </li>
-          )),
+          lists &&
+            lists?.map((list) => (
+              <li>
+                <Link to={`sheet/${list.sheetId}`}>{list.name}</Link>
+              </li>
+            )),
         )}
       </ListWrapper>
     </StyledHomePage>
