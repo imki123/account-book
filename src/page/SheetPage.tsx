@@ -1,13 +1,15 @@
 import styled from '@emotion/styled'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Header from '../component/Header/Header'
 // import { data } from '../dummy/sheetData'
 import produce from 'immer'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
-import { getSheet } from '../api/sheet'
-import { AxiosResponse } from 'axios'
+import { getSheet, patchSheet } from '../api/sheet'
+import Button from '../component/Button/Button'
+import { useModal } from '../hook/useModal'
+import RefreshButton from '../component/Button/RefreshButton'
 
 export interface SheetDataInterface {
   sheetId: number
@@ -22,16 +24,23 @@ export default function SheetPage() {
   const [sheetData, setSheetData] = useState<SheetDataInterface>()
   const [addedRow, setAddedRow] = useState<number>()
   const [removedRow, setRemovedRow] = useState<number>()
+  const { Modal, openModal } = useModal({
+    title: '저장 성공',
+    buttons: [{ children: '확인', closeButton: true }],
+  })
   let sum = 0
 
-  useEffect(() => {
+  const getSheetAndSave = useCallback(() => {
     if (params.sheetId) {
       getSheet(Number(params.sheetId)).then((res) => {
-        if (res) setSheetData(res.data)
+        if (res) setSheetData(res)
       })
     }
-    //setSheetData(data.filter((i) => i.sheetId === Number(params?.sheetId))[0])
-  }, [params])
+  }, [params.sheetId])
+
+  useEffect(() => {
+    getSheetAndSave()
+  }, [getSheetAndSave])
 
   // addRow 액션
   useEffect(() => {
@@ -74,12 +83,25 @@ export default function SheetPage() {
   }
 
   const removeRow = (row: number) => {
-    setRemovedRow(row)
+    if (window.confirm(`${row}번 행을 삭제하시겠습니까?`)) setRemovedRow(row)
   }
 
   return (
     <>
+      <RefreshButton onClick={getSheetAndSave} />
+      <Modal />
       <Header title={`${sheetData?.name}`} backButton />
+      <SaveButton
+        onClick={() => {
+          if (params.sheetId && sheetData) {
+            patchSheet(Number(params.sheetId), sheetData).then((res) =>
+              openModal(),
+            )
+          }
+        }}
+      >
+        저장
+      </SaveButton>
       <TableWrapper>
         <tbody>
           <tr>
@@ -99,11 +121,7 @@ export default function SheetPage() {
                 <td onClick={() => addRow(i + 1)}>
                   <AddIcon fontSize='small' />
                 </td>
-                <td
-                  onClick={() => {
-                    if (window.confirm(`${i + 1}번 행 삭제?`)) removeRow(i + 1)
-                  }}
-                >
+                <td onClick={() => removeRow(i + 1)}>
                   <RemoveIcon fontSize='small' />
                 </td>
                 <td>{i + 1}</td>
@@ -178,4 +196,14 @@ const AddIcon = styled(AddCircleOutlineIcon)`
 `
 const RemoveIcon = styled(RemoveCircleOutlineIcon)`
   color: red;
+`
+const SaveButton = styled(Button)`
+  position: fixed;
+  top: 2px;
+  right: 8px;
+  opacity: 0.7;
+  border-radius: 100%;
+  font-size: 12px;
+  width: 40px;
+  height: 40px;
 `

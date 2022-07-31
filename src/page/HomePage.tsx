@@ -9,9 +9,7 @@ import { SheetDataInterface } from './SheetPage'
 export default function HomePage() {
   const [lists, setLists] = useState<SheetDataInterface[]>()
   useEffect(() => {
-    getSheets().then((res) => {
-      if (res) setLists(res.data)
-    })
+    getSheets().then((res) => setLists(res))
   }, [])
 
   return (
@@ -19,12 +17,11 @@ export default function HomePage() {
       <Header title='고영이 가계부' />
       <ListWrapper>
         {React.Children.toArray(
-          lists &&
-            lists?.map((list) => (
-              <li>
-                <Link to={`sheet/${list.sheetId}`}>{list.name}</Link>
-              </li>
-            )),
+          lists?.map((list) => (
+            <li>
+              <Link to={`sheet/${list.sheetId}`}>{list.name}</Link>
+            </li>
+          )),
         )}
       </ListWrapper>
     </StyledHomePage>

@@ -9,22 +9,25 @@ export default function Header({
   title?: string
   backButton?: boolean
 }) {
+  console.log(title)
   const navigate = useNavigate()
   return (
     <HeaderWrapper>
       {backButton && (
         <BackIcon fontSize='inherit' onClick={() => navigate(-1)} />
       )}
-      <TitleSpan>{title}</TitleSpan>
+      {title && title !== 'undefined' && <TitleSpan>{title}</TitleSpan>}
     </HeaderWrapper>
   )
 }
+
 const HeaderWrapper = styled.div`
   position: fixed;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
+  height: 38.5px;
   max-width: 500px;
 
   display: flex;

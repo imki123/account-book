@@ -2,8 +2,9 @@ import { css, SerializedStyles } from '@emotion/react'
 import styled from '@emotion/styled'
 import { ReactNode } from 'react'
 
-interface ButtonInterface {
-  buttonType?: 'gray' | 'blue' | 'kakao'
+export type ButtonTypes = 'gray' | 'blue' | 'kakao'
+export interface ButtonInterface {
+  buttonType?: ButtonTypes
   height?: 44 | 38 | 32
   fontSize?: 16 | 14 | 12 | 10
   styles?: SerializedStyles

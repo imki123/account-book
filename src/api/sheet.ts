@@ -5,23 +5,22 @@ const axiosInstance = Axios.create({
   baseURL: 'http://localhost:4000/accountBook/',
 })
 export const getSheets = async () => {
-  try {
-    const result = await axiosInstance.get('sheet/')
-    console.log(result)
-    return result
-  } catch (e) {
-    console.error(e)
-  }
+  let res = await axiosInstance.get<SheetDataInterface[]>('sheet/')
+  return res.data
 }
 
 export const getSheet = async (sheetId: number) => {
-  try {
-    const result = await axiosInstance.get<SheetDataInterface>(
-      `sheet/${sheetId}`,
-    )
-    console.log(result)
-    return result
-  } catch (e) {
-    console.error(e)
-  }
+  let res = await axiosInstance.get<SheetDataInterface>(`sheet/${sheetId}`)
+  return res.data
+}
+
+export const patchSheet = async (
+  sheetId: number,
+  sheetData: SheetDataInterface,
+) => {
+  let res = await axiosInstance.patch<SheetDataInterface>(
+    `sheet/${sheetId}`,
+    sheetData,
+  )
+  return res.data
 }

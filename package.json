@@ -2,6 +2,13 @@
   "name": "account-book",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "deploy": "gh-pages -d dist",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
@@ -25,13 +32,8 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
-    "@types/js-cookie": "^3.0.2"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "@types/js-cookie": "^3.0.2",
+    "gh-pages": "^4.0.0"
   },
   "eslintConfig": {
     "extends": [
