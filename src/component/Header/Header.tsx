@@ -9,7 +9,6 @@ export default function Header({
   title?: string
   backButton?: boolean
 }) {
-  console.log(title)
   const navigate = useNavigate()
   return (
     <HeaderWrapper>
