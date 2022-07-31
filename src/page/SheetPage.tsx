@@ -27,6 +27,7 @@ export default function SheetPage() {
   const [removedRow, setRemovedRow] = useState<number>()
   const { SnackBar, openSnackBar } = useSnackBar({
     message: '저장 완료',
+    duration: 1500,
   })
   let sum = 0
 
@@ -86,7 +87,7 @@ export default function SheetPage() {
   )
 
   const removeRow = useCallback((row: number) => {
-    if (window.confirm(`${row}번 행을 삭제하시겠습니까?`)) setRemovedRow(row)
+    setRemovedRow(row)
   }, [])
 
   return (
@@ -97,9 +98,9 @@ export default function SheetPage() {
       <SaveButton
         onClick={() => {
           if (params.sheetId && sheetData) {
-            patchSheet(Number(params.sheetId), sheetData).then((res) =>
-              openSnackBar(),
-            )
+            patchSheet(Number(params.sheetId), sheetData).then((res) => {
+              openSnackBar()
+            })
           }
         }}
       >
@@ -108,23 +109,24 @@ export default function SheetPage() {
       <TableWrapper>
         <tbody>
           <tr>
-            <th onClick={() => addRow(0)}>
-              <AddIcon fontSize='small' />
-            </th>
             <th></th>
             <th>NO</th>
             <th>Type</th>
             <th>Title</th>
             <th>Amount</th>
             <th>Total</th>
+            <th onClick={() => addRow(0)}>
+              <AddIcon fontSize='small' />
+            </th>
           </tr>
           {React.Children.toArray(
             sheetData?.table?.map((row, i) => (
               <tr id={`row_${i + 1}`}>
-                <td onClick={() => addRow(i + 1)}>
-                  <AddIcon fontSize='small' />
-                </td>
-                <td onClick={() => removeRow(i + 1)}>
+                <td
+                  onClick={() => {
+                    removeRow(i + 1)
+                  }}
+                >
                   <RemoveIcon fontSize='small' />
                 </td>
                 <td>{i + 1}</td>
@@ -137,6 +139,9 @@ export default function SheetPage() {
                   }),
                 )}
                 <td>{Number(sum)}</td>
+                <td onClick={() => addRow(i + 1)}>
+                  <AddIcon fontSize='small' />
+                </td>
               </tr>
             )),
           )}
@@ -186,11 +191,11 @@ const TableWrapper = styled.table`
   }
   th:nth-of-type(1),
   th:nth-of-type(2),
-  th:nth-of-type(3) {
+  th:nth-of-type(7) {
     width: 10px;
   }
-  td:nth-of-type(6),
-  td:nth-of-type(7) {
+  td:nth-of-type(5),
+  td:nth-of-type(6) {
     text-align: right;
   }
 `
