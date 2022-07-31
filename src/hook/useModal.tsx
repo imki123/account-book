@@ -74,7 +74,7 @@ const ModalWrapper = styled.div`
   background: white;
   width: 75%;
   max-width: 350px;
-  min-width: 250px;
+  min-width: 200px;
   max-height: 75%;
   overflow: auto;
   border: 1px solid gray;
@@ -82,7 +82,6 @@ const ModalWrapper = styled.div`
   border-radius: 16px;
   padding: 20px;
   text-align: center;
-  font-size: 20px;
 
   display: flex;
   flex-direction: column;
@@ -91,15 +90,20 @@ const ModalWrapper = styled.div`
 `
 const Title = styled.div`
   font-weight: bold;
+  font-size: 16px;
 `
 const Message = styled.div`
   margin-top: 4px;
-  font-size: 12px;
+  font-size: 14px;
 `
 const ButtonDiv = styled.div`
   display: flex;
   align-content: center;
   justify-items: center;
   margin-top: 20px;
-  font-size: 14px;
+
+  button {
+    font-size: 14px;
+    width: 60px;
+  }
 `

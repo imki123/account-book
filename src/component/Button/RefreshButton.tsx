@@ -15,12 +15,12 @@ const RefreshButtonWrapper = styled.button`
   left: 20px;
 
   padding: 5px;
-  border-radius: 100%;
   width: 40px;
   height: 40px;
 
   background: white;
   border: 2px solid #eee;
+  border-radius: 100%;
   svg {
     color: #aaa;
     width: 100%;

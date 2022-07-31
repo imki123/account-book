@@ -8,8 +8,9 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import { getSheet, patchSheet } from '../api/sheet'
 import Button from '../component/Button/Button'
-import { useModal } from '../hook/useModal'
 import RefreshButton from '../component/Button/RefreshButton'
+import SaveIcon from '@mui/icons-material/Save'
+import useSnackBar from '../hook/useSnackBar'
 
 export interface SheetDataInterface {
   sheetId: number
@@ -24,9 +25,8 @@ export default function SheetPage() {
   const [sheetData, setSheetData] = useState<SheetDataInterface>()
   const [addedRow, setAddedRow] = useState<number>()
   const [removedRow, setRemovedRow] = useState<number>()
-  const { Modal, openModal } = useModal({
-    title: '저장 성공',
-    buttons: [{ children: '확인', closeButton: true }],
+  const { SnackBar, openSnackBar } = useSnackBar({
+    message: '저장 완료',
   })
   let sum = 0
 
@@ -74,33 +74,36 @@ export default function SheetPage() {
     }
   }, [removedRow, sheetData])
 
-  const addRow = (row: number) => {
-    const nextState = produce(sheetData, (draft) => {
-      draft?.table?.splice(row, 0, ['', '', ''])
-    })
-    setSheetData(nextState)
-    setAddedRow(row)
-  }
+  const addRow = useCallback(
+    (row: number) => {
+      const nextState = produce(sheetData, (draft) => {
+        draft?.table?.splice(row, 0, ['', '', ''])
+      })
+      setSheetData(nextState)
+      setAddedRow(row)
+    },
+    [sheetData],
+  )
 
-  const removeRow = (row: number) => {
+  const removeRow = useCallback((row: number) => {
     if (window.confirm(`${row}번 행을 삭제하시겠습니까?`)) setRemovedRow(row)
-  }
+  }, [])
 
   return (
     <>
       <RefreshButton onClick={getSheetAndSave} />
-      <Modal />
+      <SnackBar />
       <Header title={`${sheetData?.name}`} backButton />
       <SaveButton
         onClick={() => {
           if (params.sheetId && sheetData) {
             patchSheet(Number(params.sheetId), sheetData).then((res) =>
-              openModal(),
+              openSnackBar(),
             )
           }
         }}
       >
-        저장
+        <SaveIcon />
       </SaveButton>
       <TableWrapper>
         <tbody>
@@ -200,10 +203,19 @@ const RemoveIcon = styled(RemoveCircleOutlineIcon)`
 const SaveButton = styled(Button)`
   position: fixed;
   top: 2px;
-  right: 8px;
-  opacity: 0.7;
-  border-radius: 100%;
-  font-size: 12px;
+  right: 10px;
+
+  padding: 5px;
   width: 40px;
   height: 40px;
+
+  background: blue;
+  border: 2px solid #eee;
+  border-radius: 100%;
+  opacity: 0.7;
+  svg {
+    color: white;
+    width: 100%;
+    height: 100%;
+  }
 `
