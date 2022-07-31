@@ -2,10 +2,11 @@
   "name": "account-book",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://imki123.github.io/account-book/",
   "scripts": {
     "start": "react-scripts start",
-    "deploy": "gh-pages -d dist",
     "build": "react-scripts build",
+    "deploy": "npm run build && gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -39,6 +39,13 @@ function App() {
 
 export default App
 
+const FallBackDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+`
 const MobileWrapper = styled.div`
   background: #fff;
   width: 100%;
@@ -51,11 +58,4 @@ const MobileWrapper = styled.div`
   @media (min-width: 500px) {
     border: 1px solid #cec;
   }
-`
-const FallBackDiv = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100%;
 `

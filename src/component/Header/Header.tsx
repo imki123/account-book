@@ -35,7 +35,6 @@ const HeaderWrapper = styled.div`
   align-items: center;
   gap: 20px;
   padding: 10px 20px 10px;
-  margin-bottom: 10px;
   border-bottom: 1px solid #cec;
   background: white;
   @media (min-width: 500px) {
