@@ -35,4 +35,5 @@ const ListWrapper = styled.ul`
   width: 100%;
   text-align: left;
   padding-inline-start: 20px;
+  margin: 0;
 `
