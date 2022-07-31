@@ -3,6 +3,7 @@ import { SheetDataInterface } from '../page/SheetPage'
 
 const axiosInstance = Axios.create({
   baseURL: process.env.REACT_APP_API_URL + 'accountBook/',
+  withCredentials: true,
 })
 export const getSheets = async () => {
   let res = await axiosInstance.get<SheetDataInterface[]>('sheet/')
