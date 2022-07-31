@@ -2,7 +2,7 @@ import Axios from 'axios'
 import { SheetDataInterface } from '../page/SheetPage'
 
 const axiosInstance = Axios.create({
-  baseURL: 'http://localhost:4000/accountBook/',
+  baseURL: process.env.REACT_APP_API_URL + 'accountBook/',
 })
 export const getSheets = async () => {
   let res = await axiosInstance.get<SheetDataInterface[]>('sheet/')
