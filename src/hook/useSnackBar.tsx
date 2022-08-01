@@ -10,7 +10,7 @@ export default function useSnackBar({
   message: string
   duration?: number
 }) {
-  const [animating, setAnimating] = useState<boolean>()
+  const [animating, setAnimating] = useState(false)
   const snackBarRef = useRef<any>()
 
   useEffect(() => {
@@ -27,12 +27,14 @@ export default function useSnackBar({
     [message],
   )
 
-  const openSnackBar = useCallback(() => {
+  const openSnackBar = () => {
+    const time = new Date().getTime() % 100000 // 정수초과로 자리수 낮추기
+    snackBarRef.current.style.zIndex = time
     if (!animating) {
       snackBarRef.current.classList.add('open')
       setAnimating(true)
     }
-  }, [animating])
+  }
 
   return { SnackBar, openSnackBar }
 }

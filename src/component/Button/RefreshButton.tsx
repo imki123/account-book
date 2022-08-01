@@ -1,16 +1,22 @@
 import styled from '@emotion/styled'
 import RefreshIcon from '@mui/icons-material/Refresh'
 
-export default function RefreshButton({ onClick }: { onClick: () => void }) {
+export default function RefreshButton({
+  onClick,
+  refreshing,
+}: {
+  onClick: () => void
+  refreshing: boolean
+}) {
   return (
-    <RefreshButtonWrapper onClick={onClick}>
+    <RefreshButtonWrapper onClick={onClick} disabled={refreshing}>
       <RefreshIcon />
     </RefreshButtonWrapper>
   )
 }
 
-const RefreshButtonWrapper = styled.button`
-  position: fixed;
+const RefreshButtonWrapper = styled.button<{ disabled: boolean }>`
+  position: absolute;
   bottom: 20px;
   left: 20px;
 
@@ -18,9 +24,20 @@ const RefreshButtonWrapper = styled.button`
   width: 40px;
   height: 40px;
 
+  overflow: hidden;
   background: white;
   border: 2px solid #eee;
   border-radius: 100%;
+
+  ${({ disabled }) => disabled && `animation: 500ms rotation infinite linear;`}
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
   svg {
     color: #aaa;
     width: 100%;

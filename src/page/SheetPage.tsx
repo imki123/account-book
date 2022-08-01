@@ -7,7 +7,6 @@ import produce from 'immer'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import { getSheet, patchSheet } from '../api/sheet'
-import Button from '../component/Button/Button'
 import RefreshButton from '../component/Button/RefreshButton'
 import SaveIcon from '@mui/icons-material/Save'
 import useSnackBar from '../hook/useSnackBar'
@@ -23,17 +22,27 @@ const animationDuration = 300
 export default function SheetPage() {
   const params = useParams()
   const [sheetData, setSheetData] = useState<SheetDataInterface>()
+  const [refreshing, setRefreshing] = useState(false)
+  const [saving, setSaving] = useState(false)
   const [addedRow, setAddedRow] = useState<number>()
   const [removedRow, setRemovedRow] = useState<number>()
-  const { SnackBar, openSnackBar } = useSnackBar({
-    message: '저장 완료',
-    duration: 1500,
-  })
+  const { SnackBar: SnackBarSave, openSnackBar: openSnackBarSave } =
+    useSnackBar({
+      message: '저장 완료',
+      duration: 1500,
+    })
+  const { SnackBar: SnackBarRefresh, openSnackBar: openSnackBarRefresh } =
+    useSnackBar({
+      message: '새로고침 완료',
+      duration: 1500,
+    })
   let sum = 0
 
   const getSheetAndSave = useCallback(() => {
     if (params.sheetId) {
+      setRefreshing(true)
       getSheet(Number(params.sheetId)).then((res) => {
+        setRefreshing(false)
         if (res) setSheetData(res)
       })
     }
@@ -92,20 +101,30 @@ export default function SheetPage() {
 
   return (
     <>
-      <RefreshButton onClick={getSheetAndSave} />
-      <SnackBar />
-      <Header title={`${sheetData?.name}`} backButton />
+      <RefreshButton
+        refreshing={refreshing}
+        onClick={() => {
+          getSheetAndSave()
+          openSnackBarRefresh()
+        }}
+      />
       <SaveButton
+        disabled={saving}
         onClick={() => {
           if (params.sheetId && sheetData) {
+            setSaving(true)
             patchSheet(Number(params.sheetId), sheetData).then((res) => {
-              openSnackBar()
+              setSaving(false)
+              openSnackBarSave()
             })
           }
         }}
       >
         <SaveIcon />
       </SaveButton>
+      <SnackBarRefresh />
+      <SnackBarSave />
+      <Header title={`${sheetData?.name}`} backButton />
       <TableWrapper>
         <tbody>
           <tr>
@@ -205,15 +224,17 @@ const AddIcon = styled(AddCircleOutlineIcon)`
 const RemoveIcon = styled(RemoveCircleOutlineIcon)`
   color: red;
 `
-const SaveButton = styled(Button)`
-  position: fixed;
+const SaveButton = styled.button<{ disabled: boolean }>`
+  position: absolute;
+  z-index: 1;
   top: 2px;
-  right: 10px;
+  right: 20px;
 
   padding: 5px;
   width: 40px;
   height: 40px;
 
+  overflow: hidden;
   background: blue;
   border: 2px solid #eee;
   border-radius: 100%;
@@ -223,4 +244,5 @@ const SaveButton = styled(Button)`
     width: 100%;
     height: 100%;
   }
+  ${({ disabled }) => disabled && `background: gray;`}
 `

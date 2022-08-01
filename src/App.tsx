@@ -47,6 +47,7 @@ const FallBackDiv = styled.div`
   width: 100%;
 `
 const MobileWrapper = styled.div`
+  position: relative;
   background: #fff;
   width: 100%;
   height: 100%;

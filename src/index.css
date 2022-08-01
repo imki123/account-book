@@ -1,6 +1,10 @@
 * {
   box-sizing: border-box;
 }
+button:hover {
+  cursor: pointer;
+}
+
 html,
 body {
   height: 100%;
