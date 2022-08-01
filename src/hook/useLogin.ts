@@ -1,6 +1,6 @@
-import Cookies from 'js-cookie'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { getCookieFe } from '../util/cookie'
 
 /**
  * replace = true 이고 로그인 안되어있으면 로그인 페이지로 이동
@@ -8,8 +8,8 @@ import { useNavigate } from 'react-router-dom'
  */
 export default function useLogin(replace?: boolean) {
   const navigate = useNavigate()
-  const kakaoUser = Cookies.get('kakaoUser')
+  const cookieFe = getCookieFe()
   const replaceLoginPage = useCallback(() => navigate('/login'), [navigate])
 
-  return { isLogin: !!kakaoUser, kakaoUser: kakaoUser, replaceLoginPage }
+  return { isLogin: !!cookieFe, cookieFe: cookieFe, replaceLoginPage }
 }

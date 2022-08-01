@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import Button from '../component/Button/Button'
 import kakao_login_medium_narrow from '../asset/kakao_login_medium_narrow.png'
 import styled from '@emotion/styled'
@@ -6,34 +6,51 @@ import { getKakaoUser, kakaoAppLogin } from '../util/kakaoSdk'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 import Header from '../component/Header/Header'
-import { css } from '@emotion/react'
+import { postUserCheckEmail } from '../api/account'
+import { getCookieFe, removeCookieFe, setCookieFe } from '../util/cookie'
 
 export default function HomePage() {
   const navigate = useNavigate()
-  const [loginUser, setLoginUser] = useState<any>(null)
-  const kakaoUser = useMemo(() => Cookies.get('kakaoUser'), [])
+  const cookieFe = useMemo(() => getCookieFe(), [])
 
   useEffect(() => {
-    if (kakaoUser) {
-      console.log('kakaoUser:', kakaoUser)
-      // navigate('/')
-    }
-    if (loginUser) {
-      console.log('loginUser:', loginUser)
+    console.log('cookieFe:', cookieFe)
+    if (cookieFe) {
       navigate('/')
     }
-  }, [kakaoUser, loginUser, navigate])
+  }, [cookieFe, navigate])
 
   const loginCallback = () => {
     getKakaoUser()
       .then((res) => {
-        setLoginUser(JSON.stringify(res))
-        Cookies.set('kakaoUser', JSON.stringify(res), {
-          expires: 7, // days
-        })
+        // 카카오 계정 처리
+        if (!res?.kakao_account?.email) {
+          window.alert(
+            '이메일 정보가 없습니다. 로그인을 위해 이메일 정보가 필요합니다.',
+          )
+        } else {
+          const user = {
+            username: res?.kakao_account?.profile?.nickname,
+            email: res?.kakao_account?.email,
+          }
+          postUserCheckEmail(user)
+            .then((res) => {
+              setCookieFe(res.data)
+              navigate('/')
+            })
+            .catch((err) => {
+              removeCookieFe()
+              if (err?.response?.status === 403) {
+                window.alert(
+                  '승인되지 않은 사용자입니다.⛔️ 관리자에게 문의해주세요.',
+                )
+              } else {
+                window.alert('오류가 발생했습니다.😔 관리자에게 문의해주세요.')
+              }
+            })
+        }
       })
       .catch((err) => {
-        console.error(err)
         window.alert('카카오 로그인에 실패했어요.😔 관리자에게 문의해주세요.')
       })
   }
@@ -48,27 +65,6 @@ export default function HomePage() {
         <Button buttonType='kakao' onClick={() => kakaoAppLogin(loginCallback)}>
           <img src={kakao_login_medium_narrow} alt='kakaoLogin' />
         </Button>
-        <div>
-          {kakaoUser &&
-            React.Children.toArray(
-              JSON.stringify(kakaoUser)
-                //.replace(/[{|}]/g, '')
-                .split(',')
-                .map((i) => <div>{i}</div>),
-            )}
-        </div>
-        {kakaoUser && (
-          <div>
-            <Button
-              onClick={() => navigate('/')}
-              styles={css`
-                width: 120px;
-              `}
-            >
-              홈으로
-            </Button>
-          </div>
-        )}
       </>
     </StyledHomePage>
   )
