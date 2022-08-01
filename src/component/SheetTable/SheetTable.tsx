@@ -78,7 +78,7 @@ export default function SheetTable({
                     <td>
                       <CommonInput
                         value={col}
-                        height='27px'
+                        height='28px'
                         onChange={(e) => handleInputChange(e, i, j)}
                       />
                     </td>
