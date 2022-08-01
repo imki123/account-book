@@ -6,15 +6,20 @@ import { Colors } from '../../util/Colors'
 export default function Header({
   title,
   backButton,
+  backFunction,
 }: {
   title?: string
   backButton?: boolean
+  backFunction?: () => void
 }) {
   const navigate = useNavigate()
   return (
     <HeaderWrapper>
       {backButton && (
-        <BackIcon fontSize='inherit' onClick={() => navigate(-1)} />
+        <BackIcon
+          fontSize='inherit'
+          onClick={() => (backFunction ? backFunction() : navigate(-1))}
+        />
       )}
       {title && title !== 'undefined' && <TitleSpan>{title}</TitleSpan>}
     </HeaderWrapper>

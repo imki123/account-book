@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Header from '../component/Header/Header'
 import produce from 'immer'
 
@@ -19,6 +19,7 @@ export interface SheetDataInterface {
 
 export default function SheetPage() {
   const params = useParams()
+  const navigate = useNavigate()
   const [sheetData, setSheetData] = useState<SheetDataInterface>()
   const [refreshing, setRefreshing] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -98,6 +99,17 @@ export default function SheetPage() {
 
   return (
     <>
+      <Header
+        title={`${sheetData?.name}`}
+        backButton
+        backFunction={() => navigate('/')}
+      />
+      <SheetTable
+        sheetData={sheetData}
+        setSheetData={setSheetData}
+        addRow={addRow}
+        removeRow={removeRow}
+      />
       <RefreshButton
         refreshing={refreshing}
         onClick={() => {
@@ -121,13 +133,6 @@ export default function SheetPage() {
       </SaveButton>
       <SnackBarRefresh />
       <SnackBarSave />
-      <Header title={`${sheetData?.name}`} backButton />
-      <SheetTable
-        sheetData={sheetData}
-        setSheetData={setSheetData}
-        addRow={addRow}
-        removeRow={removeRow}
-      />
     </>
   )
 }
