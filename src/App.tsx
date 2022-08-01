@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import React, { Suspense, useEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import useLogin from './hook/useLogin'
+import { Colors } from './util/Colors'
 
 /**
  * 라우트 페이지.
@@ -57,6 +58,6 @@ const MobileWrapper = styled.div`
   overflow: auto;
   font-size: 14px;
   @media (min-width: 500px) {
-    border: 1px solid #cec;
+    border: 1px solid ${Colors.greenLine};
   }
 `

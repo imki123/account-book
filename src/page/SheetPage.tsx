@@ -2,22 +2,20 @@ import styled from '@emotion/styled'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Header from '../component/Header/Header'
-// import { data } from '../dummy/sheetData'
 import produce from 'immer'
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
+
 import { getSheet, patchSheet } from '../api/sheet'
 import RefreshButton from '../component/Button/RefreshButton'
 import SaveIcon from '@mui/icons-material/Save'
 import useSnackBar from '../hook/useSnackBar'
+import SheetTable from '../component/SheetTable/SheetTable'
+import { animationDuration } from '../constant/constant'
 
 export interface SheetDataInterface {
   sheetId: number
   name: string
   table?: (string | number)[][]
 }
-
-const animationDuration = 300
 
 export default function SheetPage() {
   const params = useParams()
@@ -36,7 +34,6 @@ export default function SheetPage() {
       message: '새로고침 완료',
       duration: 1500,
     })
-  let sum = 0
 
   const getSheetAndSave = useCallback(() => {
     if (params.sheetId) {
@@ -125,105 +122,16 @@ export default function SheetPage() {
       <SnackBarRefresh />
       <SnackBarSave />
       <Header title={`${sheetData?.name}`} backButton />
-      <TableWrapper>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>NO</th>
-            <th>Type</th>
-            <th>Title</th>
-            <th>Amount</th>
-            <th>Total</th>
-            <th onClick={() => addRow(0)}>
-              <AddIcon fontSize='small' />
-            </th>
-          </tr>
-          {React.Children.toArray(
-            sheetData?.table?.map((row, i) => (
-              <tr id={`row_${i + 1}`}>
-                <td
-                  onClick={() => {
-                    removeRow(i + 1)
-                  }}
-                >
-                  <RemoveIcon fontSize='small' />
-                </td>
-                <td>{i + 1}</td>
-                {React.Children.toArray(
-                  row.map((col, j) => {
-                    if (j === 2) {
-                      sum += Number(col)
-                    }
-                    return <td>{col}</td>
-                  }),
-                )}
-                <td>{Number(sum)}</td>
-                <td onClick={() => addRow(i + 1)}>
-                  <AddIcon fontSize='small' />
-                </td>
-              </tr>
-            )),
-          )}
-        </tbody>
-      </TableWrapper>
+      <SheetTable
+        sheetData={sheetData}
+        setSheetData={setSheetData}
+        addRow={addRow}
+        removeRow={removeRow}
+      />
     </>
   )
 }
 
-const TableWrapper = styled.table`
-  border-collapse: collapse;
-  border: 1px solid #cec;
-  min-width: 100%;
-  max-width: 200%;
-
-  th {
-    background: #cec;
-  }
-  th,
-  td {
-    border: 1px solid #cec;
-    white-space: pre;
-    text-align: left;
-    padding: 4px 2px;
-  }
-  .blink {
-    @keyframes blink {
-      0% {
-        background: #cec;
-      }
-      100% {
-        background: white;
-      }
-    }
-    animation: blink ${animationDuration}ms;
-  }
-  .blinkRed {
-    @keyframes blinkRed {
-      0% {
-        background: red;
-      }
-      100% {
-        background: white;
-      }
-    }
-    animation: blinkRed ${animationDuration}ms;
-  }
-  th:nth-of-type(1),
-  th:nth-of-type(2),
-  th:nth-of-type(7) {
-    width: 10px;
-  }
-  td:nth-of-type(5),
-  td:nth-of-type(6) {
-    text-align: right;
-  }
-`
-const AddIcon = styled(AddCircleOutlineIcon)`
-  color: #7c7;
-`
-const RemoveIcon = styled(RemoveCircleOutlineIcon)`
-  color: red;
-`
 const SaveButton = styled.button<{ disabled: boolean }>`
   position: absolute;
   z-index: 1;
@@ -244,5 +152,5 @@ const SaveButton = styled.button<{ disabled: boolean }>`
     width: 100%;
     height: 100%;
   }
-  ${({ disabled }) => disabled && `background: gray;`}
+  ${({ disabled }) => disabled && `background: #555;`}
 `

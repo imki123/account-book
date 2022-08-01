@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { useNavigate } from 'react-router-dom'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
+import { Colors } from '../../util/Colors'
 
 export default function Header({
   title,
@@ -34,10 +35,10 @@ const HeaderWrapper = styled.div`
   align-items: center;
   gap: 20px;
   padding: 10px 20px 10px;
-  border-bottom: 1px solid #cec;
+  border-bottom: 1px solid ${Colors.greenLine};
   background: white;
   @media (min-width: 500px) {
-    border: 1px solid #cec;
+    border: 1px solid ${Colors.greenLine};
     border-top: 0;
   }
 `
