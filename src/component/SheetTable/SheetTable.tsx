@@ -31,8 +31,6 @@ export default function SheetTable({
     j: number,
   ) => {
     if (e.target) {
-      console.log(e.target.value, i, j)
-      console.log(sheetData?.table && sheetData?.table[i][j])
       const newSheetData = produce((draft) => {
         if (draft && draft.table && draft.table[i]) {
           draft.table[i][j] = e.target.value
@@ -40,6 +38,15 @@ export default function SheetTable({
         }
       }, sheetData)
       setSheetData(newSheetData)
+    }
+  }
+
+  const parseToNumber = (num: string | number) => {
+    const removeComma = String(num).replace(/,/g, '')
+    if (Number.isNaN(Number(removeComma))) {
+      return 0
+    } else {
+      return Number(removeComma)
     }
   }
 
@@ -72,11 +79,12 @@ export default function SheetTable({
                 row.map((col, j) => {
                   // 합계에 가격 더하기
                   if (j === 2) {
-                    sum += Number(col)
+                    sum += parseToNumber(col)
                   }
                   return (
                     <td>
                       <CommonInput
+                        numCheck={j === 2}
                         value={col}
                         height='28px'
                         onChange={(e) => handleInputChange(e, i, j)}
@@ -157,7 +165,7 @@ const AddIcon = styled(AddCircleOutlineIcon)`
 const RemoveIcon = styled(RemoveCircleOutlineIcon)`
   color: red;
 `
-const CommonInput = styled.input<{ height?: string }>`
+const CommonInput = styled.input<{ height?: string; numCheck?: boolean }>`
   width: 100%;
   height: ${({ height }) => (height ? `${height}` : '100%')};
   border: 0;
@@ -169,4 +177,10 @@ const CommonInput = styled.input<{ height?: string }>`
   &:active {
     background: ${Colors.greenLine};
   }
+  ${({ numCheck, value }) => {
+    const removeComma = String(value).replace(/,/g, '')
+    if (numCheck && Number.isNaN(Number(removeComma))) {
+      return 'background: #fcc;'
+    } else return ''
+  }}
 `
