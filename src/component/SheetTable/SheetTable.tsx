@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect } from 'react'
+import React, { ChangeEvent } from 'react'
 import { Colors } from '../../util/Colors'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
@@ -21,8 +21,6 @@ interface SheetTableInterface {
   addRow: (row: number) => void
   removeRow: (row: number) => void
 }
-// 첫 데이터가 펫치됐을때 한번만 setInputWidth() 실행하기 위함
-let fetched = false
 
 export default function SheetTable({
   sheetData,
@@ -31,21 +29,6 @@ export default function SheetTable({
   removeRow,
 }: SheetTableInterface) {
   let sum = BigInt(0)
-
-  // 처음 한번만 전체 input width 설정하기
-  useEffect(() => {
-    if (!fetched && sheetData) {
-      const inputs = document.querySelectorAll<HTMLInputElement>(
-        'input:not(.fakeInput)',
-      )
-      if (inputs) {
-        inputs.forEach((input) => {
-          changeInputWidth(input)
-        })
-        fetched = true
-      }
-    }
-  }, [sheetData])
 
   // 이벤트와 인덱스를 받아서 sheetData에 저장
   const handleInputChange = (

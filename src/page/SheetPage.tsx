@@ -19,6 +19,9 @@ export interface SheetDataInterface {
   table?: (string | BigInt)[][]
 }
 
+// 첫 데이터가 펫치됐을때 한번만 setInputWidth() 실행하기 위함
+let beforeSetWidth = true
+
 export default function SheetPage() {
   const params = useParams()
   const navigate = useNavigate()
@@ -66,10 +69,29 @@ export default function SheetPage() {
     },
     [sheetData],
   )
+  // 처음 한번만 전체 input width 설정하기
+  const changeInputWidthAll = useCallback(() => {
+    const inputs = document.querySelectorAll<HTMLInputElement>(
+      'input:not(.fakeInput)',
+    )
+    if (inputs) {
+      inputs.forEach((input) => {
+        changeInputWidth(input)
+      })
+      beforeSetWidth = false
+    }
+  }, [])
 
   useEffect(() => {
     getSheetAndSave()
   }, [getSheetAndSave])
+
+  // sheetData 바뀌고 beforeSetWidth가 true이면 input width 바꿔주기
+  useEffect(() => {
+    if (beforeSetWidth && sheetData) {
+      changeInputWidthAll()
+    }
+  }, [changeInputWidthAll, sheetData])
 
   // addRow 액션
   useEffect(() => {
@@ -143,6 +165,7 @@ export default function SheetPage() {
         onClick={() => {
           getSheetAndSave()
           openSnackBarRefresh()
+          beforeSetWidth = true
         }}
       />
       <SaveButton
