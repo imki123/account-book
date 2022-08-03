@@ -16,7 +16,7 @@ export default function useSnackBar({
   useEffect(() => {
     if (animating) {
       setTimeout(() => {
-        snackBarRef.current.classList.remove('open')
+        if (snackBarRef.current) snackBarRef.current.classList.remove('open')
         setAnimating(false)
       }, duration)
     }
@@ -29,9 +29,9 @@ export default function useSnackBar({
 
   const openSnackBar = () => {
     const time = new Date().getTime() % 100000 // 정수초과로 자리수 낮추기
-    snackBarRef.current.style.zIndex = time
+    if (snackBarRef.current) snackBarRef.current.style.zIndex = time
     if (!animating) {
-      snackBarRef.current.classList.add('open')
+      if (snackBarRef.current) snackBarRef.current.classList.add('open')
       setAnimating(true)
     }
   }

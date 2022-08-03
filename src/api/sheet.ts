@@ -16,6 +16,11 @@ export const getSheet = async (sheetId: number) => {
   return res.data
 }
 
+export const postSheets = async () => {
+  let res = await axiosInstance.post<SheetDataInterface[]>('')
+  return res.data
+}
+
 export const patchSheet = async (
   sheetId: number,
   sheetData: SheetDataInterface,
@@ -25,4 +30,18 @@ export const patchSheet = async (
     sheetData,
   )
   return res.data
+}
+
+// sheet 순서 변경
+export const patchOrder = async (orderData: sheetOrderInterface) => {
+  let res = await axiosInstance.patch(
+    `${orderData.fromId}/${orderData.toId}`,
+    orderData,
+  )
+  return res.data
+}
+
+export interface sheetOrderInterface {
+  fromId: number
+  toId: number
 }

@@ -26,7 +26,6 @@ export default function Button({
 
 const StyledButton = styled.button<ButtonInterface>`
   border: 0px;
-  cursor: pointer;
   background: #33f;
   color: #fff;
   height: 44px;

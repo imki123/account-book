@@ -16,6 +16,7 @@ import { changeInputWidth } from '../util/util'
 export interface SheetDataInterface {
   sheetId: number
   name: string
+  order: number
   table?: (string | BigInt)[][]
 }
 
@@ -41,7 +42,7 @@ export default function SheetPage() {
       duration: 1500,
     })
 
-  const getSheetAndSave = useCallback(() => {
+  const getSheetAndSet = useCallback(() => {
     if (params.sheetId) {
       setRefreshing(true)
       getSheet(Number(params.sheetId)).then((res) => {
@@ -83,8 +84,8 @@ export default function SheetPage() {
   }, [])
 
   useEffect(() => {
-    getSheetAndSave()
-  }, [getSheetAndSave])
+    getSheetAndSet()
+  }, [getSheetAndSet])
 
   // sheetData 바뀌고 beforeSetWidth가 true이면 input width 바꿔주기
   useEffect(() => {
@@ -163,7 +164,7 @@ export default function SheetPage() {
       <RefreshButton
         refreshing={refreshing}
         onClick={() => {
-          getSheetAndSave()
+          getSheetAndSet()
           openSnackBarRefresh()
           beforeSetWidth = true
         }}

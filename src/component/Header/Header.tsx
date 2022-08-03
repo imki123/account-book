@@ -50,7 +50,6 @@ const HeaderWrapper = styled.div`
 `
 
 const BackIcon = styled(ArrowBackIosNewIcon)`
-  cursor: pointer;
   &::active {
     background: #eee;
   }

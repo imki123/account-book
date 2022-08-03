@@ -130,6 +130,7 @@ const TableWrapper = styled.div`
     white-space: pre;
     text-align: left;
     padding: 2px;
+    min-width: 10px;
   }
   .blink {
     @keyframes blink {
@@ -153,10 +154,10 @@ const TableWrapper = styled.div`
     }
     animation: blinkRed ${animationDuration}ms;
   }
-  td:nth-of-type(3),
-  td:nth-of-type(4),
-  td:nth-of-type(5),
-  td:nth-of-type(6) {
+  th:nth-of-type(3),
+  th:nth-of-type(4),
+  th:nth-of-type(5),
+  th:nth-of-type(6) {
     min-width: 60px;
   }
   td:nth-of-type(5) input,

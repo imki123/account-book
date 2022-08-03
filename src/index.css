@@ -1,8 +1,10 @@
 * {
   box-sizing: border-box;
 }
-button:hover {
-  cursor: pointer;
+@media (min-width: 500px) {
+  button:hover {
+    cursor: pointer;
+  }
 }
 
 html,
@@ -25,6 +27,16 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+a,
+a:visited,
+a:hover,
+a:active,
+a:focus {
+  text-decoration: none;
+  font: inherit;
+  color: inherit;
 }
 
 #root {
