@@ -6,6 +6,7 @@ import produce from 'immer'
 import { SheetDataInterface } from '../../page/SheetPage'
 import styled from '@emotion/styled'
 import { animationDuration } from '../../constant/constant'
+import { isNumber, localeNumber, parseToNumber } from '../../util/util'
 
 interface SheetTableInterface {
   sheetData?: SheetDataInterface
@@ -36,7 +37,6 @@ export default function SheetTable({
       if (fakeInput) {
         fakeInput.value = e.target.value
         const width = fakeInput.scrollWidth + 10
-        console.log(width)
         e.target.style.width = width + 'px'
         fakeInput.value = ''
       }
@@ -49,15 +49,6 @@ export default function SheetTable({
         }
       }, sheetData)
       setSheetData(newSheetData)
-    }
-  }
-
-  const parseToNumber = (num: string | number) => {
-    const removeComma = String(num).replace(/,/g, '')
-    if (Number.isNaN(Number(removeComma))) {
-      return 0
-    } else {
-      return Number(removeComma)
     }
   }
 
@@ -90,13 +81,18 @@ export default function SheetTable({
                 row.map((col, j) => {
                   // 합계에 가격 더하기
                   if (j === 2) {
+                    // todo: 21억 넘어가는 경우 BigInt 처리
                     sum += parseToNumber(col)
                   }
                   return (
                     <td>
                       <CommonInput
                         numCheck={j === 2}
-                        value={col}
+                        value={
+                          j === 2 && isNumber(col) && col !== 0 && col !== ''
+                            ? localeNumber(col)
+                            : col
+                        }
                         height='28px'
                         onChange={(e) => handleInputChange(e, i, j)}
                       />
@@ -104,7 +100,7 @@ export default function SheetTable({
                   )
                 }),
               )}
-              <td>{Number(sum)}</td>
+              <td>{localeNumber(sum)}</td>
               <td onClick={() => addRow(i + 1)}>
                 <AddIcon fontSize='small' />
               </td>

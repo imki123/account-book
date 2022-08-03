@@ -16,7 +16,10 @@ export default function RefreshButton({
 }
 
 const RefreshButtonWrapper = styled.button<{ disabled: boolean }>`
-  position: absolute;
+  position: fixed;
+  @media (min-width: 500px) {
+    position: absolute;
+  }
   bottom: 20px;
   left: 20px;
 

@@ -138,7 +138,10 @@ export default function SheetPage() {
 }
 
 const SaveButton = styled.button<{ disabled: boolean }>`
-  position: absolute;
+  position: fixed;
+  @media (min-width: 500px) {
+    position: absolute;
+  }
   z-index: 1;
   top: 2px;
   right: 20px;
