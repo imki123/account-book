@@ -34,6 +34,7 @@ function App() {
           <Route path='sheet/:sheetId' element={<SheetPage />} />
         </Routes>
       </MobileWrapper>
+      <FakeInput className='fakeInput' />
     </Suspense>
   )
 }
@@ -60,4 +61,11 @@ const MobileWrapper = styled.div`
   @media (min-width: 500px) {
     border: 1px solid ${Colors.greenLine};
   }
+`
+const FakeInput = styled.input`
+  border: 0;
+  outline: none;
+  opacity: 0;
+  height: 0;
+  width: 0;
 `

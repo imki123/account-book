@@ -31,6 +31,17 @@ export default function SheetTable({
     j: number,
   ) => {
     if (e.target) {
+      // input size 변경
+      const fakeInput = document.querySelector<HTMLInputElement>('.fakeInput')
+      if (fakeInput) {
+        fakeInput.value = e.target.value
+        const width = fakeInput.scrollWidth + 10
+        console.log(width)
+        e.target.style.width = width + 'px'
+        fakeInput.value = ''
+      }
+
+      // sheetData 업데이트
       const newSheetData = produce((draft) => {
         if (draft && draft.table && draft.table[i]) {
           draft.table[i][j] = e.target.value
@@ -167,6 +178,7 @@ const RemoveIcon = styled(RemoveCircleOutlineIcon)`
 `
 const CommonInput = styled.input<{ height?: string; numCheck?: boolean }>`
   width: 100%;
+  min-width: 100%;
   height: ${({ height }) => (height ? `${height}` : '100%')};
   border: 0;
   outline: none;
