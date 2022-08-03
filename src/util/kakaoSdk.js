@@ -74,3 +74,20 @@ export const getKakaoUser = () => {
     })
   })
 }
+
+// 카카오 연결 끊기
+export const unlinkKakao = () => {
+  return new Promise((resolve, reject) => {
+    waitSdk(() => {
+      Kakao.API.request({
+        url: '/v1/user/unlink',
+        success: function (response) {
+          resolve(response)
+        },
+        fail: function (error) {
+          reject(error)
+        },
+      })
+    })
+  })
+}

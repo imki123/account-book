@@ -12,6 +12,7 @@ import SheetTable from '../component/SheetTable/SheetTable'
 import { animationDuration } from '../constant/constant'
 import { Colors } from '../util/Colors'
 import { changeInputWidth } from '../util/util'
+import LoadingDim from '../component/LoadingDim/LoadingDim'
 
 export interface SheetDataInterface {
   sheetId: number
@@ -27,8 +28,7 @@ export default function SheetPage() {
   const params = useParams()
   const navigate = useNavigate()
   const [sheetData, setSheetData] = useState<SheetDataInterface>()
-  const [refreshing, setRefreshing] = useState(false)
-  const [saving, setSaving] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [addedRow, setAddedRow] = useState<number>()
   const [removedRow, setRemovedRow] = useState<number>()
   const { SnackBar: SnackBarSave, openSnackBar: openSnackBarSave } =
@@ -44,9 +44,9 @@ export default function SheetPage() {
 
   const getSheetAndSet = useCallback(() => {
     if (params.sheetId) {
-      setRefreshing(true)
+      setLoading(true)
       getSheet(Number(params.sheetId)).then((res) => {
-        setRefreshing(false)
+        setLoading(false)
         if (res) setSheetData(res)
       })
     }
@@ -162,7 +162,7 @@ export default function SheetPage() {
         removeRow={removeRow}
       />
       <RefreshButton
-        refreshing={refreshing}
+        refreshing={loading}
         onClick={() => {
           getSheetAndSet()
           openSnackBarRefresh()
@@ -170,12 +170,12 @@ export default function SheetPage() {
         }}
       />
       <SaveButton
-        disabled={saving}
+        disabled={loading}
         onClick={() => {
           if (params.sheetId && sheetData) {
-            setSaving(true)
+            setLoading(true)
             patchSheet(Number(params.sheetId), sheetData).then((res) => {
-              setSaving(false)
+              setLoading(false)
               openSnackBarSave()
             })
           }
@@ -185,6 +185,7 @@ export default function SheetPage() {
       </SaveButton>
       <SnackBarRefresh />
       <SnackBarSave />
+      <LoadingDim loading={loading} />
     </>
   )
 }

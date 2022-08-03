@@ -101,22 +101,24 @@ export default function HomePage() {
     <StyledHomePage>
       <Header title='고영이 가계부' />
       <ListWrapper>
-        {sheetLists?.map((list, i) => (
-          <ListDiv>
-            <NameDiv>
-              <ArrowCircleUpIcon onClick={() => orderUp(i)} />
-              <ArrowCircleDownIcon onClick={() => orderDown(i)} />
-              <Link to={`sheet/${list.sheetId}`}>{list.name}</Link>
-            </NameDiv>
-            <RemoveDiv>
-              <RemoveCircleOutlineIcon
-                onClick={() => {
-                  openSnackBarDelete()
-                }}
-              />
-            </RemoveDiv>
-          </ListDiv>
-        ))}
+        {React.Children.toArray(
+          sheetLists?.map((list, i) => (
+            <ListDiv>
+              <NameDiv>
+                <ArrowCircleUpIcon onClick={() => orderUp(i)} />
+                <ArrowCircleDownIcon onClick={() => orderDown(i)} />
+                <Link to={`sheet/${list.sheetId}`}>{list.name}</Link>
+              </NameDiv>
+              <RemoveDiv>
+                <RemoveCircleOutlineIcon
+                  onClick={() => {
+                    openSnackBarDelete()
+                  }}
+                />
+              </RemoveDiv>
+            </ListDiv>
+          )),
+        )}
       </ListWrapper>
       <AddButton onClick={handleAddButton}>
         <AddIcon />

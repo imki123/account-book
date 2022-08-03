@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react'
 import Button from '../component/Button/Button'
 import kakao_login_medium_narrow from '../asset/kakao_login_medium_narrow.png'
 import styled from '@emotion/styled'
-import { getKakaoUser, kakaoAppLogin } from '../util/kakaoSdk'
+import { getKakaoUser, kakaoAppLogin, unlinkKakao } from '../util/kakaoSdk'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 import Header from '../component/Header/Header'
@@ -28,6 +28,7 @@ export default function HomePage() {
           window.alert(
             '이메일 정보가 없습니다. 로그인을 위해 이메일 정보가 필요합니다.',
           )
+          unlinkKakao()
         } else {
           const user = {
             username: res?.kakao_account?.profile?.nickname,
