@@ -68,4 +68,5 @@ const FakeInput = styled.input`
   opacity: 0;
   height: 0;
   width: 0;
+  font-size: inherit;
 `

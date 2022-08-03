@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Header from '../component/Header/Header'
 import produce from 'immer'
@@ -10,11 +10,13 @@ import SaveIcon from '@mui/icons-material/Save'
 import useSnackBar from '../hook/useSnackBar'
 import SheetTable from '../component/SheetTable/SheetTable'
 import { animationDuration } from '../constant/constant'
+import { Colors } from '../util/Colors'
+import { changeInputWidth } from '../util/util'
 
 export interface SheetDataInterface {
   sheetId: number
   name: string
-  table?: (string | number)[][]
+  table?: (string | BigInt)[][]
 }
 
 export default function SheetPage() {
@@ -45,6 +47,25 @@ export default function SheetPage() {
       })
     }
   }, [params.sheetId])
+
+  const handleChangeHeader = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      // sheetData 업데이트
+      if (sheetData) {
+        const newSheetData = produce((draft) => {
+          if (draft) {
+            // size 변경
+            changeInputWidth(e.target)
+
+            draft.name = e.target.value
+            return draft
+          }
+        }, sheetData)
+        setSheetData(newSheetData)
+      }
+    },
+    [sheetData],
+  )
 
   useEffect(() => {
     getSheetAndSave()
@@ -100,7 +121,14 @@ export default function SheetPage() {
   return (
     <>
       <Header
-        title={`${sheetData?.name}`}
+        title={
+          sheetData?.name ? (
+            <HeaderInput
+              value={sheetData?.name}
+              onChange={handleChangeHeader}
+            />
+          ) : null
+        }
         backButton
         backFunction={() => navigate('/')}
       />
@@ -137,6 +165,20 @@ export default function SheetPage() {
   )
 }
 
+const HeaderInput = styled.input`
+  width: 100%;
+  min-width: 100%;
+  height: 24px;
+  border: 0;
+  outline: none;
+  background: none;
+  font: inherit;
+  &:focus,
+  &:hover,
+  &:active {
+    border-bottom: 1px solid ${Colors.greenLine};
+  }
+`
 const SaveButton = styled.button<{ disabled: boolean }>`
   position: fixed;
   @media (min-width: 500px) {

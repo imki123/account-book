@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, useEffect } from 'react'
 import { Colors } from '../../util/Colors'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
@@ -6,7 +6,12 @@ import produce from 'immer'
 import { SheetDataInterface } from '../../page/SheetPage'
 import styled from '@emotion/styled'
 import { animationDuration } from '../../constant/constant'
-import { isNumber, localeNumber, parseToNumber } from '../../util/util'
+import {
+  changeInputWidth,
+  isBigInt,
+  localeBigInt,
+  parseToBigInt,
+} from '../../util/util'
 
 interface SheetTableInterface {
   sheetData?: SheetDataInterface
@@ -16,6 +21,8 @@ interface SheetTableInterface {
   addRow: (row: number) => void
   removeRow: (row: number) => void
 }
+// 첫 데이터가 펫치됐을때 한번만 setInputWidth() 실행하기 위함
+let fetched = false
 
 export default function SheetTable({
   sheetData,
@@ -23,7 +30,22 @@ export default function SheetTable({
   addRow,
   removeRow,
 }: SheetTableInterface) {
-  let sum = 0
+  let sum = BigInt(0)
+
+  // 처음 한번만 전체 input width 설정하기
+  useEffect(() => {
+    if (!fetched && sheetData) {
+      const inputs = document.querySelectorAll<HTMLInputElement>(
+        'input:not(.fakeInput)',
+      )
+      if (inputs) {
+        inputs.forEach((input) => {
+          changeInputWidth(input)
+        })
+        fetched = true
+      }
+    }
+  }, [sheetData])
 
   // 이벤트와 인덱스를 받아서 sheetData에 저장
   const handleInputChange = (
@@ -33,13 +55,7 @@ export default function SheetTable({
   ) => {
     if (e.target) {
       // input size 변경
-      const fakeInput = document.querySelector<HTMLInputElement>('.fakeInput')
-      if (fakeInput) {
-        fakeInput.value = e.target.value
-        const width = fakeInput.scrollWidth + 10
-        e.target.style.width = width + 'px'
-        fakeInput.value = ''
-      }
+      changeInputWidth(e.target)
 
       // sheetData 업데이트
       const newSheetData = produce((draft) => {
@@ -54,70 +70,74 @@ export default function SheetTable({
 
   return (
     <TableWrapper>
-      <tbody>
-        <tr>
-          <th></th>
-          <th>번호</th>
-          <th>유형</th>
-          <th>항목</th>
-          <th>가격</th>
-          <th>합계</th>
-          <th onClick={() => addRow(0)}>
-            <AddIcon fontSize='small' />
-          </th>
-        </tr>
-        {React.Children.toArray(
-          sheetData?.table?.map((row, i) => (
-            <tr id={`row_${i + 1}`}>
-              <td
-                onClick={() => {
-                  removeRow(i + 1)
-                }}
-              >
-                <RemoveIcon fontSize='small' />
-              </td>
-              <td>{i + 1}</td>
-              {React.Children.toArray(
-                row.map((col, j) => {
-                  // 합계에 가격 더하기
-                  if (j === 2) {
-                    // todo: 21억 넘어가는 경우 BigInt 처리
-                    sum += parseToNumber(col)
-                  }
-                  return (
-                    <td>
-                      <CommonInput
-                        numCheck={j === 2}
-                        value={
-                          j === 2 && isNumber(col) && col !== 0 && col !== ''
-                            ? localeNumber(col)
-                            : col
-                        }
-                        height='28px'
-                        onChange={(e) => handleInputChange(e, i, j)}
-                      />
-                    </td>
-                  )
-                }),
-              )}
-              <td>{localeNumber(sum)}</td>
-              <td onClick={() => addRow(i + 1)}>
-                <AddIcon fontSize='small' />
-              </td>
-            </tr>
-          )),
-        )}
-      </tbody>
+      <table>
+        <tbody>
+          <tr>
+            <th></th>
+            <th>번호</th>
+            <th>유형</th>
+            <th>항목</th>
+            <th>가격</th>
+            <th>합계</th>
+            <th onClick={() => addRow(0)}>
+              <AddIcon fontSize='small' />
+            </th>
+          </tr>
+          {React.Children.toArray(
+            sheetData?.table?.map((row, i) => (
+              <tr id={`row_${i + 1}`}>
+                <td
+                  onClick={() => {
+                    removeRow(i + 1)
+                  }}
+                >
+                  <RemoveIcon fontSize='small' />
+                </td>
+                <td>{i + 1}</td>
+                {React.Children.toArray(
+                  row.map((col, j) => {
+                    // 합계에 가격 더하기
+                    if (j === 2) {
+                      sum += parseToBigInt(col)
+                    }
+                    return (
+                      <td>
+                        <CommonInput
+                          numCheck={j === 2}
+                          value={
+                            j === 2 && isBigInt(col) && col !== ''
+                              ? localeBigInt(col)
+                              : col.toString()
+                          }
+                          height='28px'
+                          onChange={(e) => handleInputChange(e, i, j)}
+                        />
+                      </td>
+                    )
+                  }),
+                )}
+                <td>{localeBigInt(sum)}</td>
+                <td onClick={() => addRow(i + 1)}>
+                  <AddIcon fontSize='small' />
+                </td>
+              </tr>
+            )),
+          )}
+        </tbody>
+      </table>
     </TableWrapper>
   )
 }
 
-const TableWrapper = styled.table`
-  border-collapse: collapse;
-  border: 1px solid ${Colors.greenLine};
+const TableWrapper = styled.div`
   min-width: 100%;
   max-width: 200%;
+  overflow: auto;
 
+  table {
+    border-collapse: collapse;
+    border: 1px solid ${Colors.greenLine};
+  }
   th {
     background: ${Colors.greenLine};
   }
@@ -172,7 +192,11 @@ const AddIcon = styled(AddCircleOutlineIcon)`
 const RemoveIcon = styled(RemoveCircleOutlineIcon)`
   color: red;
 `
-const CommonInput = styled.input<{ height?: string; numCheck?: boolean }>`
+export const CommonInput = styled.input<{
+  height?: string
+  value?: string | number | BigInt
+  numCheck?: boolean
+}>`
   width: 100%;
   min-width: 100%;
   height: ${({ height }) => (height ? `${height}` : '100%')};
@@ -186,9 +210,6 @@ const CommonInput = styled.input<{ height?: string; numCheck?: boolean }>`
     background: ${Colors.greenLine};
   }
   ${({ numCheck, value }) => {
-    const removeComma = String(value).replace(/,/g, '')
-    if (numCheck && Number.isNaN(Number(removeComma))) {
-      return 'background: #fcc;'
-    } else return ''
+    return numCheck && !isBigInt(value) ? 'background: #fcc;' : ''
   }}
 `

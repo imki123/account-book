@@ -2,13 +2,14 @@ import styled from '@emotion/styled'
 import { useNavigate } from 'react-router-dom'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import { Colors } from '../../util/Colors'
+import { ReactNode } from 'react'
 
 export default function Header({
   title,
   backButton,
   backFunction,
 }: {
-  title?: string
+  title?: ReactNode
   backButton?: boolean
   backFunction?: () => void
 }) {
