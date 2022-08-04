@@ -2,7 +2,12 @@ import React, { useEffect, useMemo } from 'react'
 import Button from '../component/Button/Button'
 import kakao_login_medium_narrow from '../asset/kakao_login_medium_narrow.png'
 import styled from '@emotion/styled'
-import { getKakaoUser, kakaoAppLogin, logoutUser } from '../util/kakaoSdk'
+import {
+  getKakaoUser,
+  kakaoAppLogin,
+  logoutUser,
+  unlinkKakao,
+} from '../util/kakaoSdk'
 import { useNavigate } from 'react-router-dom'
 import Header from '../component/Header/Header'
 import { postUserCheckEmail } from '../api/account'
@@ -23,10 +28,10 @@ export default function LoginPage() {
       .then((res) => {
         // 카카오 계정 처리
         if (!res?.kakao_account?.email) {
+          unlinkKakao()
           window.alert(
             '로그인을 위해 이메일 정보가 필요합니다.😔 이메일 제공 동의를 승인해주세요.',
           )
-          logoutUser()
         } else {
           const user = {
             username: res?.kakao_account?.profile?.nickname,
