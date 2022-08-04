@@ -3,7 +3,6 @@ import Button from '../component/Button/Button'
 import kakao_login_medium_narrow from '../asset/kakao_login_medium_narrow.png'
 import styled from '@emotion/styled'
 import { getKakaoUser, kakaoAppLogin, unlinkKakao } from '../util/kakaoSdk'
-import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 import Header from '../component/Header/Header'
 import { postUserCheckEmail } from '../api/account'
@@ -14,7 +13,6 @@ export default function HomePage() {
   const cookieFe = useMemo(() => getCookieFe(), [])
 
   useEffect(() => {
-    console.log('cookieFe:', cookieFe)
     if (cookieFe) {
       navigate('/')
     }
@@ -26,9 +24,9 @@ export default function HomePage() {
         // 카카오 계정 처리
         if (!res?.kakao_account?.email) {
           window.alert(
-            '이메일 정보가 없습니다. 로그인을 위해 이메일 정보가 필요합니다.',
+            '로그인을 위해 이메일 정보가 필요합니다.😔 이메일 제공 동의를 승인해주세요.',
           )
-          unlinkKakao()
+          unlinkKakao() // 카카오 언링크
         } else {
           const user = {
             username: res?.kakao_account?.profile?.nickname,
@@ -41,6 +39,7 @@ export default function HomePage() {
             })
             .catch((err) => {
               removeCookieFe()
+              unlinkKakao() // 카카오 언링크
               if (err?.response?.status === 403) {
                 window.alert(
                   '승인되지 않은 사용자입니다.⛔️ 관리자에게 문의해주세요.',

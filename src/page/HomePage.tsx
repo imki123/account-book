@@ -13,21 +13,13 @@ import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown'
 import { Colors } from '../util/Colors'
 import LoadingDim from '../component/LoadingDim/LoadingDim'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
-import useSnackBar from '../hook/useSnackBar'
+import { addSnackBar } from '../util/util'
 
 export default function HomePage() {
   const navigate = useNavigate()
   const [sheetLists, setSheetLists] = useState<SheetDataInterface[]>()
   const [loading, setLoading] = useState(false)
   const cookieFe = useMemo(() => getCookieFe(), [])
-  const { SnackBar: OrderSnackBar, openSnackBar: openSnackBarOrder } =
-    useSnackBar({
-      message: '변경 완료',
-    })
-  const { SnackBar: DeleteSnackBar, openSnackBar: openSnackBarDelete } =
-    useSnackBar({
-      message: '준비중',
-    })
 
   // sheets 불러오기
   const getSheetsAndSet = useCallback(() => {
@@ -44,6 +36,7 @@ export default function HomePage() {
     postSheets().then(() => {
       getSheetsAndSet()
       setLoading(false)
+      addSnackBar('추가 완료')
     })
   }, [getSheetsAndSet])
 
@@ -73,11 +66,11 @@ export default function HomePage() {
           })
           await getSheetsAndSet()
           setLoading(false)
-          openSnackBarOrder()
+          addSnackBar('변경 완료')
         }
       }
     },
-    [getSheetsAndSet, openSnackBarOrder, sheetLists],
+    [getSheetsAndSet, sheetLists],
   )
   const orderDown = useCallback(
     async (i: number) => {
@@ -90,11 +83,11 @@ export default function HomePage() {
           })
           await getSheetsAndSet()
           setLoading(false)
-          openSnackBarOrder()
+          addSnackBar('변경 완료')
         }
       }
     },
-    [getSheetsAndSet, openSnackBarOrder, sheetLists],
+    [getSheetsAndSet, sheetLists],
   )
 
   return (
@@ -112,7 +105,7 @@ export default function HomePage() {
               <RemoveDiv>
                 <RemoveCircleOutlineIcon
                   onClick={() => {
-                    openSnackBarDelete()
+                    addSnackBar('준비중')
                   }}
                 />
               </RemoveDiv>
@@ -124,8 +117,6 @@ export default function HomePage() {
         <AddIcon />
       </AddButton>
       <LoadingDim loading={loading} />
-      <OrderSnackBar />
-      <DeleteSnackBar />
     </StyledHomePage>
   )
 }

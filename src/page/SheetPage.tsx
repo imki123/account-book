@@ -7,11 +7,10 @@ import produce from 'immer'
 import { getSheet, patchSheet } from '../api/sheet'
 import RefreshButton from '../component/Button/RefreshButton'
 import SaveIcon from '@mui/icons-material/Save'
-import useSnackBar from '../hook/useSnackBar'
 import SheetTable from '../component/SheetTable/SheetTable'
 import { animationDuration } from '../constant/constant'
 import { Colors } from '../util/Colors'
-import { changeInputWidth } from '../util/util'
+import { addSnackBar, changeInputWidth } from '../util/util'
 import LoadingDim from '../component/LoadingDim/LoadingDim'
 
 export interface SheetDataInterface {
@@ -22,7 +21,6 @@ export interface SheetDataInterface {
 }
 
 // 첫 데이터가 펫치됐을때 한번만 setInputWidth() 실행하기 위함
-let beforeSetWidth = true
 
 export default function SheetPage() {
   const params = useParams()
@@ -31,16 +29,7 @@ export default function SheetPage() {
   const [loading, setLoading] = useState(false)
   const [addedRow, setAddedRow] = useState<number>()
   const [removedRow, setRemovedRow] = useState<number>()
-  const { SnackBar: SnackBarSave, openSnackBar: openSnackBarSave } =
-    useSnackBar({
-      message: '저장 완료',
-      duration: 1500,
-    })
-  const { SnackBar: SnackBarRefresh, openSnackBar: openSnackBarRefresh } =
-    useSnackBar({
-      message: '새로고침 완료',
-      duration: 1500,
-    })
+  const [beforeSetWidth, setBeforeSetWidth] = useState(true)
 
   const getSheetAndSet = useCallback(() => {
     if (params.sheetId) {
@@ -79,7 +68,7 @@ export default function SheetPage() {
       inputs.forEach((input) => {
         changeInputWidth(input)
       })
-      beforeSetWidth = false
+      setBeforeSetWidth(false)
     }
   }, [])
 
@@ -92,7 +81,7 @@ export default function SheetPage() {
     if (beforeSetWidth && sheetData) {
       changeInputWidthAll()
     }
-  }, [changeInputWidthAll, sheetData])
+  }, [beforeSetWidth, changeInputWidthAll, sheetData])
 
   // addRow 액션
   useEffect(() => {
@@ -165,8 +154,8 @@ export default function SheetPage() {
         refreshing={loading}
         onClick={() => {
           getSheetAndSet()
-          openSnackBarRefresh()
-          beforeSetWidth = true
+          setBeforeSetWidth(true)
+          addSnackBar('새로고침 완료')
         }}
       />
       <SaveButton
@@ -176,15 +165,13 @@ export default function SheetPage() {
             setLoading(true)
             patchSheet(Number(params.sheetId), sheetData).then((res) => {
               setLoading(false)
-              openSnackBarSave()
+              addSnackBar('저장 완료')
             })
           }
         }}
       >
         <SaveIcon />
       </SaveButton>
-      <SnackBarRefresh />
-      <SnackBarSave />
       <LoadingDim loading={loading} />
     </>
   )
