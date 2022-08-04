@@ -116,6 +116,9 @@ export default function HomePage() {
       <AddButton onClick={handleAddButton}>
         <AddIcon />
       </AddButton>
+      <AddButton onClick={handleAddButton}>
+        <AddIcon />
+      </AddButton>
       <LoadingDim loading={loading} />
     </StyledHomePage>
   )

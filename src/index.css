@@ -11,8 +11,12 @@ html,
 body {
   height: 100%;
   margin: 0;
+  padding: 0;
   color: #222;
   font-size: 16px;
+}
+#root {
+  height: 100%;
 }
 
 body {
@@ -21,7 +25,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #fafaff;
+}
+@media (min-width: 500px) {
+  body {
+    background: #fafaff;
+  }
 }
 
 code {
@@ -37,8 +45,4 @@ a:focus {
   text-decoration: none;
   font: inherit;
   color: inherit;
-}
-
-#root {
-  height: 100%;
 }

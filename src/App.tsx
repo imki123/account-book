@@ -63,6 +63,7 @@ const MobileWrapper = styled.div`
   }
 `
 const FakeInput = styled.input`
+  position: fixed;
   border: 0;
   outline: none;
   opacity: 0;
