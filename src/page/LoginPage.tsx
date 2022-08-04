@@ -2,13 +2,13 @@ import React, { useEffect, useMemo } from 'react'
 import Button from '../component/Button/Button'
 import kakao_login_medium_narrow from '../asset/kakao_login_medium_narrow.png'
 import styled from '@emotion/styled'
-import { getKakaoUser, kakaoAppLogin, unlinkKakao } from '../util/kakaoSdk'
+import { getKakaoUser, kakaoAppLogin, logoutUser } from '../util/kakaoSdk'
 import { useNavigate } from 'react-router-dom'
 import Header from '../component/Header/Header'
 import { postUserCheckEmail } from '../api/account'
 import { getCookieFe, removeCookieFe, setCookieFe } from '../util/cookie'
 
-export default function HomePage() {
+export default function LoginPage() {
   const navigate = useNavigate()
   const cookieFe = useMemo(() => getCookieFe(), [])
 
@@ -26,7 +26,7 @@ export default function HomePage() {
           window.alert(
             '로그인을 위해 이메일 정보가 필요합니다.😔 이메일 제공 동의를 승인해주세요.',
           )
-          unlinkKakao() // 카카오 언링크
+          logoutUser()
         } else {
           const user = {
             username: res?.kakao_account?.profile?.nickname,
@@ -34,12 +34,12 @@ export default function HomePage() {
           }
           postUserCheckEmail(user)
             .then((res) => {
-              setCookieFe(res.data)
+              setCookieFe(res.data.token)
               navigate('/')
             })
             .catch((err) => {
               removeCookieFe()
-              unlinkKakao() // 카카오 언링크
+              logoutUser()
               if (err?.response?.status === 403) {
                 window.alert(
                   '승인되지 않은 사용자입니다.⛔️ 관리자에게 문의해주세요.',
@@ -56,7 +56,7 @@ export default function HomePage() {
   }
 
   return (
-    <StyledHomePage>
+    <StyledLoginPage>
       <>
         <Header title='고영이 가계부' />
         <TitleMessage>
@@ -66,11 +66,11 @@ export default function HomePage() {
           <img src={kakao_login_medium_narrow} alt='kakaoLogin' />
         </Button>
       </>
-    </StyledHomePage>
+    </StyledLoginPage>
   )
 }
 
-const StyledHomePage = styled.div`
+const StyledLoginPage = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;

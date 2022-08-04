@@ -14,6 +14,8 @@ import { Colors } from '../util/Colors'
 import LoadingDim from '../component/LoadingDim/LoadingDim'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import { addSnackBar } from '../util/util'
+import Button from '../component/Button/Button'
+import { logoutUser } from '../util/kakaoSdk'
 
 export default function HomePage() {
   const navigate = useNavigate()
@@ -116,9 +118,7 @@ export default function HomePage() {
       <AddButton onClick={handleAddButton}>
         <AddIcon />
       </AddButton>
-      <AddButton onClick={handleAddButton}>
-        <AddIcon />
-      </AddButton>
+      <LogoutButton onClick={logoutUser}>로그아웃</LogoutButton>
       <LoadingDim loading={loading} />
     </StyledHomePage>
   )
@@ -126,6 +126,7 @@ export default function HomePage() {
 
 const StyledHomePage = styled.div`
   height: 100%;
+  padding-bottom: 50px;
 `
 const ListWrapper = styled.div`
   width: 100%;
@@ -176,4 +177,17 @@ const AddButton = styled.button`
     width: 100%;
     height: 100%;
   }
+`
+const LogoutButton = styled(Button)`
+  position: fixed;
+  @media (min-width: 500px) {
+    position: absolute;
+  }
+  z-index: 1;
+  bottom: 20px;
+  left: 20px;
+  height: 32px;
+
+  background: ${Colors.green100};
+  font: inherit;
 `

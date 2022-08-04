@@ -17,11 +17,11 @@ export default function RefreshButton({
 
 const RefreshButtonWrapper = styled.button<{ disabled: boolean }>`
   position: fixed;
-  @media (min-width: 500px) {
-    position: absolute;
-  }
   bottom: 20px;
-  left: 20px;
+  right: 20px;
+  @media (min-width: 500px) {
+    right: calc(50% - 230px);
+  }
 
   padding: 5px;
   width: 40px;

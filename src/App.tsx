@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
-import React, { Suspense, useEffect } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
+import { getUser } from './api/account'
 import useLogin from './hook/useLogin'
 import { Colors } from './util/Colors'
 
@@ -16,6 +17,7 @@ const SheetPage = React.lazy(() => import('./page/SheetPage'))
 
 function App() {
   const location = useLocation()
+  const [username, setUsername] = useState<string>()
   // 로그인여부 체크해서 로그인 페이지로 보내기
   const { isLogin, replaceLoginPage } = useLogin()
 
@@ -25,9 +27,16 @@ function App() {
     }
   }, [isLogin, location, replaceLoginPage])
 
+  useEffect(() => {
+    if (isLogin) {
+      getUser().then((res) => setUsername(res.data.username))
+    }
+  }, [isLogin])
+
   return (
     <Suspense fallback={<FallBackDiv>Loading...</FallBackDiv>}>
       <MobileWrapper>
+        {username && <UsernameDiv>{username}</UsernameDiv>}
         <Routes>
           <Route path='' element={<HomePage />} />
           <Route path='login' element={<LoginPage />} />
@@ -47,6 +56,16 @@ const FallBackDiv = styled.div`
   align-items: center;
   height: 100%;
   width: 100%;
+`
+const UsernameDiv = styled.div`
+  position: fixed;
+  z-index: 1;
+  top: 10px;
+  right: 10px;
+  @media (min-width: 500px) {
+    right: calc(50% - 240px);
+  }
+  font-size: 12px;
 `
 const MobileWrapper = styled.div`
   position: relative;

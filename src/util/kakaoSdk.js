@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+import { removeCookieFe } from './cookie'
+import { postUserLogout } from '../api/account'
 let Kakao = window.Kakao
 
 const KAKAO_JS_KEY = process.env.REACT_APP_KAKAO_JS_KEY
@@ -46,7 +49,7 @@ export function kakaoAppLogin(callback, errorCallback) {
   waitSdk(() => {
     Kakao.Auth.login({
       success(res) {
-        console.log('로그인 api 호출', res)
+        // console.log('로그인 api 호출', res)
         callback && callback()
       },
       fail(error) {
@@ -90,4 +93,16 @@ export const unlinkKakao = () => {
       })
     })
   })
+}
+
+// 카카오 언링크, FE쿠키제거, BE쿠키제거
+export const logoutUser = async () => {
+  try {
+    await postUserLogout()
+    await removeCookieFe()
+    await unlinkKakao()
+  } catch (e) {
+    console.error(e)
+  }
+  window.location.href = process.env.PUBLIC_URL
 }
