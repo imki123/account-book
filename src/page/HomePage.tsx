@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Link, useNavigate } from 'react-router-dom'
 // import { data } from '../dummy/sheetData'
 import Header from '../component/Header/Header'
-import { getSheets, patchOrder, postSheets } from '../api/sheet'
+import { deleteSheet, getSheets, patchOrder, postSheets } from '../api/sheet'
 import { SheetDataInterface } from './SheetPage'
 import { postUserCheckToken } from '../api/account'
 import { getCookieFe, removeCookieFe, setCookieFe } from '../util/cookie'
@@ -92,6 +92,14 @@ export default function HomePage() {
     [getSheetsAndSet, sheetLists],
   )
 
+  const handleDeleteSheet = async (sheetId: number, sheetName: string) => {
+    if (window.confirm(`${sheetName}을(를) 삭제하시겠습니까?`)) {
+      await deleteSheet(sheetId)
+      await getSheetsAndSet()
+      addSnackBar('삭제 완료')
+    }
+  }
+
   return (
     <StyledHomePage>
       <Header title='고영이 가계부' />
@@ -107,7 +115,7 @@ export default function HomePage() {
               <RemoveDiv>
                 <RemoveCircleOutlineIcon
                   onClick={() => {
-                    addSnackBar('준비중')
+                    handleDeleteSheet(list.sheetId, list.name)
                   }}
                 />
               </RemoveDiv>

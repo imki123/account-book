@@ -41,6 +41,11 @@ export const patchOrder = async (orderData: sheetOrderInterface) => {
   return res.data
 }
 
+export const deleteSheet = async (sheetId: number) => {
+  let res = await axiosInstance.delete(`${sheetId}`)
+  return res.data
+}
+
 export interface sheetOrderInterface {
   fromId: number
   toId: number
