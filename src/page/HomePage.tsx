@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from '@emotion/styled'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 // import { data } from '../dummy/sheetData'
 import Header from '../component/Header/Header'
 import { deleteSheet, getSheets, patchOrder, postSheets } from '../api/sheet'
@@ -16,6 +16,7 @@ import Button from '../component/Button/Button'
 import { logoutUser } from '../util/kakaoSdk'
 
 export default function HomePage() {
+  const navigate = useNavigate()
   const [sheetLists, setSheetLists] = useState<SheetDataInterface[]>()
   const [loading, setLoading] = useState(false)
 
@@ -113,8 +114,8 @@ export default function HomePage() {
       </AddButton>
       <LogoutButton
         onClick={() => {
-          logoutUser()
           setLoading(true)
+          logoutUser().then(() => navigate('/login'))
         }}
       >
         로그아웃

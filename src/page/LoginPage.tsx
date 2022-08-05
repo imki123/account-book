@@ -11,17 +11,16 @@ import {
 import { useNavigate } from 'react-router-dom'
 import Header from '../component/Header/Header'
 import { postUserCheckEmail } from '../api/account'
-import useLogin from '../hook/useLogin'
 import LoadingDim from '../component/LoadingDim/LoadingDim'
 
 export default function LoginPage() {
   const navigate = useNavigate()
-  const { isLogin, goToHomePage } = useLogin()
   const [loading, setLoading] = useState(false)
+  const [isLogin, setIsLogin] = useState(false)
 
   useEffect(() => {
-    if (isLogin) goToHomePage()
-  }, [goToHomePage, isLogin])
+    if (isLogin && navigate) navigate('/')
+  }, [isLogin, navigate])
 
   const loginCallback = () => {
     getKakaoUser()
@@ -41,11 +40,10 @@ export default function LoginPage() {
           postUserCheckEmail(user)
             .then((res) => {
               setLoading(false)
-              navigate('/')
+              setIsLogin(true)
             })
             .catch((err) => {
               setLoading(false)
-              logoutUser()
               if (err?.response?.status === 403) {
                 window.alert(
                   '승인되지 않은 사용자입니다.⛔️ 관리자에게 문의해주세요.',
@@ -53,6 +51,7 @@ export default function LoginPage() {
               } else {
                 window.alert('오류가 발생했습니다.😔 관리자에게 문의해주세요.')
               }
+              logoutUser().then(() => navigate('/login'))
             })
         }
       })

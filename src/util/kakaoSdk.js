@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import { removeCookieFe } from './cookie'
 import { postUserLogout } from '../api/account'
 let Kakao = window.Kakao
 
@@ -78,6 +77,25 @@ export const getKakaoUser = () => {
   })
 }
 
+// 카카오 로그아웃
+export const logoutKakao = () => {
+  return new Promise((resolve, reject) => {
+    waitSdk(() => {
+      try {
+        if (!Kakao.Auth.getAccessToken()) {
+          console.log('Not logged in.')
+          return
+        }
+        Kakao.Auth.logout(function () {
+          resolve('logout success')
+        })
+      } catch (e) {
+        reject('logout error')
+      }
+    })
+  })
+}
+
 // 카카오 연결 끊기
 export const unlinkKakao = () => {
   return new Promise((resolve, reject) => {
@@ -98,10 +116,18 @@ export const unlinkKakao = () => {
 // 카카오 언링크, FE쿠키제거, BE쿠키제거
 export const logoutUser = async () => {
   try {
-    const step1 = await removeCookieFe()
-    const step2 = await postUserLogout()
-    const step3 = await unlinkKakao()
-    console.log('Logout:', step1, step2, step3)
-  } catch (e) {}
-  window.location.href = process.env.PUBLIC_URL
+    await postUserLogout()
+  } catch (e) {
+    window.alert('BE 로그아웃 실패')
+  }
+  try {
+    await logoutKakao()
+  } catch (e) {
+    window.alert('카카오 로그아웃 실패')
+  }
+  /* try {
+    await unlinkKakao()
+  } catch (e) {
+    window.alert('카카오 unlink 실패')
+  } */
 }

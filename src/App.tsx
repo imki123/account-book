@@ -22,10 +22,13 @@ function App() {
   const { isLogin, replaceLoginPage, goToHomePage } = useLogin()
 
   useEffect(() => {
-    if (location.pathname !== '/login' && !isLogin) {
+    if (location.pathname !== '/login' && !isLogin && replaceLoginPage) {
       replaceLoginPage()
     }
-  }, [isLogin, location, replaceLoginPage])
+    if (location.pathname === '/login' && isLogin && goToHomePage) {
+      goToHomePage()
+    }
+  }, [goToHomePage, isLogin, location, replaceLoginPage])
 
   useEffect(() => {
     if (isLogin) {
