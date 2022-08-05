@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import Button from '../component/Button/Button'
 import kakao_login_medium_narrow from '../asset/kakao_login_medium_narrow.png'
 import styled from '@emotion/styled'
@@ -11,17 +11,15 @@ import {
 import { useNavigate } from 'react-router-dom'
 import Header from '../component/Header/Header'
 import { postUserCheckEmail } from '../api/account'
-import { getCookieFe, removeCookieFe, setCookieFe } from '../util/cookie'
+import useLogin from '../hook/useLogin'
 
 export default function LoginPage() {
   const navigate = useNavigate()
-  const cookieFe = useMemo(() => getCookieFe(), [])
+  const { isLogin, goToHomePage } = useLogin()
 
   useEffect(() => {
-    if (cookieFe) {
-      navigate('/')
-    }
-  }, [cookieFe, navigate])
+    if (isLogin) goToHomePage()
+  }, [goToHomePage, isLogin])
 
   const loginCallback = () => {
     getKakaoUser()
@@ -39,11 +37,9 @@ export default function LoginPage() {
           }
           postUserCheckEmail(user)
             .then((res) => {
-              setCookieFe(res.data.token)
               navigate('/')
             })
             .catch((err) => {
-              removeCookieFe()
               logoutUser()
               if (err?.response?.status === 403) {
                 window.alert(

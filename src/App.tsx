@@ -19,7 +19,7 @@ function App() {
   const location = useLocation()
   const [username, setUsername] = useState<string>()
   // 로그인여부 체크해서 로그인 페이지로 보내기
-  const { isLogin, replaceLoginPage } = useLogin()
+  const { isLogin, replaceLoginPage, goToHomePage } = useLogin()
 
   useEffect(() => {
     if (location.pathname !== '/login' && !isLogin) {
@@ -29,9 +29,11 @@ function App() {
 
   useEffect(() => {
     if (isLogin) {
-      getUser().then((res) => setUsername(res.data.username))
+      getUser().then((res) => {
+        setUsername(res.data.username)
+      })
     }
-  }, [isLogin])
+  }, [goToHomePage, isLogin])
 
   return (
     <Suspense fallback={<FallBackDiv>Loading...</FallBackDiv>}>

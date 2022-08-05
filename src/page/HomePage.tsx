@@ -1,12 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from '@emotion/styled'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 // import { data } from '../dummy/sheetData'
 import Header from '../component/Header/Header'
 import { deleteSheet, getSheets, patchOrder, postSheets } from '../api/sheet'
 import { SheetDataInterface } from './SheetPage'
-import { postUserCheckToken } from '../api/account'
-import { getCookieFe, setCookieFe } from '../util/cookie'
 import AddIcon from '@mui/icons-material/Add'
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp'
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown'
@@ -18,10 +16,8 @@ import Button from '../component/Button/Button'
 import { logoutUser } from '../util/kakaoSdk'
 
 export default function HomePage() {
-  const navigate = useNavigate()
   const [sheetLists, setSheetLists] = useState<SheetDataInterface[]>()
   const [loading, setLoading] = useState(false)
-  const cookieFe = useMemo(() => getCookieFe(), [])
 
   // sheets 불러오기
   const getSheetsAndSet = useCallback(() => {
@@ -45,16 +41,6 @@ export default function HomePage() {
   useEffect(() => {
     getSheetsAndSet()
   }, [getSheetsAndSet])
-
-  useEffect(() => {
-    if (cookieFe) {
-      postUserCheckToken()
-        .then((res) => setCookieFe(res.data))
-        .catch(() => {
-          logoutUser()
-        })
-    }
-  }, [cookieFe, navigate])
 
   const orderUp = useCallback(
     async (i: number) => {
