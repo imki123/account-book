@@ -125,7 +125,14 @@ export default function HomePage() {
       <AddButton onClick={handleAddButton}>
         <AddIcon />
       </AddButton>
-      <LogoutButton onClick={logoutUser}>로그아웃</LogoutButton>
+      <LogoutButton
+        onClick={() => {
+          logoutUser()
+          setLoading(true)
+        }}
+      >
+        로그아웃
+      </LogoutButton>
       <LoadingDim loading={loading} />
     </StyledHomePage>
   )
