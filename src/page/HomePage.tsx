@@ -6,7 +6,7 @@ import Header from '../component/Header/Header'
 import { deleteSheet, getSheets, patchOrder, postSheets } from '../api/sheet'
 import { SheetDataInterface } from './SheetPage'
 import { postUserCheckToken } from '../api/account'
-import { getCookieFe, removeCookieFe, setCookieFe } from '../util/cookie'
+import { getCookieFe, setCookieFe } from '../util/cookie'
 import AddIcon from '@mui/icons-material/Add'
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp'
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown'
@@ -51,8 +51,7 @@ export default function HomePage() {
       postUserCheckToken()
         .then((res) => setCookieFe(res.data))
         .catch(() => {
-          removeCookieFe()
-          navigate('/login')
+          logoutUser()
         })
     }
   }, [cookieFe, navigate])
