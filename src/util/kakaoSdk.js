@@ -97,19 +97,11 @@ export const unlinkKakao = () => {
 
 // 카카오 언링크, FE쿠키제거, BE쿠키제거
 export const logoutUser = async () => {
-  let timeout
   try {
-    timeout = setTimeout(() => {
-      window.location.href = process.env.PUBLIC_URL
-    }, 1500)
     const step1 = await removeCookieFe()
     const step2 = await postUserLogout()
     const step3 = await unlinkKakao()
     console.log('Logout:', step1, step2, step3)
-  } catch (e) {
-    clearTimeout(timeout)
-    window.location.href = process.env.PUBLIC_URL
-  }
-  clearTimeout(timeout)
+  } catch (e) {}
   window.location.href = process.env.PUBLIC_URL
 }

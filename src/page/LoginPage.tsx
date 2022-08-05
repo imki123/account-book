@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '../component/Button/Button'
 import kakao_login_medium_narrow from '../asset/kakao_login_medium_narrow.png'
 import styled from '@emotion/styled'
@@ -12,10 +12,12 @@ import { useNavigate } from 'react-router-dom'
 import Header from '../component/Header/Header'
 import { postUserCheckEmail } from '../api/account'
 import useLogin from '../hook/useLogin'
+import LoadingDim from '../component/LoadingDim/LoadingDim'
 
 export default function LoginPage() {
   const navigate = useNavigate()
   const { isLogin, goToHomePage } = useLogin()
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (isLogin) goToHomePage()
@@ -26,6 +28,7 @@ export default function LoginPage() {
       .then((res) => {
         // 카카오 계정 처리
         if (!res?.kakao_account?.email) {
+          setLoading(false)
           unlinkKakao()
           window.alert(
             '로그인을 위해 이메일 정보가 필요합니다.😔 이메일 제공 동의를 승인해주세요.',
@@ -37,9 +40,11 @@ export default function LoginPage() {
           }
           postUserCheckEmail(user)
             .then((res) => {
+              setLoading(false)
               navigate('/')
             })
             .catch((err) => {
+              setLoading(false)
               logoutUser()
               if (err?.response?.status === 403) {
                 window.alert(
@@ -63,9 +68,16 @@ export default function LoginPage() {
         <TitleMessage>
           <Message>카카오 로그인이 필요해요</Message>
         </TitleMessage>
-        <Button buttonType='kakao' onClick={() => kakaoAppLogin(loginCallback)}>
+        <Button
+          buttonType='kakao'
+          onClick={() => {
+            setLoading(true)
+            kakaoAppLogin(loginCallback)
+          }}
+        >
           <img src={kakao_login_medium_narrow} alt='kakaoLogin' />
         </Button>
+        <LoadingDim loading={loading} />
       </>
     </StyledLoginPage>
   )
