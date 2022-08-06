@@ -40,6 +40,7 @@ export default function HomePage() {
   }, [getSheetsAndSet])
 
   useEffect(() => {
+    console.log('HomePage')
     getSheetsAndSet()
   }, [getSheetsAndSet])
 
@@ -86,6 +87,14 @@ export default function HomePage() {
     }
   }
 
+  const handleLogout = async () => {
+    setLoading(true)
+    await logoutUser()
+    console.log('로그아웃 성공. 로그인 페이지로 이동')
+    setLoading(false)
+    navigate('/login')
+  }
+
   return (
     <StyledHomePage>
       <Header title='고영이 가계부' />
@@ -112,16 +121,7 @@ export default function HomePage() {
       <AddButton onClick={handleAddButton}>
         <AddIcon />
       </AddButton>
-      <LogoutButton
-        onClick={async () => {
-          setLoading(true)
-          await logoutUser()
-          setLoading(false)
-          navigate('/login')
-        }}
-      >
-        로그아웃
-      </LogoutButton>
+      <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
       <LoadingDim loading={loading} />
     </StyledHomePage>
   )

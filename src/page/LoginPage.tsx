@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Button from '../component/Button/Button'
 import kakao_login_medium_narrow from '../asset/kakao_login_medium_narrow.png'
 import styled from '@emotion/styled'
@@ -14,21 +14,18 @@ import { postUserCheckEmail } from '../api/account'
 import LoadingDim from '../component/LoadingDim/LoadingDim'
 
 export default function LoginPage() {
+  console.log('LoginPage')
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
-  const [isLogin, setIsLogin] = useState(false)
-
-  useEffect(() => {
-    if (isLogin && navigate) navigate('/')
-  }, [isLogin, navigate])
+  const timeout = useRef<NodeJS.Timeout>()
 
   const loginCallback = () => {
     getKakaoUser()
-      .then((res) => {
-        // 카카오 계정 처리
+      .then(async (res) => {
+        // 이메일 정보가 없으면 카카오 연결 끊기
         if (!res?.kakao_account?.email) {
           setLoading(false)
-          unlinkKakao()
+          await unlinkKakao()
           window.alert(
             '로그인을 위해 이메일 정보가 필요합니다.😔 이메일 제공 동의를 승인해주세요.',
           )
@@ -39,26 +36,39 @@ export default function LoginPage() {
           }
           postUserCheckEmail(user)
             .then((res) => {
-              setLoading(false)
-              setIsLogin(true)
+              // 로그인 성공. BE 쿠키 등록
+              console.log('이메일 체크 성공, 쿠키 등록, 홈으로 이동')
+              navigate('/') // 홈으로 이동
             })
             .catch(async (err) => {
-              setLoading(false)
+              await logoutUser()
               if (err?.response?.status === 403) {
                 window.alert(
                   '승인되지 않은 사용자입니다.⛔️ 관리자에게 문의해주세요.',
                 )
               } else {
-                window.alert('오류가 발생했습니다.😔 관리자에게 문의해주세요.')
+                window.alert(
+                  '앱 로그인에 실패했습니다.😔 관리자에게 문의해주세요.',
+                )
               }
-              await logoutUser()
-              navigate('/login')
             })
         }
       })
       .catch((err) => {
-        window.alert('카카오 로그인에 실패했어요.😔 관리자에게 문의해주세요.')
+        window.alert('카카오 로그인에 실패했습니다.😔 관리자에게 문의해주세요.')
       })
+      .finally(() => {
+        setLoading(false)
+        clearTimeout(timeout.current)
+      })
+  }
+
+  const handleLogin = () => {
+    setLoading(true)
+    timeout.current = setTimeout(() => {
+      setLoading(false)
+    }, 10 * 1000)
+    kakaoAppLogin(loginCallback)
   }
 
   return (
@@ -68,13 +78,7 @@ export default function LoginPage() {
         <TitleMessage>
           <Message>카카오 로그인이 필요해요</Message>
         </TitleMessage>
-        <Button
-          buttonType='kakao'
-          onClick={() => {
-            setLoading(true)
-            kakaoAppLogin(loginCallback)
-          }}
-        >
+        <Button buttonType='kakao' onClick={handleLogin}>
           <img src={kakao_login_medium_narrow} alt='kakaoLogin' />
         </Button>
         <LoadingDim loading={loading} />

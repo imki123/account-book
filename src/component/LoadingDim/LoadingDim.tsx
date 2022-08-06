@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
 
-export default function LoadingDim({ loading }: { loading: boolean }) {
+export default function LoadingDim({ loading }: { loading?: boolean }) {
   return loading ? (
     <Dim>
       <HourglassEmptyIcon />

@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
-import React, { Suspense, useEffect } from 'react'
-import { Route, Routes, useLocation } from 'react-router-dom'
-import useLogin from './hook/useLogin'
+import React, { Suspense, useEffect, useState } from 'react'
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { getUser, postUserCheckToken } from './api/account'
+import LoadingDim from './component/LoadingDim/LoadingDim'
 import { Colors } from './util/Colors'
 
 /**
@@ -16,17 +17,39 @@ const SheetPage = React.lazy(() => import('./page/SheetPage'))
 
 function App() {
   const location = useLocation()
+  const navigate = useNavigate()
   // 로그인여부 체크해서 로그인 페이지로 보내기
-  const { isLogin, username, replaceLoginPage, replaceToHomePage } = useLogin()
+  const [username, setUsername] = useState<string>()
+  const [loading, setLoading] = useState<boolean>()
 
   useEffect(() => {
-    if (location.pathname !== '/login' && !isLogin && replaceLoginPage) {
-      replaceLoginPage()
+    if (navigate && location.pathname) {
+      console.log('App. pathname:', location.pathname)
+      setLoading(true)
+      postUserCheckToken()
+        .then((res) => {
+          if (res.data) {
+            console.log('checkToken. 로그인 되어있음')
+            getUser().then((res) => {
+              console.log('getUser. 유저정보 가져옴. pathname 이동')
+              setUsername(res.data.username)
+              if (location.pathname === '/login') navigate('/')
+              else navigate(location.pathname)
+            })
+          } else {
+            console.log('checkToken. 토큰 없음')
+            navigate('/login')
+          }
+        })
+        .catch((e) => {
+          console.log('checkToken. 에러 발생. 로그인 실패')
+          navigate('/login')
+        })
+        .finally(() => {
+          setLoading(false)
+        })
     }
-    if (location.pathname === '/login' && isLogin && replaceToHomePage) {
-      replaceToHomePage()
-    }
-  }, [replaceToHomePage, isLogin, location, replaceLoginPage])
+  }, [location.pathname, navigate])
 
   return (
     <Suspense fallback={<FallBackDiv>Loading...</FallBackDiv>}>
@@ -36,9 +59,11 @@ function App() {
           <Route path='' element={<HomePage />} />
           <Route path='login' element={<LoginPage />} />
           <Route path='sheet/:sheetId' element={<SheetPage />} />
+          <Route path='*' element={<HomePage />} />
         </Routes>
       </MobileWrapper>
       <FakeInput className='fakeInput' />
+      <LoadingDim loading={loading} />
     </Suspense>
   )
 }

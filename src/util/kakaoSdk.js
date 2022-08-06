@@ -100,6 +100,10 @@ export const logoutKakao = () => {
 export const unlinkKakao = () => {
   return new Promise((resolve, reject) => {
     waitSdk(() => {
+      if (!Kakao.Auth.getAccessToken()) {
+        console.log('Not logged in.')
+        return reject('Not logged in.')
+      }
       Kakao.API.request({
         url: '/v1/user/unlink',
         success: function (response) {
@@ -113,18 +117,13 @@ export const unlinkKakao = () => {
   })
 }
 
-// 카카오 언링크, FE쿠키제거, BE쿠키제거
+// BE쿠키제거, 카카오 언링크
 export const logoutUser = async () => {
   try {
     await postUserLogout()
   } catch (e) {
     window.alert('BE 로그아웃 실패')
   }
-  /* try {
-    await logoutKakao()
-  } catch (e) {
-    window.alert('카카오 로그아웃 실패')
-  } */
   try {
     await unlinkKakao()
   } catch (e) {
