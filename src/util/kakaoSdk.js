@@ -128,6 +128,6 @@ export const logoutUser = async () => {
   try {
     await unlinkKakao()
   } catch (e) {
-    window.alert('카카오 unlink 실패')
+    console.log('카카오 unlink 실패')
   }
 }

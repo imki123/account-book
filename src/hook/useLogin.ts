@@ -4,7 +4,7 @@ import { getUser, postUserCheckToken } from '../api/account'
 
 /**
  * replace = true 이고 로그인 안되어있으면 로그인 페이지로 이동
- * isLogin, replaceLoginPage(), goToHomePage() 리턴
+ * isLogin, username, replaceLoginPage(), goToHomePage() 리턴
  */
 export default function useLogin(replace?: boolean) {
   const navigate = useNavigate()
