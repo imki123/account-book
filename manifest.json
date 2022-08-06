@@ -1,6 +1,6 @@
 {
-  "short_name": "AccountBook",
-  "name": "Simple account book for Goyoung",
+  "short_name": "고영이 가계부",
+  "name": "고영이 가계부",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,12 +8,12 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "imcat_120.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "imcat_120.png",
       "type": "image/png",
       "sizes": "512x512"
     }
