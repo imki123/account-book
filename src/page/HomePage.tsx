@@ -113,9 +113,11 @@ export default function HomePage() {
         <AddIcon />
       </AddButton>
       <LogoutButton
-        onClick={() => {
+        onClick={async () => {
           setLoading(true)
-          logoutUser().then(() => navigate('/login'))
+          await logoutUser()
+          setLoading(false)
+          navigate('/login')
         }}
       >
         로그아웃

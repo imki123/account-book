@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
-import { getUser } from './api/account'
 import useLogin from './hook/useLogin'
 import { Colors } from './util/Colors'
 
@@ -17,26 +16,17 @@ const SheetPage = React.lazy(() => import('./page/SheetPage'))
 
 function App() {
   const location = useLocation()
-  const [username, setUsername] = useState<string>()
   // 로그인여부 체크해서 로그인 페이지로 보내기
-  const { isLogin, replaceLoginPage, goToHomePage } = useLogin()
+  const { isLogin, username, replaceLoginPage, replaceToHomePage } = useLogin()
 
   useEffect(() => {
     if (location.pathname !== '/login' && !isLogin && replaceLoginPage) {
       replaceLoginPage()
     }
-    if (location.pathname === '/login' && isLogin && goToHomePage) {
-      goToHomePage()
+    if (location.pathname === '/login' && isLogin && replaceToHomePage) {
+      replaceToHomePage()
     }
-  }, [goToHomePage, isLogin, location, replaceLoginPage])
-
-  useEffect(() => {
-    if (isLogin) {
-      getUser().then((res) => {
-        setUsername(res.data.username)
-      })
-    }
-  }, [goToHomePage, isLogin])
+  }, [replaceToHomePage, isLogin, location, replaceLoginPage])
 
   return (
     <Suspense fallback={<FallBackDiv>Loading...</FallBackDiv>}>

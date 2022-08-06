@@ -42,7 +42,7 @@ export default function LoginPage() {
               setLoading(false)
               setIsLogin(true)
             })
-            .catch((err) => {
+            .catch(async (err) => {
               setLoading(false)
               if (err?.response?.status === 403) {
                 window.alert(
@@ -51,7 +51,8 @@ export default function LoginPage() {
               } else {
                 window.alert('오류가 발생했습니다.😔 관리자에게 문의해주세요.')
               }
-              logoutUser().then(() => navigate('/login'))
+              await logoutUser()
+              navigate('/login')
             })
         }
       })
