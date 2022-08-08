@@ -8,6 +8,7 @@ export const parseToNumber = (num: string | number) => {
 }
 
 export const removeComma = (num?: string | number | BigInt) => {
+  if (!num) return ''
   return String(num).replace(/,/g, '')
 }
 

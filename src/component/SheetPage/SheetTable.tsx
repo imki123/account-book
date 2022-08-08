@@ -186,6 +186,7 @@ export const CommonInput = styled.input<{
   min-width: 100%;
   height: ${({ height }) => (height ? `${height}` : '100%')};
   border: 0;
+  border-radius: 0;
   outline: none;
   background: none;
   font: inherit;

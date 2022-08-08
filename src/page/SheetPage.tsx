@@ -7,17 +7,19 @@ import produce from 'immer'
 import { getSheet, patchSheet } from '../api/sheet'
 import RefreshButton from '../component/Button/RefreshButton'
 import SaveIcon from '@mui/icons-material/Save'
-import SheetTable from '../component/SheetTable/SheetTable'
+import SheetTable from '../component/SheetPage/SheetTable'
 import { animationDuration } from '../constant/constant'
 import { Colors } from '../util/Colors'
 import { addSnackBar, changeInputWidth } from '../util/util'
 import LoadingDim from '../component/LoadingDim/LoadingDim'
+import SheetSummary from '../component/SheetPage/SheetSummary'
 
 export interface SheetDataInterface {
   sheetId: number
   name: string
   order: number
-  table?: (string | BigInt)[][]
+  table?: string[][]
+  types?: string[]
 }
 
 // 첫 데이터가 펫치됐을때 한번만 setInputWidth() 실행하기 위함
@@ -150,6 +152,7 @@ export default function SheetPage() {
         addRow={addRow}
         removeRow={removeRow}
       />
+      <SheetSummary sheetData={sheetData} setSheetData={setSheetData} />
       <RefreshButton
         refreshing={loading}
         onClick={() => {
