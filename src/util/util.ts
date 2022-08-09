@@ -45,14 +45,17 @@ export const isBigInt = (num?: string | BigInt | number) => {
 }
 
 // fake input 사용해서 input size 변경
-export const changeInputWidth = (target: HTMLInputElement) => {
+export const changeInputWidth = (
+  target: HTMLInputElement | HTMLSelectElement,
+  addWidth = 6,
+) => {
   if (target) {
     const fakeInput = document.querySelector<HTMLInputElement>('.fakeInput')
     if (fakeInput) {
       fakeInput.value = target.value
       fakeInput.style.fontSize = getComputedStyle(target).fontSize
       fakeInput.style.fontWeight = getComputedStyle(target).fontWeight
-      const width = fakeInput.scrollWidth + 10
+      const width = fakeInput.scrollWidth + addWidth
       target.style.width = width + 'px'
       fakeInput.value = ''
     }

@@ -29,10 +29,19 @@ export default function SheetTable({
   removeRow,
 }: SheetTableInterface) {
   let sum = BigInt(0)
+  const defaultTypes = [
+    '수입',
+    '생활비',
+    '배달외식',
+    '여행',
+    '경조사',
+    '병원',
+    '비상금',
+  ]
 
   // 이벤트와 인덱스를 받아서 sheetData에 저장
   const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement>,
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     i: number,
     j: number,
   ) => {
@@ -50,7 +59,6 @@ export default function SheetTable({
       setSheetData(newSheetData)
     }
   }
-
   return (
     <TableWrapper>
       <table>
@@ -80,6 +88,23 @@ export default function SheetTable({
                 {React.Children.toArray(
                   row.map((col, j) => {
                     // 합계에 가격 더하기
+                    if (j === 0) {
+                      return (
+                        <td>
+                          <CommonSelect
+                            value={col}
+                            onChange={(e) => handleInputChange(e, i, j)}
+                            height='28px'
+                          >
+                            {React.Children.toArray(
+                              defaultTypes.map((type) => (
+                                <option>{type}</option>
+                              )),
+                            )}
+                          </CommonSelect>
+                        </td>
+                      )
+                    }
                     if (j === 2) {
                       sum += parseToBigInt(col)
                     }
@@ -178,6 +203,29 @@ const RemoveIcon = styled(RemoveCircleOutlineIcon)`
   color: red;
 `
 export const CommonInput = styled.input<{
+  height?: string
+  value?: string | number | BigInt
+  numCheck?: boolean
+}>`
+  width: 100%;
+  min-width: 100%;
+  height: ${({ height }) => (height ? `${height}` : '100%')};
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  background: none;
+  font: inherit;
+  &:focus,
+  &:hover,
+  &:active {
+    background: ${Colors.greenLine};
+  }
+  ${({ numCheck, value }) => {
+    return numCheck && !isBigInt(value) ? 'background: #fcc;' : ''
+  }}
+`
+
+const CommonSelect = styled.select<{
   height?: string
   value?: string | number | BigInt
   numCheck?: boolean
