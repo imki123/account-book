@@ -72,6 +72,15 @@ export default function SheetPage() {
       })
       setBeforeSetWidth(false)
     }
+    const selects = document.querySelectorAll<HTMLSelectElement>(
+      'select:not(.fakeSelect)',
+    )
+    if (selects) {
+      selects.forEach((select) => {
+        changeInputWidth(select, true)
+      })
+      setBeforeSetWidth(false)
+    }
   }, [])
 
   useEffect(() => {

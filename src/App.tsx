@@ -63,6 +63,9 @@ function App() {
         </Routes>
       </MobileWrapper>
       <FakeInput className='fakeInput' />
+      <FakeSelect className='fakeSelect'>
+        <option></option>
+      </FakeSelect>
       <LoadingDim loading={loading} />
     </Suspense>
   )
@@ -108,5 +111,13 @@ const FakeInput = styled.input`
   opacity: 0;
   height: 0;
   width: 0;
+  font-size: inherit;
+`
+const FakeSelect = styled.select`
+  position: fixed;
+  border: 0;
+  outline: none;
+  opacity: 0;
+  height: 0;
   font-size: inherit;
 `
