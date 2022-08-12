@@ -111,7 +111,7 @@ const FakeInput = styled.input`
   opacity: 0;
   height: 0;
   width: 0;
-  font-size: inherit;
+  font: inherit;
 `
 const FakeSelect = styled.select`
   position: fixed;
@@ -119,5 +119,5 @@ const FakeSelect = styled.select`
   outline: none;
   opacity: 0;
   height: 0;
-  font-size: inherit;
+  font: inherit;
 `

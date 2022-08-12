@@ -62,14 +62,15 @@ const SummaryDiv = styled.div`
   padding-top: 10px;
 `
 const SummaryRow = styled.div`
-  padding: 2px;
-  width: 220px;
+  padding: 2px 4px;
+  width: 250px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 `
 const TypeName = styled.div`
   display: flex;
+  flex-shrink: 0;
   justify-content: space-between;
   width: 80px;
   padding-right: 10px;
@@ -79,4 +80,5 @@ const Sum = styled.div`
   display: inline-block;
   padding-left: 10px;
   text-align: right;
+  overflow-wrap: anywhere;
 `
