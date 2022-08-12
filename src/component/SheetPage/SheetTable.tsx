@@ -37,6 +37,7 @@ export default function SheetTable({
     '경조사',
     '병원',
     '비상금',
+    '기타',
   ]
 
   // 이벤트와 인덱스를 받아서 sheetData에 저장
@@ -44,10 +45,11 @@ export default function SheetTable({
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     i: number,
     j: number,
+    select = false,
   ) => {
     if (e.target) {
       // input size 변경
-      changeInputWidth(e.target)
+      changeInputWidth(e.target, select)
 
       // sheetData 업데이트
       const newSheetData = produce((draft) => {
@@ -59,6 +61,7 @@ export default function SheetTable({
       setSheetData(newSheetData)
     }
   }
+
   return (
     <TableWrapper>
       <table>
@@ -67,7 +70,8 @@ export default function SheetTable({
             <th></th>
             <th>번호</th>
             <th>유형</th>
-            <th>항목</th>
+            <th>날짜</th>
+            <th>제목</th>
             <th>가격</th>
             <th>합계</th>
             <th onClick={() => addRow(0)}>
@@ -93,8 +97,8 @@ export default function SheetTable({
                         <td>
                           <CommonSelect
                             value={col}
-                            onChange={(e) => handleInputChange(e, i, j)}
-                            height='28px'
+                            onChange={(e) => handleInputChange(e, i, j, true)}
+                            height='27px'
                           >
                             {React.Children.toArray(
                               defaultTypes.map((type) => (
@@ -105,15 +109,15 @@ export default function SheetTable({
                         </td>
                       )
                     }
-                    if (j === 2) {
+                    if (j === 3) {
                       sum += parseToBigInt(col)
                     }
                     return (
                       <td>
                         <CommonInput
-                          numCheck={j === 2}
+                          numCheck={j === 3}
                           value={
-                            j === 2 && isBigInt(col) && col !== ''
+                            j === 3 && isBigInt(col) && col !== ''
                               ? localeBigInt(col)
                               : col.toString()
                           }
@@ -180,19 +184,19 @@ const TableWrapper = styled.div`
     }
     animation: blinkRed ${animationDuration}ms;
   }
-  th:nth-of-type(3),
-  th:nth-of-type(4),
   th:nth-of-type(5),
-  th:nth-of-type(6) {
+  th:nth-of-type(6),
+  th:nth-of-type(7) {
     min-width: 60px;
   }
-  td:nth-of-type(5) input,
-  td:nth-of-type(6) {
+  td:nth-of-type(6) input,
+  td:nth-of-type(7) {
     text-align: right;
   }
   td:nth-of-type(3),
   td:nth-of-type(4),
-  td:nth-of-type(5) {
+  td:nth-of-type(5),
+  td:nth-of-type(6) {
     padding: 0;
   }
 `

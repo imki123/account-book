@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { SheetDataInterface } from '../../page/SheetPage'
 import { localeBigInt, removeComma } from '../../util/util'
 
@@ -25,12 +25,11 @@ export default function SheetSummary({
         }
         try {
           const before = stringToBig(obj[row[0]].sum || '0')
-          const after = stringToBig(row[2] || '0')
+          const after = stringToBig(row[3] || '0')
           obj[row[0]].sum = String(before + after)
         } catch (e) {}
       }
     })
-    console.log(obj)
     const keys = Object.keys(obj).sort()
     keys.forEach((item, i) => (obj[item].order = i))
     return { summary: obj, summaryKeys: keys }
@@ -41,11 +40,11 @@ export default function SheetSummary({
       <SummaryTitle>요약</SummaryTitle>
       <SummaryDiv>
         {React.Children.toArray(
-          summaryKeys.map((item) => (
-            <div>
-              <TypeName>{item} </TypeName> :{' '}
-              <Sum> {localeBigInt(summary[item]?.sum)}</Sum>
-            </div>
+          summaryKeys.map((item, i) => (
+            <SummaryRow style={i % 2 === 0 ? { background: '#cec' } : {}}>
+              <TypeName>{item}</TypeName>
+              <Sum>{localeBigInt(summary[item]?.sum)} 원</Sum>
+            </SummaryRow>
           )),
         )}
       </SummaryDiv>
@@ -62,12 +61,22 @@ const SummaryTitle = styled.div`
 const SummaryDiv = styled.div`
   padding-top: 10px;
 `
+const SummaryRow = styled.div`
+  padding: 2px;
+  width: 220px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
 const TypeName = styled.div`
-  display: inline-block;
-  min-width: 50px;
+  display: flex;
+  justify-content: space-between;
+  width: 80px;
   padding-right: 10px;
+  border-right: 1px solid #222;
 `
 const Sum = styled.div`
   display: inline-block;
   padding-left: 10px;
+  text-align: right;
 `

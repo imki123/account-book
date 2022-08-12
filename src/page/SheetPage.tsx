@@ -129,7 +129,7 @@ export default function SheetPage() {
   const addRow = useCallback(
     (row: number) => {
       const nextState = produce(sheetData, (draft) => {
-        draft?.table?.splice(row, 0, ['', '', ''])
+        draft?.table?.splice(row, 0, ['', '', '', ''])
       })
       setSheetData(nextState)
       setAddedRow(row)
