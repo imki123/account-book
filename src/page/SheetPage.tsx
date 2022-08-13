@@ -145,12 +145,7 @@ export default function SheetPage() {
     <>
       <Header
         title={
-          sheetData?.name ? (
-            <HeaderInput
-              value={sheetData?.name}
-              onChange={handleChangeHeader}
-            />
-          ) : null
+          <HeaderInput value={sheetData?.name} onChange={handleChangeHeader} />
         }
         backButton
         backFunction={() => navigate('/')}
@@ -191,7 +186,7 @@ export default function SheetPage() {
 
 const HeaderInput = styled.input`
   width: 100%;
-  min-width: 100%;
+  min-width: 50px;
   height: 24px;
   border: 0;
   outline: none;
