@@ -201,7 +201,7 @@ const HeaderInput = styled.input`
 const SaveButton = styled.button<{ disabled: boolean }>`
   position: fixed;
   z-index: 1;
-  top: 2px;
+  bottom: 80px;
   right: 20px;
   @media (min-width: 500px) {
     right: calc(50% - 230px);
