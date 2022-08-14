@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Colors } from '../../util/Colors'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
@@ -12,6 +12,7 @@ import {
   localeBigInt,
   parseToBigInt,
 } from '../../util/util'
+import { getType } from '../../api/type'
 
 interface SheetTableInterface {
   sheetData?: SheetDataInterface
@@ -29,8 +30,10 @@ export default function SheetTable({
   removeRow,
 }: SheetTableInterface) {
   let sum = BigInt(0)
-  const defaultTypes = [
+  const [types, setTypes] = useState([
     '수입',
+    '관리비',
+    '보험료',
     '생활비',
     '배달외식',
     '여행',
@@ -38,7 +41,13 @@ export default function SheetTable({
     '병원',
     '비상금',
     '기타',
-  ]
+  ])
+
+  useEffect(() => {
+    getType().then((res) => {
+      setTypes(res)
+    })
+  }, [])
 
   // 이벤트와 인덱스를 받아서 sheetData에 저장
   const handleInputChange = (
@@ -101,9 +110,7 @@ export default function SheetTable({
                             height='27px'
                           >
                             {React.Children.toArray(
-                              defaultTypes.map((type) => (
-                                <option>{type}</option>
-                              )),
+                              types.map((type) => <option>{type}</option>),
                             )}
                           </CommonSelect>
                         </td>

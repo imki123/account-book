@@ -3,6 +3,7 @@ import React, { Suspense, useEffect, useState } from 'react'
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { getUser, postUserCheckToken } from './api/account'
 import LoadingDim from './component/LoadingDim/LoadingDim'
+import TypesPage from './page/TypesPage'
 import { Colors } from './util/Colors'
 
 /**
@@ -33,17 +34,18 @@ function App() {
             getUser().then((res) => {
               console.log('getUser. 유저정보 가져옴. pathname 이동')
               setUsername(res.data.username)
-              if (location.pathname === '/login') navigate('/')
-              else navigate(location.pathname)
+              if (location.pathname === '/login')
+                navigate('/', { replace: true })
+              else navigate(location.pathname, { replace: true })
             })
           } else {
             console.log('checkToken. 토큰 없음')
-            navigate('/login')
+            navigate('/login', { replace: true })
           }
         })
         .catch((e) => {
           console.log('checkToken. 에러 발생. 로그인 실패')
-          navigate('/login')
+          navigate('/login', { replace: true })
         })
         .finally(() => {
           setLoading(false)
@@ -59,6 +61,7 @@ function App() {
           <Route path='' element={<HomePage />} />
           <Route path='login' element={<LoginPage />} />
           <Route path='sheet/:sheetId' element={<SheetPage />} />
+          <Route path='types' element={<TypesPage />} />
           <Route path='*' element={<HomePage />} />
         </Routes>
       </MobileWrapper>

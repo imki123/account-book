@@ -122,6 +122,7 @@ export default function HomePage() {
         <AddIcon />
       </AddButton>
       <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+      <TypesButton onClick={() => navigate('/types')}>유형변경</TypesButton>
       <LoadingDim loading={loading} />
     </StyledHomePage>
   )
@@ -189,6 +190,19 @@ const LogoutButton = styled(Button)`
   z-index: 1;
   bottom: 20px;
   left: 20px;
+  height: 32px;
+
+  background: ${Colors.green100};
+  font: inherit;
+`
+const TypesButton = styled(Button)`
+  position: fixed;
+  @media (min-width: 500px) {
+    position: absolute;
+  }
+  z-index: 1;
+  bottom: 20px;
+  left: 100px;
   height: 32px;
 
   background: ${Colors.green100};
