@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { Colors } from '../../util/Colors'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
@@ -13,6 +13,7 @@ import {
   parseToBigInt,
 } from '../../util/util'
 import { getType } from '../../api/type'
+import OpenColor from 'open-color'
 
 interface SheetTableInterface {
   sheetData?: SheetDataInterface
@@ -21,6 +22,7 @@ interface SheetTableInterface {
   >
   addRow: (row: number) => void
   removeRow: (row: number) => void
+  changeRef: React.MutableRefObject<boolean>
 }
 
 export default function SheetTable({
@@ -28,26 +30,33 @@ export default function SheetTable({
   setSheetData,
   addRow,
   removeRow,
+  changeRef,
 }: SheetTableInterface) {
   let sum = BigInt(0)
-  const [types, setTypes] = useState([
-    '수입',
-    '관리비',
-    '보험료',
-    '생활비',
-    '배달외식',
-    '여행',
-    '경조사',
-    '병원',
-    '비상금',
-    '기타',
-  ])
+  const defaultTypes = useMemo(
+    () => [
+      '',
+      '1.생활비',
+      '2.배달외식',
+      '3.기타',
+      '4.관리비',
+      '5.저금',
+      '6.보험료',
+      '7.여행',
+      '8.경조사',
+      '9.병원',
+      '10.비상금',
+      '11.수입',
+    ],
+    [],
+  )
+  const [types, setTypes] = useState(defaultTypes)
 
   useEffect(() => {
     getType().then((res) => {
-      setTypes(res)
+      setTypes(res.types || defaultTypes)
     })
-  }, [])
+  }, [defaultTypes])
 
   // 이벤트와 인덱스를 받아서 sheetData에 저장
   const handleInputChange = (
@@ -56,6 +65,7 @@ export default function SheetTable({
     j: number,
     select = false,
   ) => {
+    changeRef.current = true
     if (e.target) {
       // input size 변경
       changeInputWidth(e.target, select)
@@ -238,8 +248,7 @@ export const CommonInput = styled.input<{
 
 const CommonSelect = styled.select<{
   height?: string
-  value?: string | number | BigInt
-  numCheck?: boolean
+  value: string
 }>`
   width: 100%;
   min-width: 100%;
@@ -247,14 +256,32 @@ const CommonSelect = styled.select<{
   border: 0;
   border-radius: 0;
   outline: none;
-  background: none;
+  background: transparent;
+  color: #222;
   font: inherit;
-  &:focus,
-  &:hover,
-  &:active {
-    background: ${Colors.greenLine};
-  }
-  ${({ numCheck, value }) => {
-    return numCheck && !isBigInt(value) ? 'background: #fcc;' : ''
-  }}
+  background: ${({ value }) => {
+    if (value.includes('생활비')) {
+      return OpenColor.pink[2]
+    } else if (value.includes('배달외식')) {
+      return OpenColor.red[2]
+    } else if (value.includes('기타')) {
+      return OpenColor.yellow[2]
+    } else if (value.includes('관리비')) {
+      return OpenColor.lime[2]
+    } else if (value.includes('저금')) {
+      return OpenColor.blue[4]
+    } else if (value.includes('보험료')) {
+      return OpenColor.blue[2]
+    } else if (value.includes('여행')) {
+      return OpenColor.indigo[2]
+    } else if (value.includes('경조사')) {
+      return OpenColor.indigo[4]
+    } else if (value.includes('병원')) {
+      return OpenColor.violet[2]
+    } else if (value.includes('비상금')) {
+      return OpenColor.violet[4]
+    } else if (value.includes('수입')) {
+      return OpenColor.grape[2]
+    }
+  }};
 `

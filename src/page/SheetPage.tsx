@@ -1,12 +1,17 @@
 import styled from '@emotion/styled'
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Header from '../component/Header/Header'
 import produce from 'immer'
 
 import { getSheet, patchSheet } from '../api/sheet'
 import RefreshButton from '../component/Button/RefreshButton'
-import SaveIcon from '@mui/icons-material/Save'
 import SheetTable from '../component/SheetPage/SheetTable'
 import { animationDuration } from '../constant/constant'
 import { Colors } from '../util/Colors'
@@ -32,6 +37,8 @@ export default function SheetPage() {
   const [addedRow, setAddedRow] = useState<number>()
   const [removedRow, setRemovedRow] = useState<number>()
   const [beforeSetWidth, setBeforeSetWidth] = useState(true)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null) // 자동저장 스로틀
+  const changeRef = useRef(false) // 최초 변경사항 감지
 
   const getSheetAndSet = useCallback(() => {
     if (params.sheetId) {
@@ -43,8 +50,9 @@ export default function SheetPage() {
     }
   }, [params.sheetId])
 
-  const handleChangeHeader = useCallback(
+  const handleChangeTitle = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
+      changeRef.current = true
       // sheetData 업데이트
       if (sheetData) {
         const newSheetData = produce((draft) => {
@@ -128,6 +136,7 @@ export default function SheetPage() {
 
   const addRow = useCallback(
     (row: number) => {
+      changeRef.current = true
       const nextState = produce(sheetData, (draft) => {
         draft?.table?.splice(row, 0, ['', '', '', ''])
       })
@@ -138,14 +147,40 @@ export default function SheetPage() {
   )
 
   const removeRow = useCallback((row: number) => {
+    changeRef.current = true
     setRemovedRow(row)
   }, [])
+
+  const saveSheet = useCallback(() => {
+    if (params.sheetId && sheetData) {
+      // setLoading(true)
+      patchSheet(Number(params.sheetId), sheetData).then((res) => {
+        // setLoading(false)
+        addSnackBar('자동 저장')
+      })
+    }
+  }, [params.sheetId, sheetData])
+
+  // 데이터 변경되면 2초 스로틀 방식으로 데이터 자동 저장
+  useEffect(() => {
+    if (changeRef.current === true) {
+      if (timeoutRef.current !== null) {
+        clearTimeout(timeoutRef.current)
+      }
+      timeoutRef.current = setTimeout(() => {
+        timeoutRef.current = null
+        saveSheet()
+      }, 2000)
+    }
+  }, [saveSheet, sheetData])
 
   return (
     <>
       <Header
         title={
-          <HeaderInput value={sheetData?.name} onChange={handleChangeHeader} />
+          sheetData?.name !== undefined ? (
+            <HeaderInput value={sheetData?.name} onChange={handleChangeTitle} />
+          ) : null
         }
         backButton
         backFunction={() => navigate('/')}
@@ -155,6 +190,7 @@ export default function SheetPage() {
         setSheetData={setSheetData}
         addRow={addRow}
         removeRow={removeRow}
+        changeRef={changeRef}
       />
       <SheetSummary sheetData={sheetData} setSheetData={setSheetData} />
       <RefreshButton
@@ -165,20 +201,6 @@ export default function SheetPage() {
           addSnackBar('새로고침 완료')
         }}
       />
-      <SaveButton
-        disabled={loading}
-        onClick={() => {
-          if (params.sheetId && sheetData) {
-            setLoading(true)
-            patchSheet(Number(params.sheetId), sheetData).then((res) => {
-              setLoading(false)
-              addSnackBar('저장 완료')
-            })
-          }
-        }}
-      >
-        <SaveIcon />
-      </SaveButton>
       <LoadingDim loading={loading} />
     </>
   )
@@ -197,29 +219,4 @@ const HeaderInput = styled.input`
   &:active {
     border-bottom: 1px solid ${Colors.greenLine};
   }
-`
-const SaveButton = styled.button<{ disabled: boolean }>`
-  position: fixed;
-  z-index: 1;
-  bottom: 80px;
-  right: 20px;
-  @media (min-width: 500px) {
-    right: calc(50% - 230px);
-  }
-
-  padding: 5px;
-  width: 40px;
-  height: 40px;
-
-  overflow: hidden;
-  background: blue;
-  border: 2px solid #eee;
-  border-radius: 100%;
-  opacity: 0.7;
-  svg {
-    color: white;
-    width: 100%;
-    height: 100%;
-  }
-  ${({ disabled }) => disabled && `background: #555;`}
 `

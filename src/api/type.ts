@@ -5,8 +5,13 @@ const axiosInstance = Axios.create({
   withCredentials: true,
 })
 
+interface getTypeResponse {
+  typeId: number
+  types: []
+}
+
 export const getType = async () => {
-  let res = await axiosInstance.get<string[]>('')
+  let res = await axiosInstance.get<getTypeResponse>('')
   return res.data
 }
 
