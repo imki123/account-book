@@ -231,6 +231,7 @@ export const CommonInput = styled.input<{
   width: 100%;
   min-width: 100%;
   height: ${({ height }) => (height ? `${height}` : '100%')};
+  padding: 0 2px;
   border: 0;
   border-radius: 0;
   outline: none;
@@ -239,7 +240,7 @@ export const CommonInput = styled.input<{
   &:focus,
   &:hover,
   &:active {
-    background: ${Colors.greenLine};
+    background: ${OpenColor.green[0]};
   }
   ${({ numCheck, value }) => {
     return numCheck && !isBigInt(value) ? 'background: #fcc;' : ''
@@ -253,6 +254,7 @@ const CommonSelect = styled.select<{
   width: 100%;
   min-width: 100%;
   height: ${({ height }) => (height ? `${height}` : '100%')};
+  padding: 0 2px;
   border: 0;
   border-radius: 0;
   outline: none;

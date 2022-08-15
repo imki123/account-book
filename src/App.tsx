@@ -110,6 +110,7 @@ const MobileWrapper = styled.div`
 const FakeInput = styled.input`
   position: fixed;
   border: 0;
+  padding: 0 2px;
   outline: none;
   opacity: 0;
   height: 0;
@@ -119,6 +120,7 @@ const FakeInput = styled.input`
 const FakeSelect = styled.select`
   position: fixed;
   border: 0;
+  padding: 0 2px;
   outline: none;
   opacity: 0;
   height: 0;

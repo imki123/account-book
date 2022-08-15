@@ -211,6 +211,7 @@ const HeaderInput = styled.input`
   min-width: 50px;
   height: 24px;
   border: 0;
+  padding: 0 2px;
   outline: none;
   background: none;
   font: inherit;
