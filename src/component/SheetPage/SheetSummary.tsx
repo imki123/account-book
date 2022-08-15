@@ -48,17 +48,21 @@ export default function SheetSummary({
 
   return (
     <SheetSummaryWrapper>
-      <SummaryTitle>요약</SummaryTitle>
-      <SummaryDiv>
-        {React.Children.toArray(
-          summaryKeys.map((item, i) => (
-            <SummaryRow style={i % 2 === 0 ? { background: '#cec' } : {}}>
-              <TypeName>{item}</TypeName>
-              <Sum>{localeBigInt(summary[item]?.sum)} 원</Sum>
-            </SummaryRow>
-          )),
-        )}
-      </SummaryDiv>
+      {summaryKeys.length > 0 ? (
+        <>
+          <SummaryTitle>요약</SummaryTitle>
+          <SummaryDiv>
+            {React.Children.toArray(
+              summaryKeys.map((item, i) => (
+                <SummaryRow style={i % 2 === 0 ? { background: '#cec' } : {}}>
+                  <TypeName>{item}</TypeName>
+                  <Sum>{localeBigInt(summary[item]?.sum)} 원</Sum>
+                </SummaryRow>
+              )),
+            )}
+          </SummaryDiv>
+        </>
+      ) : null}
     </SheetSummaryWrapper>
   )
 }

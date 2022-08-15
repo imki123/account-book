@@ -183,7 +183,7 @@ export default function SheetPage() {
           ) : null
         }
         backButton
-        backFunction={() => navigate('/')}
+        backFunction={() => navigate('/', { replace: true })}
       />
       <SheetTable
         sheetData={sheetData}
