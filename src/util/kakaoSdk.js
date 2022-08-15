@@ -53,6 +53,7 @@ export function kakaoAppLogin(callback, errorCallback) {
       },
       fail(error) {
         console.error('kakao login fail', error)
+        window.alert('로그인 실패 😭 ' + JSON.stringify(error))
         errorCallback && errorCallback()
       },
     })

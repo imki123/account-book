@@ -67,8 +67,8 @@ export default function LoginPage() {
     setLoading(true)
     timeout.current = setTimeout(() => {
       setLoading(false)
-    }, 10 * 1000)
-    kakaoAppLogin(loginCallback)
+    }, 5 * 1000)
+    kakaoAppLogin(loginCallback, () => {})
   }
 
   return (
