@@ -40,7 +40,6 @@ export default function HomePage() {
   }, [getSheetsAndSet])
 
   useEffect(() => {
-    console.log('HomePage')
     getSheetsAndSet()
   }, [getSheetsAndSet])
 
@@ -90,7 +89,6 @@ export default function HomePage() {
   const handleLogout = async () => {
     setLoading(true)
     await logoutUser()
-    console.log('로그아웃 성공. 로그인 페이지로 이동')
     setLoading(false)
     navigate('/login')
   }

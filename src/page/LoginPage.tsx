@@ -14,7 +14,6 @@ import { postUserCheckEmail } from '../api/account'
 import LoadingDim from '../component/LoadingDim/LoadingDim'
 
 export default function LoginPage() {
-  console.log('LoginPage')
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const timeout = useRef<NodeJS.Timeout>()
@@ -37,7 +36,6 @@ export default function LoginPage() {
           postUserCheckEmail(user)
             .then((res) => {
               // 로그인 성공. BE 쿠키 등록
-              console.log('이메일 체크 성공, 쿠키 등록, 홈으로 이동')
               navigate('/') // 홈으로 이동
             })
             .catch(async (err) => {
