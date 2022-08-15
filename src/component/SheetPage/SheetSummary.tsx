@@ -30,7 +30,18 @@ export default function SheetSummary({
         } catch (e) {}
       }
     })
-    const keys = Object.keys(obj).sort()
+    // 숫자 추출해서 오름차순 정렬
+    const keys = Object.keys(obj).sort((a, b) => {
+      const numA = Number(a.slice(0, a.indexOf('.')))
+      const numB = Number(b.slice(0, b.indexOf('.')))
+      if (!isNaN(numA) && !isNaN(numB)) {
+        if (numA > numB) return 1
+        else return -1
+      } else {
+        if (a > b) return 1
+        else return -1
+      }
+    })
     keys.forEach((item, i) => (obj[item].order = i))
     return { summary: obj, summaryKeys: keys }
   }, [sheetData?.table])
