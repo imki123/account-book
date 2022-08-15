@@ -97,7 +97,7 @@ export const addSnackBar = (
     bottom: 20px;
     opacity: 0.9;
     `
-  }, 10)
+  }, 100)
   setTimeout(() => {
     snackBar.style.cssText = defaultStyle
   }, duration)
