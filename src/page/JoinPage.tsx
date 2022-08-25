@@ -1,23 +1,11 @@
-import styled from '@emotion/styled'
-import React, {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import React, { ChangeEvent, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Header from '../component/Header/Header'
-import produce from 'immer'
 
-import { getSheet, patchSheet } from '../api/sheet'
-import RefreshButton from '../component/Button/RefreshButton'
 import SheetTable from '../component/SheetPage/SheetTable'
-import { animationDuration } from '../constant/constant'
-import { Colors } from '../util/Colors'
-import { addSnackBar, changeInputWidth } from '../util/util'
-import LoadingDim from '../component/LoadingDim/LoadingDim'
 import SheetSummary from '../component/SheetPage/SheetSummary'
+import produce, { enableMapSet } from 'immer'
+import { useGetSheetsQuery } from '../api/reactQuery.ts/useSheetQuery'
 
 export interface SheetDataInterface {
   sheetId: number
@@ -28,78 +16,72 @@ export interface SheetDataInterface {
 }
 
 // 첫 데이터가 펫치됐을때 한번만 setInputWidth() 실행하기 위함
+enableMapSet()
 
 export default function JoinPage() {
-  const params = useParams()
   const navigate = useNavigate()
+  const { data: sheets } = useGetSheetsQuery({ staleTime: 10 * 1000 })
+  const [checked, setChecked] = useState<Set<number>>(new Set())
   const [sheetData, setSheetData] = useState<SheetDataInterface>()
-  const [beforeSetWidth, setBeforeSetWidth] = useState(true)
+
+  const changeCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
+    const result = produce((draft) => {
+      if (e.target.checked) draft?.add(Number(e.target.value))
+      else draft?.delete(Number(e.target.value))
+      return draft
+    }, checked)
+    setChecked(result)
+  }
 
   useEffect(() => {
-    getSheetAndSet()
-  }, [getSheetAndSet])
-
-  // sheetData 바뀌고 beforeSetWidth가 true이면 input width 바꿔주기
-  useEffect(() => {
-    if (beforeSetWidth && sheetData) {
-      changeInputWidthAll()
-    }
-  }, [beforeSetWidth, changeInputWidthAll, sheetData])
-
-  const saveSheet = useCallback(() => {
-    if (params.sheetId && sheetData) {
-      // setLoading(true)
-      patchSheet(Number(params.sheetId), sheetData).then((res) => {
-        // setLoading(false)
-        addSnackBar('자동 저장')
+    if (sheets) {
+      const joinedSheets: SheetDataInterface[] = []
+      const arr = Array.from(checked).sort()
+      arr.forEach((item) => {
+        joinedSheets.push(sheets?.filter((sheet) => sheet.order === item)[0])
       })
+
+      let joinedTable: string[][] = []
+      joinedSheets.forEach((item) => {
+        if (item.table) {
+          joinedTable = joinedTable
+            .concat(item.table)
+            .concat([['', '', '----- 구분선 -----', '']])
+        }
+      })
+      setSheetData({ table: joinedTable, sheetId: 1, name: 'joined', order: 1 })
     }
-  }, [params.sheetId, sheetData])
+  }, [checked, sheets])
 
   return (
     <>
       <Header
-        title={
-          sheetData?.name !== undefined ? (
-            <HeaderInput value={sheetData?.name} onChange={handleChangeTitle} />
-          ) : null
-        }
+        title={'요약보기'}
         backButton
         backFunction={() => navigate('/', { replace: true })}
       />
+      {React.Children.toArray(
+        sheets &&
+          sheets?.map((item) => (
+            <div>
+              <label>
+                <input
+                  type='checkbox'
+                  name='sheet'
+                  value={item.order}
+                  onChange={changeCheckbox}
+                />
+                <span>{item.name}</span>
+              </label>
+            </div>
+          )),
+      )}
+      <SheetSummary sheetData={sheetData} setSheetData={setSheetData} />
       <SheetTable
         sheetData={sheetData}
         setSheetData={setSheetData}
-        addRow={addRow}
-        removeRow={removeRow}
-        changeRef={changeRef}
+        readOnly={true}
       />
-      <SheetSummary sheetData={sheetData} setSheetData={setSheetData} />
-      <RefreshButton
-        refreshing={loading}
-        onClick={() => {
-          getSheetAndSet()
-          setBeforeSetWidth(true)
-          addSnackBar('새로고침 완료')
-        }}
-      />
-      <LoadingDim loading={loading} />
     </>
   )
 }
-
-const HeaderInput = styled.input`
-  width: 100%;
-  min-width: 50px;
-  height: 24px;
-  border: 0;
-  padding: 0 2px;
-  outline: none;
-  background: none;
-  font: inherit;
-  &:focus,
-  &:hover,
-  &:active {
-    border-bottom: 1px solid ${Colors.greenLine};
-  }
-`

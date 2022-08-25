@@ -20,9 +20,10 @@ interface SheetTableInterface {
   setSheetData: React.Dispatch<
     React.SetStateAction<SheetDataInterface | undefined>
   >
-  addRow: (row: number) => void
-  removeRow: (row: number) => void
-  changeRef: React.MutableRefObject<boolean>
+  addRow?: (row: number) => void
+  removeRow?: (row: number) => void
+  changeRef?: React.MutableRefObject<boolean>
+  readOnly?: boolean
 }
 
 export default function SheetTable({
@@ -31,6 +32,7 @@ export default function SheetTable({
   addRow,
   removeRow,
   changeRef,
+  readOnly = false,
 }: SheetTableInterface) {
   let sum = BigInt(0)
   const defaultTypes = useMemo(
@@ -65,7 +67,7 @@ export default function SheetTable({
     j: number,
     select = false,
   ) => {
-    changeRef.current = true
+    if (changeRef) changeRef.current = true
     if (e.target) {
       // input size 변경
       changeInputWidth(e.target, select)
@@ -86,9 +88,13 @@ export default function SheetTable({
       <table>
         <tbody>
           <tr>
-            <th onClick={() => addRow(0)}>
-              <AddIcon fontSize='small' />
-            </th>
+            {readOnly ? (
+              <th></th>
+            ) : (
+              <th onClick={() => addRow && addRow(0)}>
+                <AddIcon fontSize='small' />
+              </th>
+            )}
             <th>번호</th>
             <th>유형</th>
             <th>날짜</th>
@@ -100,13 +106,17 @@ export default function SheetTable({
           {React.Children.toArray(
             sheetData?.table?.map((row, i) => (
               <tr id={`row_${i + 1}`}>
-                <td
-                  onClick={() => {
-                    addRow(i + 1)
-                  }}
-                >
-                  <AddIcon fontSize='small' />
-                </td>
+                {readOnly ? (
+                  <td></td>
+                ) : (
+                  <td
+                    onClick={() => {
+                      addRow && addRow(i + 1)
+                    }}
+                  >
+                    <AddIcon fontSize='small' />
+                  </td>
+                )}
                 <td>{i + 1}</td>
                 {React.Children.toArray(
                   row.map((col, j) => {
@@ -114,15 +124,19 @@ export default function SheetTable({
                     if (j === 0) {
                       return (
                         <td>
-                          <CommonSelect
-                            value={col}
-                            onChange={(e) => handleInputChange(e, i, j, true)}
-                            height='27px'
-                          >
-                            {React.Children.toArray(
-                              types.map((type) => <option>{type}</option>),
-                            )}
-                          </CommonSelect>
+                          {readOnly ? (
+                            col
+                          ) : (
+                            <CommonSelect
+                              value={col}
+                              onChange={(e) => handleInputChange(e, i, j, true)}
+                              height='27px'
+                            >
+                              {React.Children.toArray(
+                                types.map((type) => <option>{type}</option>),
+                              )}
+                            </CommonSelect>
+                          )}
                         </td>
                       )
                     }
@@ -131,24 +145,32 @@ export default function SheetTable({
                     }
                     return (
                       <td>
-                        <CommonInput
-                          numCheck={j === 3}
-                          value={
-                            j === 3 && isBigInt(col) && col !== ''
-                              ? localeBigInt(col)
-                              : col.toString()
-                          }
-                          height='28px'
-                          onChange={(e) => handleInputChange(e, i, j)}
-                        />
+                        {readOnly ? (
+                          col.toString()
+                        ) : (
+                          <CommonInput
+                            numCheck={j === 3}
+                            value={
+                              j === 3 && isBigInt(col) && col !== ''
+                                ? localeBigInt(col)
+                                : col.toString()
+                            }
+                            height='28px'
+                            onChange={(e) => handleInputChange(e, i, j)}
+                          />
+                        )}
                       </td>
                     )
                   }),
                 )}
                 <td>{localeBigInt(sum)}</td>
-                <td onClick={() => removeRow(i + 1)}>
-                  <RemoveIcon fontSize='small' />
-                </td>
+                {readOnly ? (
+                  <td></td>
+                ) : (
+                  <td onClick={() => removeRow && removeRow(i + 1)}>
+                    <RemoveIcon fontSize='small' />
+                  </td>
+                )}
               </tr>
             )),
           )}
@@ -206,8 +228,10 @@ const TableWrapper = styled.div`
   th:nth-of-type(7) {
     min-width: 60px;
   }
+  td:nth-of-type(6),
+  td:nth-of-type(7),
   td:nth-of-type(6) input,
-  td:nth-of-type(7) {
+  td:nth-of-type(7) input {
     text-align: right;
   }
   td:nth-of-type(3),

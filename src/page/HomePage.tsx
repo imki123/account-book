@@ -121,6 +121,7 @@ export default function HomePage() {
       </AddButton>
       <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
       <TypesButton onClick={() => navigate('/types')}>유형변경</TypesButton>
+      <JoinButton onClick={() => navigate('/join')}>요약보기</JoinButton>
       <LoadingDim loading={loading} />
     </StyledHomePage>
   )
@@ -201,6 +202,19 @@ const TypesButton = styled(Button)`
   z-index: 1;
   bottom: 20px;
   left: 100px;
+  height: 32px;
+
+  background: ${Colors.green100};
+  font: inherit;
+`
+const JoinButton = styled(Button)`
+  position: fixed;
+  @media (min-width: 500px) {
+    position: absolute;
+  }
+  z-index: 1;
+  bottom: 20px;
+  left: 180px;
   height: 32px;
 
   background: ${Colors.green100};

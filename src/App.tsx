@@ -16,6 +16,7 @@ import { Colors } from './util/Colors'
 const HomePage = React.lazy(() => import('./page/HomePage'))
 const LoginPage = React.lazy(() => import('./page/LoginPage'))
 const SheetPage = React.lazy(() => import('./page/SheetPage'))
+const JoinPage = React.lazy(() => import('./page/JoinPage'))
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,26 +36,26 @@ function App() {
 
   useEffect(() => {
     if (navigate && location.pathname) {
-      console.log('App. pathname:', location.pathname)
+      // console.log('App. pathname:', location.pathname)
       setLoading(true)
       postUserCheckToken()
         .then((res) => {
           if (res.data) {
-            console.log('checkToken. 로그인 되어있음')
+            // console.log('checkToken. 로그인 되어있음')
             getUser().then((res) => {
-              console.log('getUser. 유저정보 가져옴. pathname 이동')
+              // console.log('getUser. 유저정보 가져옴. pathname 이동')
               setUsername(res.data.username)
               if (location.pathname === '/login')
                 navigate('/', { replace: true })
               else navigate(location.pathname, { replace: true })
             })
           } else {
-            console.log('checkToken. 토큰 없음')
+            // console.log('checkToken. 토큰 없음')
             navigate('/login', { replace: true })
           }
         })
         .catch((e) => {
-          console.log('checkToken. 에러 발생. 로그인 실패')
+          // console.log('checkToken. 에러 발생. 로그인 실패')
           navigate('/login', { replace: true })
         })
         .finally(() => {
@@ -65,7 +66,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Suspense fallback={<FallBackDiv>Loading...</FallBackDiv>}>
+      <Suspense fallback={<LoadingDim loading={true} />}>
         <MobileWrapper>
           {username && <UsernameDiv>{username}</UsernameDiv>}
           <Routes>
@@ -73,6 +74,7 @@ function App() {
             <Route path='login' element={<LoginPage />} />
             <Route path='sheet/:sheetId' element={<SheetPage />} />
             <Route path='types' element={<TypesPage />} />
+            <Route path='join' element={<JoinPage />} />
             <Route path='*' element={<HomePage />} />
           </Routes>
         </MobileWrapper>
