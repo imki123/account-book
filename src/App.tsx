@@ -90,13 +90,6 @@ function App() {
 
 export default App
 
-const FallBackDiv = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-`
 const UsernameDiv = styled.div`
   position: fixed;
   z-index: 1;
