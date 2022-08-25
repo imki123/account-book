@@ -86,26 +86,26 @@ export default function SheetTable({
       <table>
         <tbody>
           <tr>
-            <th></th>
+            <th onClick={() => addRow(0)}>
+              <AddIcon fontSize='small' />
+            </th>
             <th>번호</th>
             <th>유형</th>
             <th>날짜</th>
             <th>제목</th>
             <th>가격</th>
             <th>합계</th>
-            <th onClick={() => addRow(0)}>
-              <AddIcon fontSize='small' />
-            </th>
+            <th></th>
           </tr>
           {React.Children.toArray(
             sheetData?.table?.map((row, i) => (
               <tr id={`row_${i + 1}`}>
                 <td
                   onClick={() => {
-                    removeRow(i + 1)
+                    addRow(i + 1)
                   }}
                 >
-                  <RemoveIcon fontSize='small' />
+                  <AddIcon fontSize='small' />
                 </td>
                 <td>{i + 1}</td>
                 {React.Children.toArray(
@@ -146,8 +146,8 @@ export default function SheetTable({
                   }),
                 )}
                 <td>{localeBigInt(sum)}</td>
-                <td onClick={() => addRow(i + 1)}>
-                  <AddIcon fontSize='small' />
+                <td onClick={() => removeRow(i + 1)}>
+                  <RemoveIcon fontSize='small' />
                 </td>
               </tr>
             )),
