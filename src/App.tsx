@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React, { Suspense, useEffect, useState } from 'react'
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { getUser, postUserCheckToken } from './api/account'
@@ -15,6 +16,15 @@ import { Colors } from './util/Colors'
 const HomePage = React.lazy(() => import('./page/HomePage'))
 const LoginPage = React.lazy(() => import('./page/LoginPage'))
 const SheetPage = React.lazy(() => import('./page/SheetPage'))
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      suspense: true,
+      useErrorBoundary: true,
+    },
+  },
+})
 
 function App() {
   const location = useLocation()
@@ -54,23 +64,25 @@ function App() {
   }, [location.pathname, navigate])
 
   return (
-    <Suspense fallback={<FallBackDiv>Loading...</FallBackDiv>}>
-      <MobileWrapper>
-        {username && <UsernameDiv>{username}</UsernameDiv>}
-        <Routes>
-          <Route path='' element={<HomePage />} />
-          <Route path='login' element={<LoginPage />} />
-          <Route path='sheet/:sheetId' element={<SheetPage />} />
-          <Route path='types' element={<TypesPage />} />
-          <Route path='*' element={<HomePage />} />
-        </Routes>
-      </MobileWrapper>
-      <FakeInput className='fakeInput' />
-      <FakeSelect className='fakeSelect'>
-        <option></option>
-      </FakeSelect>
-      <LoadingDim loading={loading} />
-    </Suspense>
+    <QueryClientProvider client={queryClient}>
+      <Suspense fallback={<FallBackDiv>Loading...</FallBackDiv>}>
+        <MobileWrapper>
+          {username && <UsernameDiv>{username}</UsernameDiv>}
+          <Routes>
+            <Route path='' element={<HomePage />} />
+            <Route path='login' element={<LoginPage />} />
+            <Route path='sheet/:sheetId' element={<SheetPage />} />
+            <Route path='types' element={<TypesPage />} />
+            <Route path='*' element={<HomePage />} />
+          </Routes>
+        </MobileWrapper>
+        <FakeInput className='fakeInput' />
+        <FakeSelect className='fakeSelect'>
+          <option></option>
+        </FakeSelect>
+        <LoadingDim loading={loading} />
+      </Suspense>
+    </QueryClientProvider>
   )
 }
 
