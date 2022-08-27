@@ -1,10 +1,15 @@
-export const parseToNumber = (num: string | number) => {
+export const parseToNumber = (num: string | number | BigInt) => {
   const number = removeComma(num)
   if (Number.isNaN(Number(number))) {
     return 0
   } else {
     return Number(number)
   }
+}
+
+export const setFixed = (number: string | number | BigInt, decimals = 0) => {
+  const num = parseToNumber(number)
+  return Math.round(num * 10 ** decimals) / 10 ** decimals
 }
 
 export const removeComma = (num?: string | number | BigInt) => {

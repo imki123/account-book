@@ -88,9 +88,7 @@ export default function SheetTable({
       <table>
         <tbody>
           <tr>
-            {readOnly ? (
-              <th></th>
-            ) : (
+            {!readOnly && (
               <th onClick={() => addRow && addRow(0)}>
                 <AddIcon fontSize='small' />
               </th>
@@ -101,14 +99,12 @@ export default function SheetTable({
             <th>제목</th>
             <th>가격</th>
             <th>합계</th>
-            <th></th>
+            {!readOnly && <th></th>}
           </tr>
           {React.Children.toArray(
             sheetData?.table?.map((row, i) => (
               <tr id={`row_${i + 1}`}>
-                {readOnly ? (
-                  <td></td>
-                ) : (
+                {!readOnly && (
                   <td
                     onClick={() => {
                       addRow && addRow(i + 1)
@@ -125,7 +121,9 @@ export default function SheetTable({
                       return (
                         <td>
                           {readOnly ? (
-                            col
+                            <Background value={col} height='20px'>
+                              {col}
+                            </Background>
                           ) : (
                             <CommonSelect
                               value={col}
@@ -164,9 +162,7 @@ export default function SheetTable({
                   }),
                 )}
                 <td>{localeBigInt(sum)}</td>
-                {readOnly ? (
-                  <td></td>
-                ) : (
+                {!readOnly && (
                   <td onClick={() => removeRow && removeRow(i + 1)}>
                     <RemoveIcon fontSize='small' />
                   </td>
@@ -270,6 +266,37 @@ export const CommonInput = styled.input<{
     return numCheck && !isBigInt(value) ? 'background: #fcc;' : ''
   }}
 `
+const background = (value: string) => {
+  if (value.includes('생활비')) {
+    return OpenColor.pink[2]
+  } else if (value.includes('배달외식')) {
+    return OpenColor.red[2]
+  } else if (value.includes('기타')) {
+    return OpenColor.yellow[2]
+  } else if (value.includes('관리비')) {
+    return OpenColor.lime[2]
+  } else if (value.includes('저금')) {
+    return OpenColor.blue[4]
+  } else if (value.includes('보험료')) {
+    return OpenColor.blue[2]
+  } else if (value.includes('여행')) {
+    return OpenColor.indigo[2]
+  } else if (value.includes('경조사')) {
+    return OpenColor.indigo[4]
+  } else if (value.includes('병원')) {
+    return OpenColor.violet[2]
+  } else if (value.includes('비상금')) {
+    return OpenColor.violet[4]
+  } else if (value.includes('수입')) {
+    return OpenColor.grape[2]
+  } else if (value.includes('용돈')) {
+    return OpenColor.lime[4]
+  } else if (value.includes('카드')) {
+    return OpenColor.yellow[4]
+  } else if (value.includes('월급')) {
+    return OpenColor.grape[4]
+  }
+}
 
 const CommonSelect = styled.select<{
   height?: string
@@ -285,29 +312,13 @@ const CommonSelect = styled.select<{
   background: transparent;
   color: #222;
   font: inherit;
-  background: ${({ value }) => {
-    if (value.includes('생활비')) {
-      return OpenColor.pink[2]
-    } else if (value.includes('배달외식')) {
-      return OpenColor.red[2]
-    } else if (value.includes('기타')) {
-      return OpenColor.yellow[2]
-    } else if (value.includes('관리비')) {
-      return OpenColor.lime[2]
-    } else if (value.includes('저금')) {
-      return OpenColor.blue[4]
-    } else if (value.includes('보험료')) {
-      return OpenColor.blue[2]
-    } else if (value.includes('여행')) {
-      return OpenColor.indigo[2]
-    } else if (value.includes('경조사')) {
-      return OpenColor.indigo[4]
-    } else if (value.includes('병원')) {
-      return OpenColor.violet[2]
-    } else if (value.includes('비상금')) {
-      return OpenColor.violet[4]
-    } else if (value.includes('수입')) {
-      return OpenColor.grape[2]
-    }
-  }};
+  background: ${({ value }) => background(value)};
+`
+
+const Background = styled.div<{
+  height?: string
+  value: string
+}>`
+  height: ${({ height }) => (height ? `${height}` : '100%')};
+  background: ${({ value }) => background(value)};
 `
