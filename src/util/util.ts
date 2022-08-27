@@ -81,6 +81,7 @@ export const addSnackBar = (
   const snackBar = document.createElement('div')
   const defaultStyle = `
     position: fixed;
+    z-index: 999;
     bottom: -40px;
     left: 50%;
     transform: translate(-50%);
