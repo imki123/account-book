@@ -88,7 +88,9 @@ export default function SheetTable({
       <table>
         <tbody>
           <tr>
-            {!readOnly && (
+            {readOnly ? (
+              <th></th>
+            ) : (
               <th onClick={() => addRow && addRow(0)}>
                 <AddIcon fontSize='small' />
               </th>
@@ -99,12 +101,14 @@ export default function SheetTable({
             <th>제목</th>
             <th>가격</th>
             <th>합계</th>
-            {!readOnly && <th></th>}
+            <th></th>
           </tr>
           {React.Children.toArray(
             sheetData?.table?.map((row, i) => (
               <tr id={`row_${i + 1}`}>
-                {!readOnly && (
+                {readOnly ? (
+                  <td></td>
+                ) : (
                   <td
                     onClick={() => {
                       addRow && addRow(i + 1)
@@ -162,7 +166,9 @@ export default function SheetTable({
                   }),
                 )}
                 <td>{localeBigInt(sum)}</td>
-                {!readOnly && (
+                {readOnly ? (
+                  <td></td>
+                ) : (
                   <td onClick={() => removeRow && removeRow(i + 1)}>
                     <RemoveIcon fontSize='small' />
                   </td>

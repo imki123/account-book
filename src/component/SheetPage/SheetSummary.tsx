@@ -19,13 +19,16 @@ export default function SheetSummary({
     React.SetStateAction<SheetDataInterface | undefined>
   >
 }) {
-  const income = useRef(parseToNumber(0))
+  const income = useRef(0)
+  const sum = useRef(0)
   const { summary, summaryKeys } = useMemo(() => {
     if (!sheetData?.table) return { summary: {}, summaryKeys: [] }
     const obj = {}
-    income.current = parseToNumber(0)
+    income.current = 0
+    sum.current = 0
     sheetData?.table?.forEach((row, i) => {
       // 월급, 수입 저장
+      sum.current += parseToNumber(row[3])
       if (row[0].includes('월급') || row[0].includes('수입')) {
         income.current += parseToNumber(row[3])
       }
@@ -71,9 +74,8 @@ export default function SheetSummary({
                     {`${localeBigInt(summary[item]?.sum)} 원`}
                     <Percent>{`${Math.abs(
                       setFixed(
-                        (parseToNumber(summary[item]?.sum) *
-                          parseToNumber('100')) /
-                          income.current,
+                        (parseToNumber(summary[item]?.sum) * 100) /
+                          (income.current !== 0 ? income.current : sum.current),
                         2,
                       ),
                     )}%`}</Percent>
