@@ -148,7 +148,11 @@ export default function SheetTable({
                     return (
                       <td>
                         {readOnly ? (
-                          col.toString()
+                          j === 3 && isBigInt(col) && col !== '' ? (
+                            localeBigInt(col)
+                          ) : (
+                            col.toString()
+                          )
                         ) : (
                           <CommonInput
                             numCheck={j === 3}

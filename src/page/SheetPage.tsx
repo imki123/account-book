@@ -198,6 +198,7 @@ export default function SheetPage() {
         onClick={() => {
           getSheetAndSet()
           setBeforeSetWidth(true)
+          changeRef.current = false
           addSnackBar('새로고침 완료')
         }}
       />
