@@ -50,7 +50,8 @@ export default function TypesPage() {
       {React.Children.toArray(
         types?.map((type, i) => (
           <ListDiv>
-            <input value={type} onChange={(e) => changeInput(e, i)} />{' '}
+            {`${i}.`}
+            <TypeInput value={type} onChange={(e) => changeInput(e, i)} />{' '}
             <RemoveIcon fontSize='small' onClick={(e) => removeType(i)} />
           </ListDiv>
         )),
@@ -86,6 +87,9 @@ const ListDiv = styled.div`
   padding: 4px;
   display: flex;
   align-items: center;
+`
+const TypeInput = styled.input`
+  margin-left: 4px;
 `
 const AddButton = styled.button`
   position: fixed;

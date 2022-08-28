@@ -29,11 +29,11 @@ export default function SheetSummary({
     sheetData?.table?.forEach((row, i) => {
       // 월급, 수입 저장
       sum.current += parseToNumber(row[3])
-      if (row[0].includes('월급') || row[0].includes('수입')) {
+      if (row[0]?.includes('월급') || row[0]?.includes('수입')) {
         income.current += parseToNumber(row[3])
       }
       //row[0]가 공백이 아니면 obj에 값 합산해서 저장
-      if (row[0].trim() !== '') {
+      if (row[0]?.trim() !== '') {
         if (obj[row[0]] === undefined) {
           obj[row[0]] = { sum: '0', order: '' }
         }

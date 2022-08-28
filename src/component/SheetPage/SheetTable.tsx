@@ -135,7 +135,11 @@ export default function SheetTable({
                               height='27px'
                             >
                               {React.Children.toArray(
-                                types.map((type) => <option>{type}</option>),
+                                types.map((type, k) => (
+                                  <option value={type}>
+                                    {k === 0 ? '' : `${k}.${type}`}
+                                  </option>
+                                )),
                               )}
                             </CommonSelect>
                           )}
@@ -277,33 +281,33 @@ export const CommonInput = styled.input<{
   }}
 `
 const background = (value: string) => {
-  if (value.includes('생활비')) {
+  if (value?.includes('생활비')) {
     return OpenColor.pink[2]
-  } else if (value.includes('배달외식')) {
+  } else if (value?.includes('배달외식')) {
     return OpenColor.red[2]
-  } else if (value.includes('기타')) {
+  } else if (value?.includes('기타')) {
     return OpenColor.yellow[2]
-  } else if (value.includes('관리비')) {
+  } else if (value?.includes('관리비')) {
     return OpenColor.lime[2]
-  } else if (value.includes('저금')) {
+  } else if (value?.includes('저금')) {
     return OpenColor.blue[4]
-  } else if (value.includes('보험료')) {
+  } else if (value?.includes('보험료')) {
     return OpenColor.blue[2]
-  } else if (value.includes('여행')) {
+  } else if (value?.includes('여행')) {
     return OpenColor.indigo[2]
-  } else if (value.includes('경조사')) {
+  } else if (value?.includes('경조사')) {
     return OpenColor.indigo[4]
-  } else if (value.includes('병원')) {
+  } else if (value?.includes('병원')) {
     return OpenColor.violet[2]
-  } else if (value.includes('비상금')) {
+  } else if (value?.includes('비상금')) {
     return OpenColor.violet[4]
-  } else if (value.includes('수입')) {
+  } else if (value?.includes('수입')) {
     return OpenColor.grape[2]
-  } else if (value.includes('용돈')) {
+  } else if (value?.includes('용돈')) {
     return OpenColor.lime[4]
-  } else if (value.includes('카드')) {
+  } else if (value?.includes('카드')) {
     return OpenColor.yellow[4]
-  } else if (value.includes('월급')) {
+  } else if (value?.includes('월급')) {
     return OpenColor.grape[4]
   }
 }
