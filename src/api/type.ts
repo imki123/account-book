@@ -5,7 +5,7 @@ const axiosInstance = Axios.create({
   withCredentials: true,
 })
 
-interface getTypeResponse {
+export interface getTypeResponse {
   typeId: number
   types: string[]
 }

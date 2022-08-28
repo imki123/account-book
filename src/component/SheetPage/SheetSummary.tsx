@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import React, { useMemo, useRef } from 'react'
+import { useGetTypeQuery } from '../../api/reactQuery.ts/useGetTypeQuery'
 import { SheetDataInterface } from '../../page/SheetPage'
 import {
   localeBigInt,
@@ -21,7 +22,42 @@ export default function SheetSummary({
 }) {
   const income = useRef(0)
   const sum = useRef(0)
-  const { summary, summaryKeys } = useMemo(() => {
+  const { data: types } = useGetTypeQuery()
+  console.log(types)
+  const summary = useMemo(() => {
+    if (types) {
+      const objs = types?.types.map((item) => {
+        return {
+          type: item,
+          amount: 0,
+        }
+      })
+      income.current = 0
+      sum.current = 0
+      sheetData?.table?.forEach((row, i) => {
+        // 월급, 수입 저장
+        sum.current += parseToNumber(row[3])
+        if (row[0]?.includes('월급') || row[0]?.includes('수입')) {
+          income.current += parseToNumber(row[3])
+        }
+        //row[0]가 공백이 아니면 obj에 값 합산해서 저장
+        if (row[0]?.trim() !== '') {
+          temp.forEach()
+          if (temp) {
+            obj[row[0]] = { sum: '0', order: '' }
+          }
+          try {
+            const before = stringToBig(obj[row[0]].sum || '0')
+            const after = stringToBig(row[3] || '0')
+            obj[row[0]].sum = String(before + after)
+          } catch (e) {}
+        }
+      })
+    }
+  }, [types])
+  console.log(summary)
+
+  /* const { summary, summaryKeys } = useMemo(() => {
     if (!sheetData?.table) return { summary: {}, summaryKeys: [] }
     const obj = {}
     income.current = 0
@@ -58,11 +94,11 @@ export default function SheetSummary({
     })
     keys.forEach((item, i) => (obj[item].order = i))
     return { summary: obj, summaryKeys: keys }
-  }, [sheetData?.table])
+  }, [sheetData?.table]) */
 
   return (
     <SheetSummaryWrapper>
-      {summaryKeys.length > 0 ? (
+      {/* {summaryKeys.length > 0 ? (
         <>
           <SummaryTitle>요약</SummaryTitle>
           <SummaryDiv>
@@ -85,7 +121,7 @@ export default function SheetSummary({
             )}
           </SummaryDiv>
         </>
-      ) : null}
+      ) : null} */}
     </SheetSummaryWrapper>
   )
 }

@@ -5,7 +5,7 @@ import Header from '../component/Header/Header'
 import SheetTable from '../component/SheetPage/SheetTable'
 import SheetSummary from '../component/SheetPage/SheetSummary'
 import produce, { enableMapSet } from 'immer'
-import { useGetSheetsQuery } from '../api/reactQuery.ts/useSheetQuery'
+import { useGetSheetsQuery } from '../api/reactQuery.ts/useGetSheetQuery'
 
 export interface SheetDataInterface {
   sheetId: number
