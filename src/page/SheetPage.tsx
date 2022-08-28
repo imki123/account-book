@@ -36,7 +36,6 @@ export default function SheetPage() {
   const [loading, setLoading] = useState(false)
   const [addedRow, setAddedRow] = useState<number>()
   const [removedRow, setRemovedRow] = useState<number>()
-  const [beforeSetWidth, setBeforeSetWidth] = useState(true)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null) // 자동저장 스로틀
   const changeRef = useRef(false) // 최초 변경사항 감지
 
@@ -69,38 +68,10 @@ export default function SheetPage() {
     },
     [sheetData],
   )
-  // 처음 한번만 전체 input width 설정하기
-  const changeInputWidthAll = useCallback(() => {
-    const inputs = document.querySelectorAll<HTMLInputElement>(
-      'input:not(.fakeInput)',
-    )
-    if (inputs) {
-      inputs.forEach((input) => {
-        changeInputWidth(input)
-      })
-      setBeforeSetWidth(false)
-    }
-    const selects = document.querySelectorAll<HTMLSelectElement>(
-      'select:not(.fakeSelect)',
-    )
-    if (selects) {
-      selects.forEach((select) => {
-        changeInputWidth(select, true)
-      })
-      setBeforeSetWidth(false)
-    }
-  }, [])
 
   useEffect(() => {
     getSheetAndSet()
   }, [getSheetAndSet])
-
-  // sheetData 바뀌고 beforeSetWidth가 true이면 input width 바꿔주기
-  useEffect(() => {
-    if (beforeSetWidth && sheetData) {
-      changeInputWidthAll()
-    }
-  }, [beforeSetWidth, changeInputWidthAll, sheetData])
 
   // addRow 액션
   useEffect(() => {
@@ -197,7 +168,6 @@ export default function SheetPage() {
         refreshing={loading}
         onClick={() => {
           getSheetAndSet()
-          setBeforeSetWidth(true)
           changeRef.current = false
           addSnackBar('새로고침 완료')
         }}

@@ -7,7 +7,7 @@ const axiosInstance = Axios.create({
 
 interface getTypeResponse {
   typeId: number
-  types: []
+  types: string[]
 }
 
 export const getType = async () => {

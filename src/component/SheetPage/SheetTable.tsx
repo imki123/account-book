@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useMemo, useState } from 'react'
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import { Colors } from '../../util/Colors'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
@@ -35,30 +35,44 @@ export default function SheetTable({
   readOnly = false,
 }: SheetTableInterface) {
   let sum = BigInt(0)
-  const defaultTypes = useMemo(
-    () => [
-      '',
-      '1.생활비',
-      '2.배달외식',
-      '3.기타',
-      '4.관리비',
-      '5.저금',
-      '6.보험료',
-      '7.여행',
-      '8.경조사',
-      '9.병원',
-      '10.비상금',
-      '11.수입',
-    ],
-    [],
-  )
-  const [types, setTypes] = useState(defaultTypes)
+  const [types, setTypes] = useState<string[]>([])
+  const [beforeSetWidth, setBeforeSetWidth] = useState(true)
 
   useEffect(() => {
     getType().then((res) => {
-      setTypes(res.types || defaultTypes)
+      setTypes(res.types)
     })
-  }, [defaultTypes])
+  }, [])
+
+  // 처음 한번만 전체 input width 설정하기
+  const changeInputWidthAll = useCallback(() => {
+    if (beforeSetWidth) {
+      const inputs = document.querySelectorAll<HTMLInputElement>(
+        'input:not(.fakeInput)',
+      )
+      if (inputs) {
+        inputs.forEach((input) => {
+          changeInputWidth(input)
+        })
+      }
+      const selects = document.querySelectorAll<HTMLSelectElement>(
+        'select:not(.fakeSelect)',
+      )
+      if (selects) {
+        selects.forEach((select) => {
+          changeInputWidth(select, true)
+        })
+      }
+      setBeforeSetWidth(false)
+    }
+  }, [beforeSetWidth])
+
+  // sheetData, types 있을때 beforeSetWidth가 true이면 input width 바꿔주기
+  useEffect(() => {
+    if (beforeSetWidth && sheetData && types?.length > 0) {
+      changeInputWidthAll()
+    }
+  }, [beforeSetWidth, changeInputWidthAll, sheetData, types])
 
   // 이벤트와 인덱스를 받아서 sheetData에 저장
   const handleInputChange = (
