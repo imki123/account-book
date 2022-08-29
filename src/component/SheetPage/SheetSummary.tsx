@@ -2,14 +2,7 @@ import styled from '@emotion/styled'
 import React, { useMemo, useRef } from 'react'
 import { useGetTypeQuery } from '../../api/reactQuery.ts/useGetTypeQuery'
 import { SheetDataInterface } from '../../page/SheetPage'
-import {
-  localeBigInt,
-  parseToNumber,
-  removeComma,
-  setFixed,
-} from '../../util/util'
-
-const stringToBig = (str: string) => BigInt(removeComma(str))
+import { localeBigInt, parseToNumber, setFixed } from '../../util/util'
 
 export default function SheetSummary({
   sheetData,
@@ -23,10 +16,9 @@ export default function SheetSummary({
   const income = useRef(0)
   const sum = useRef(0)
   const { data: types } = useGetTypeQuery()
-  console.log(types)
   const summary = useMemo(() => {
     if (types) {
-      const objs = types?.types.map((item) => {
+      const summaryObj = types?.types.map((item) => {
         return {
           type: item,
           amount: 0,
@@ -42,86 +34,50 @@ export default function SheetSummary({
         }
         //row[0]가 공백이 아니면 obj에 값 합산해서 저장
         if (row[0]?.trim() !== '') {
-          temp.forEach()
-          if (temp) {
-            obj[row[0]] = { sum: '0', order: '' }
-          }
-          try {
-            const before = stringToBig(obj[row[0]].sum || '0')
-            const after = stringToBig(row[3] || '0')
-            obj[row[0]].sum = String(before + after)
-          } catch (e) {}
+          summaryObj.forEach((item) => {
+            if (item.type.includes(row[0])) {
+              item.amount += parseToNumber(row[3])
+            }
+          })
         }
       })
+      return summaryObj
     }
-  }, [types])
-  console.log(summary)
-
-  /* const { summary, summaryKeys } = useMemo(() => {
-    if (!sheetData?.table) return { summary: {}, summaryKeys: [] }
-    const obj = {}
-    income.current = 0
-    sum.current = 0
-    sheetData?.table?.forEach((row, i) => {
-      // 월급, 수입 저장
-      sum.current += parseToNumber(row[3])
-      if (row[0]?.includes('월급') || row[0]?.includes('수입')) {
-        income.current += parseToNumber(row[3])
-      }
-      //row[0]가 공백이 아니면 obj에 값 합산해서 저장
-      if (row[0]?.trim() !== '') {
-        if (obj[row[0]] === undefined) {
-          obj[row[0]] = { sum: '0', order: '' }
-        }
-        try {
-          const before = stringToBig(obj[row[0]].sum || '0')
-          const after = stringToBig(row[3] || '0')
-          obj[row[0]].sum = String(before + after)
-        } catch (e) {}
-      }
-    })
-    // 숫자 추출해서 오름차순 정렬
-    const keys = Object.keys(obj).sort((a, b) => {
-      const numA = Number(a.slice(0, a.indexOf('.')))
-      const numB = Number(b.slice(0, b.indexOf('.')))
-      if (!isNaN(numA) && !isNaN(numB)) {
-        if (numA > numB) return 1
-        else return -1
-      } else {
-        if (a > b) return 1
-        else return -1
-      }
-    })
-    keys.forEach((item, i) => (obj[item].order = i))
-    return { summary: obj, summaryKeys: keys }
-  }, [sheetData?.table]) */
+    return []
+  }, [sheetData?.table, types])
 
   return (
     <SheetSummaryWrapper>
-      {/* {summaryKeys.length > 0 ? (
+      {summary.length > 0 ? (
         <>
           <SummaryTitle>요약</SummaryTitle>
           <SummaryDiv>
             {React.Children.toArray(
-              summaryKeys.map((item, i) => (
-                <SummaryRow style={i % 2 === 0 ? { background: '#cec' } : {}}>
-                  <TypeName>{item}</TypeName>
-                  <Sum>
-                    {`${localeBigInt(summary[item]?.sum)} 원`}
-                    <Percent>{`${Math.abs(
-                      setFixed(
-                        (parseToNumber(summary[item]?.sum) * 100) /
-                          (income.current !== 0 ? income.current : sum.current),
-                        2,
-                      ),
-                    )}%`}</Percent>
-                  </Sum>
-                </SummaryRow>
+              summary.map((item, i) => (
+                <>
+                  {summary[i]?.amount !== 0 && (
+                    <SummaryRow>
+                      <TypeName>{i !== 0 && `${i}.${item.type}`}</TypeName>
+                      <Sum>
+                        {`${localeBigInt(summary[i]?.amount)} 원`}
+                        <Percent>{`${Math.abs(
+                          setFixed(
+                            (parseToNumber(summary[i]?.amount) * 100) /
+                              (income.current !== 0
+                                ? income.current
+                                : sum.current),
+                            2,
+                          ),
+                        )}%`}</Percent>
+                      </Sum>
+                    </SummaryRow>
+                  )}
+                </>
               )),
             )}
           </SummaryDiv>
         </>
-      ) : null} */}
+      ) : null}
     </SheetSummaryWrapper>
   )
 }
@@ -134,6 +90,9 @@ const SummaryTitle = styled.div`
 `
 const SummaryDiv = styled.div`
   padding-top: 10px;
+  & > div:nth-of-type(2n) {
+    background: #cec;
+  }
 `
 const SummaryRow = styled.div`
   padding: 2px 4px;

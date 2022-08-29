@@ -35,7 +35,7 @@ export const parseToBigInt = (num: string | BigInt) => {
   }
 }
 
-export const localeBigInt = (num: string | BigInt) => {
+export const localeBigInt = (num: string | BigInt | number) => {
   return BigInt(removeComma(num)).toLocaleString()
 }
 
