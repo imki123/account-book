@@ -5,9 +5,13 @@ const axiosInstance = Axios.create({
   withCredentials: true,
 })
 
+export interface TypeInterface {
+  type: string
+  background?: string
+}
 export interface getTypeResponse {
   typeId: number
-  types: string[]
+  types: TypeInterface[]
 }
 
 export const getType = async () => {
@@ -15,7 +19,7 @@ export const getType = async () => {
   return res.data
 }
 
-export const patchType = async (typeArray: string[]) => {
-  let res = await axiosInstance.patch<string[]>('', typeArray)
+export const patchType = async (typeArray: TypeInterface[]) => {
+  let res = await axiosInstance.patch<TypeInterface[]>('', typeArray)
   return res.data
 }

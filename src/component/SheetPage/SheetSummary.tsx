@@ -18,9 +18,9 @@ export default function SheetSummary({
   const { data: types } = useGetTypeQuery()
   const summary = useMemo(() => {
     if (types) {
-      const summaryObj = types?.types.map((item) => {
+      const summaryObj = types?.types.map(({ type }) => {
         return {
-          type: item,
+          type: type,
           amount: 0,
         }
       })

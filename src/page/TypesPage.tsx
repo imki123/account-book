@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import produce from 'immer'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { getType, patchType } from '../api/type'
+import { getType, patchType, TypeInterface } from '../api/type'
 import Header from '../component/Header/Header'
 import AddIcon from '@mui/icons-material/Add'
 import { Colors } from '../util/Colors'
@@ -11,7 +11,7 @@ import LoadingDim from '../component/LoadingDim/LoadingDim'
 import { addSnackBar } from '../util/util'
 
 export default function TypesPage() {
-  const [types, setTypes] = useState<string[]>()
+  const [types, setTypes] = useState<TypeInterface[]>()
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function TypesPage() {
 
   const addType = () => {
     const changed = produce((draft) => {
-      draft?.push('')
+      draft?.push({ type: '', background: '' })
       return draft
     }, types)
     setTypes(changed)
@@ -36,9 +36,16 @@ export default function TypesPage() {
     setTypes(removed)
   }
 
-  const changeInput = (e: ChangeEvent<HTMLInputElement>, i: number) => {
+  const changeType = (e: ChangeEvent<HTMLInputElement>, i: number) => {
     const changed = produce((draft) => {
-      if (draft && draft[i] !== undefined) draft[i] = e.target.value
+      if (draft && draft[i] !== undefined) draft[i].type = e.target.value
+      return draft
+    }, types)
+    setTypes(changed)
+  }
+  const changeBackground = (e: ChangeEvent<HTMLInputElement>, i: number) => {
+    const changed = produce((draft) => {
+      if (draft && draft[i] !== undefined) draft[i].background = e.target.value
       return draft
     }, types)
     setTypes(changed)
@@ -47,11 +54,19 @@ export default function TypesPage() {
   return (
     <>
       <Header title='유형변경' backButton />
+      <ListTitle>
+        <span>유형이름</span>
+        <span>배경색</span>
+      </ListTitle>
       {React.Children.toArray(
-        types?.map((type, i) => (
+        types?.map(({ type, background }, i) => (
           <ListDiv>
             {`${i}.`}
-            <TypeInput value={type} onChange={(e) => changeInput(e, i)} />{' '}
+            <TypeInput value={type} onChange={(e) => changeType(e, i)} />{' '}
+            <TypeInput
+              value={background}
+              onChange={(e) => changeBackground(e, i)}
+            />{' '}
             <RemoveIcon fontSize='small' onClick={(e) => removeType(i)} />
           </ListDiv>
         )),
@@ -82,13 +97,21 @@ export default function TypesPage() {
     </>
   )
 }
-
+const ListTitle = styled.div`
+  padding-left: 20px;
+  span {
+    display: inline-block;
+    text-align: center;
+    width: 100px;
+  }
+`
 const ListDiv = styled.div`
   padding: 4px;
   display: flex;
   align-items: center;
 `
 const TypeInput = styled.input`
+  width: 100px;
   margin-left: 4px;
 `
 const AddButton = styled.button`

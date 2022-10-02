@@ -12,7 +12,7 @@ import {
   localeBigInt,
   parseToBigInt,
 } from '../../util/util'
-import { getType } from '../../api/type'
+import { getType, TypeInterface } from '../../api/type'
 import OpenColor from 'open-color'
 
 interface SheetTableInterface {
@@ -35,7 +35,7 @@ export default function SheetTable({
   readOnly = false,
 }: SheetTableInterface) {
   let sum = BigInt(0)
-  const [types, setTypes] = useState<string[]>([])
+  const [types, setTypes] = useState<TypeInterface[]>([])
   const [beforeSetWidth, setBeforeSetWidth] = useState(true)
 
   useEffect(() => {
@@ -97,6 +97,17 @@ export default function SheetTable({
     }
   }
 
+  const setBackground = (value: string) => {
+    let back = ''
+    types.forEach(({ type, background }) => {
+      if (value && type && value.includes(type)) {
+        if (background?.startsWith('#')) back = background
+        else back = `#${background}`
+      }
+    })
+    return back
+  }
+
   return (
     <TableWrapper>
       <table>
@@ -139,17 +150,22 @@ export default function SheetTable({
                       return (
                         <td>
                           {readOnly ? (
-                            <Background value={col} height='20px'>
+                            <Background
+                              value={col}
+                              background={setBackground(col)}
+                              height='20px'
+                            >
                               {col}
                             </Background>
                           ) : (
                             <CommonSelect
                               value={col}
+                              background={setBackground(col)}
                               onChange={(e) => handleInputChange(e, i, j, true)}
                               height='27px'
                             >
                               {React.Children.toArray(
-                                types.map((type, k) => (
+                                types.map(({ type }, k) => (
                                   <option value={type}>
                                     {k === 0 ? '' : `${k}.${type}`}
                                   </option>
@@ -294,41 +310,11 @@ export const CommonInput = styled.input<{
     return numCheck && !isBigInt(value) ? 'background: #fcc;' : ''
   }}
 `
-const background = (value: string) => {
-  if (value?.includes('생활비')) {
-    return OpenColor.pink[2]
-  } else if (value?.includes('배달외식')) {
-    return OpenColor.red[2]
-  } else if (value?.includes('기타')) {
-    return OpenColor.yellow[2]
-  } else if (value?.includes('관리비')) {
-    return OpenColor.lime[2]
-  } else if (value?.includes('저금')) {
-    return OpenColor.blue[4]
-  } else if (value?.includes('보험료')) {
-    return OpenColor.blue[2]
-  } else if (value?.includes('여행')) {
-    return OpenColor.indigo[2]
-  } else if (value?.includes('경조사')) {
-    return OpenColor.indigo[4]
-  } else if (value?.includes('병원')) {
-    return OpenColor.violet[2]
-  } else if (value?.includes('비상금')) {
-    return OpenColor.violet[4]
-  } else if (value?.includes('수입')) {
-    return OpenColor.grape[2]
-  } else if (value?.includes('용돈')) {
-    return OpenColor.lime[4]
-  } else if (value?.includes('카드')) {
-    return OpenColor.yellow[4]
-  } else if (value?.includes('월급')) {
-    return OpenColor.grape[4]
-  }
-}
 
 const CommonSelect = styled.select<{
-  height?: string
   value: string
+  height?: string
+  background?: string
 }>`
   width: 100%;
   min-width: 100%;
@@ -340,13 +326,14 @@ const CommonSelect = styled.select<{
   background: transparent;
   color: #222;
   font: inherit;
-  background: ${({ value }) => background(value)};
+  background: ${({ background }) => background};
 `
 
 const Background = styled.div<{
   height?: string
   value: string
+  background?: string
 }>`
   height: ${({ height }) => (height ? `${height}` : '100%')};
-  background: ${({ value }) => background(value)};
+  background: ${({ background }) => background};
 `
