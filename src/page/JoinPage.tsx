@@ -6,6 +6,7 @@ import SheetTable from '../component/SheetPage/SheetTable'
 import SheetSummary from '../component/SheetPage/SheetSummary'
 import produce, { enableMapSet } from 'immer'
 import { useGetSheetsQuery } from '../api/reactQuery.ts/useGetSheetQuery'
+import styled from '@emotion/styled'
 
 export interface SheetDataInterface {
   sheetId: number
@@ -64,7 +65,7 @@ export default function JoinPage() {
         sheets &&
           sheets?.map((item) => (
             <div>
-              <label>
+              <CheckLabel>
                 <input
                   type='checkbox'
                   name='sheet'
@@ -72,7 +73,7 @@ export default function JoinPage() {
                   onChange={changeCheckbox}
                 />
                 <span>{item.name}</span>
-              </label>
+              </CheckLabel>
             </div>
           )),
       )}
@@ -85,3 +86,8 @@ export default function JoinPage() {
     </>
   )
 }
+
+const CheckLabel = styled.label`
+  display: flex;
+  align-items: center;
+`

@@ -67,6 +67,7 @@ export default function TypesPage() {
               value={background}
               onChange={(e) => changeBackground(e, i)}
             />{' '}
+            <ColorSpan background={background} />
             <RemoveIcon fontSize='small' onClick={(e) => removeType(i)} />
           </ListDiv>
         )),
@@ -104,6 +105,14 @@ const ListTitle = styled.div`
     text-align: center;
     width: 100px;
   }
+`
+const ColorSpan = styled.span<{ background?: string }>`
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  margin-left: 4px;
+  background: ${({ background }) =>
+    background?.startsWith('#') ? background : '#' + background};
 `
 const ListDiv = styled.div`
   padding: 4px;
