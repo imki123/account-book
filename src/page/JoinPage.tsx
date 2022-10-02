@@ -38,7 +38,7 @@ export default function JoinPage() {
       const joinedSheets: SheetDataInterface[] = []
       const arr = Array.from(checked).sort()
       arr.forEach((item) => {
-        joinedSheets.push(sheets?.filter((sheet) => sheet.order === item)[0])
+        joinedSheets.push(sheets?.filter((sheet) => sheet.sheetId === item)[0])
       })
 
       let joinedTable: string[][] = []
@@ -68,7 +68,7 @@ export default function JoinPage() {
                 <input
                   type='checkbox'
                   name='sheet'
-                  value={item.order}
+                  value={item.sheetId}
                   onChange={changeCheckbox}
                 />
                 <span>{item.name}</span>
