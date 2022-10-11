@@ -125,7 +125,7 @@ const TypeInput = styled.input`
 `
 const AddButton = styled.button`
   position: fixed;
-  @media (min-width: 500px) {
+  @media (min-width: 1000px) {
     position: absolute;
   }
   z-index: 1;
@@ -156,8 +156,8 @@ const SaveButton = styled.button<{ disabled: boolean }>`
   z-index: 1;
   bottom: 80px;
   right: 20px;
-  @media (min-width: 500px) {
-    right: calc(50% - 230px);
+  @media (min-width: 1000px) {
+    right: calc(50% - (1000px / 2) + 20px);
   }
 
   padding: 5px;

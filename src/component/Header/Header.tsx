@@ -34,7 +34,7 @@ const HeaderWrapper = styled.div`
   transform: translateX(-50%);
   width: 100%;
   height: 38.5px;
-  max-width: 500px;
+  max-width: 1000px;
 
   display: flex;
   justify-content: flex-start;
@@ -43,7 +43,7 @@ const HeaderWrapper = styled.div`
   padding: 10px 20px 10px;
   border-bottom: 1px solid ${Colors.greenLine};
   background: white;
-  @media (min-width: 500px) {
+  @media (min-width: 1000px) {
     border: 1px solid ${Colors.greenLine};
     border-top: 0;
   }

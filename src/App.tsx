@@ -91,13 +91,10 @@ function App() {
 export default App
 
 const UsernameDiv = styled.div`
-  position: fixed;
+  position: absolute;
   z-index: 1;
   top: 10px;
   right: 10px;
-  @media (min-width: 500px) {
-    right: calc(50% - 240px);
-  }
   font-size: 12px;
 `
 const MobileWrapper = styled.div`
@@ -105,12 +102,12 @@ const MobileWrapper = styled.div`
   background: #fff;
   width: 100%;
   height: 100%;
-  max-width: 500px;
+  max-width: 1000px;
   margin: auto;
   padding: calc(27.5px + 20px) 20px 10px;
   overflow: auto;
   font-size: 14px;
-  @media (min-width: 500px) {
+  @media (min-width: 1000px) {
     border: 1px solid ${Colors.greenLine};
   }
 `

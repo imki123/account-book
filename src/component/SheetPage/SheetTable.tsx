@@ -47,17 +47,15 @@ export default function SheetTable({
   // 처음 한번만 전체 input width 설정하기
   const changeInputWidthAll = useCallback(() => {
     if (beforeSetWidth) {
-      const inputs = document.querySelectorAll<HTMLInputElement>(
-        'input:not(.fakeInput)',
-      )
+      const inputs =
+        document.querySelectorAll<HTMLInputElement>('input.autoWidth')
       if (inputs) {
         inputs.forEach((input) => {
           changeInputWidth(input)
         })
       }
-      const selects = document.querySelectorAll<HTMLSelectElement>(
-        'select:not(.fakeSelect)',
-      )
+      const selects =
+        document.querySelectorAll<HTMLSelectElement>('select.autoWidth')
       if (selects) {
         selects.forEach((select) => {
           changeInputWidth(select, true)
@@ -159,6 +157,7 @@ export default function SheetTable({
                             </Background>
                           ) : (
                             <CommonSelect
+                              className='autoWidth'
                               value={col}
                               background={setBackground(col)}
                               onChange={(e) => handleInputChange(e, i, j, true)}
@@ -189,6 +188,7 @@ export default function SheetTable({
                           )
                         ) : (
                           <CommonInput
+                            className='autoWidth'
                             numCheck={j === 3}
                             value={
                               j === 3 && isBigInt(col) && col !== ''

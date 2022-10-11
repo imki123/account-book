@@ -159,7 +159,7 @@ const RemoveDiv = styled.div`
 `
 const AddButton = styled.button`
   position: fixed;
-  @media (min-width: 500px) {
+  @media (min-width: 1000px) {
     position: absolute;
   }
   z-index: 1;
@@ -183,7 +183,7 @@ const AddButton = styled.button`
 `
 const LogoutButton = styled(Button)`
   position: fixed;
-  @media (min-width: 500px) {
+  @media (min-width: 1000px) {
     position: absolute;
   }
   z-index: 1;
@@ -196,7 +196,7 @@ const LogoutButton = styled(Button)`
 `
 const TypesButton = styled(Button)`
   position: fixed;
-  @media (min-width: 500px) {
+  @media (min-width: 1000px) {
     position: absolute;
   }
   z-index: 1;
@@ -209,7 +209,7 @@ const TypesButton = styled(Button)`
 `
 const JoinButton = styled(Button)`
   position: fixed;
-  @media (min-width: 500px) {
+  @media (min-width: 1000px) {
     position: absolute;
   }
   z-index: 1;

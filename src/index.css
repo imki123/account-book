@@ -9,7 +9,7 @@
 *::-webkit-scrollbar-thumb {
   background: #cec;
 }
-@media (min-width: 500px) {
+@media (min-width: 1000px) {
   button:hover {
     cursor: pointer;
   }
@@ -34,7 +34,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-@media (min-width: 500px) {
+@media (min-width: 1000px) {
   body {
     background: #fafaff;
   }

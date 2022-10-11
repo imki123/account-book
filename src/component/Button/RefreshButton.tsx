@@ -19,8 +19,8 @@ const RefreshButtonWrapper = styled.button<{ disabled: boolean }>`
   position: fixed;
   bottom: 20px;
   right: 20px;
-  @media (min-width: 500px) {
-    right: calc(50% - 230px);
+  @media (min-width: 1000px) {
+    right: calc(50% - (1000px / 2) + 20px);
   }
 
   padding: 5px;
