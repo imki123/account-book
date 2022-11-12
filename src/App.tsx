@@ -50,8 +50,7 @@ function App() {
               else navigate(location.pathname, { replace: true })
             })
           } else {
-            // console.log('checkToken. 토큰 없음')
-            window.alert('checkToken. 토큰 없음:\n' + JSON.stringify(res))
+            console.error('checkToken. 토큰 없음')
             navigate('/login', { replace: true })
           }
         })
