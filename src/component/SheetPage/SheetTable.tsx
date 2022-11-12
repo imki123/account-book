@@ -280,6 +280,9 @@ const TableWrapper = styled.div`
   td:nth-of-type(6) {
     padding: 0;
   }
+  td:nth-of-type(4) input {
+    max-width: 30px;
+  }
 `
 const AddIcon = styled(AddCircleOutlineIcon)`
   color: #7c7;
