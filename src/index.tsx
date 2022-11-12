@@ -11,6 +11,10 @@ import { getKakaoSdk } from './util/kakaoSdk'
 getKakaoSdk()
 
 console.info('ENV:', process.env.REACT_APP_ENV)
+
+if (window.location.pathname === '/') {
+  window.location.href = '/account-book'
+}
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <BrowserRouter basename={process.env.PUBLIC_URL}>

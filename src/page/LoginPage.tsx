@@ -36,7 +36,10 @@ export default function LoginPage() {
           postUserCheckEmail(user)
             .then((res) => {
               // 로그인 성공. BE 쿠키 등록
-              navigate('/') // 홈으로 이동
+              window.alert('로그인 성공:\n' + JSON.stringify(res))
+              setTimeout(() => {
+                navigate('/') // 홈으로 이동
+              }, 500)
             })
             .catch(async (err) => {
               window.alert(JSON.stringify(err))
