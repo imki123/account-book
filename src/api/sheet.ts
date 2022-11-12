@@ -1,8 +1,9 @@
 import Axios from 'axios'
 import { SheetDataInterface } from '../page/SheetPage'
+import { api_url } from './account'
 
 const axiosInstance = Axios.create({
-  baseURL: process.env.REACT_APP_API_URL + 'accountBook/sheet/',
+  baseURL: api_url + 'accountBook/sheet/',
   withCredentials: true,
 })
 

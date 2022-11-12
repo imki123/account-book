@@ -39,6 +39,7 @@ export default function LoginPage() {
               navigate('/') // 홈으로 이동
             })
             .catch(async (err) => {
+              window.alert(JSON.stringify(err))
               await logoutUser()
               if (err?.response?.status === 403) {
                 window.alert(

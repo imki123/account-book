@@ -48,13 +48,13 @@ export function kakaoAppLogin(callback, errorCallback) {
   waitSdk(() => {
     Kakao.Auth.login({
       success(res) {
-        // console.log('로그인 api 호출', res)
-        callback && callback()
+        console.log('로그인 api 호출', res)
+        callback?.()
       },
       fail(error) {
         console.error('kakao login fail', error)
-        window.alert('로그인 실패 😭 ' + JSON.stringify(error))
-        errorCallback && errorCallback()
+        window.alert('카카오 로그인 실패 😭 ' + JSON.stringify(error))
+        errorCallback?.()
       },
     })
   })

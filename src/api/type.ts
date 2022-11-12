@@ -1,7 +1,8 @@
 import Axios from 'axios'
+import { api_url } from './account'
 
 const axiosInstance = Axios.create({
-  baseURL: process.env.REACT_APP_API_URL + 'accountBook/type/',
+  baseURL: api_url + 'accountBook/type/',
   withCredentials: true,
 })
 

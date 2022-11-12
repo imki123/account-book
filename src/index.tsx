@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
@@ -9,6 +10,7 @@ import { getKakaoSdk } from './util/kakaoSdk'
 // 카카오 sdk 불러오기
 getKakaoSdk()
 
+console.info('ENV:', process.env.REACT_APP_ENV)
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <BrowserRouter basename={process.env.PUBLIC_URL}>
