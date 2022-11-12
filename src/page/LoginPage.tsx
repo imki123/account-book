@@ -82,6 +82,12 @@ export default function LoginPage() {
         <Button buttonType='kakao' onClick={handleLogin}>
           <img src={kakao_login_medium_narrow} alt='kakaoLogin' />
         </Button>
+        <Warn>
+          <i>삼성인터넷</i> 등 일부 브라우저에서 쿠키가 저장 되지 않는 문제가
+          있습니다.
+          <br /> 로그인이 안될 경우 <strong>크롬</strong> 등의 다른 브라우저를
+          사용해주세요! 🙏
+        </Warn>
         <LoadingDim loading={loading} />
       </>
     </StyledLoginPage>
@@ -102,4 +108,15 @@ const TitleMessage = styled.div`
 `
 const Message = styled.div`
   margin-top: 20px;
+`
+const Warn = styled.div`
+  font-size: 12px;
+  margin-top: 12px;
+  text-align: center;
+  i {
+    color: red;
+  }
+  strong {
+    color: blue;
+  }
 `
