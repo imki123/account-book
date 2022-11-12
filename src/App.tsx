@@ -51,11 +51,13 @@ function App() {
             })
           } else {
             // console.log('checkToken. 토큰 없음')
+            window.alert('checkToken. 토큰 없음:\n' + JSON.stringify(res))
             navigate('/login', { replace: true })
           }
         })
         .catch((e) => {
           // console.log('checkToken. 에러 발생. 로그인 실패')
+          window.alert('checkToken. 에러 발생. 로그인 실패')
           navigate('/login', { replace: true })
         })
         .finally(() => {
