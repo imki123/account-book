@@ -14,6 +14,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import { addSnackBar } from '../util/util'
 import Button from '../component/Button/Button'
 import { logoutUser } from '../util/kakaoSdk'
+import OpenColor from 'open-color'
 
 export default function HomePage() {
   const navigate = useNavigate()
@@ -191,7 +192,7 @@ const LogoutButton = styled(Button)`
   left: 20px;
   height: 32px;
 
-  background: ${Colors.green100};
+  background: ${OpenColor.red[4]};
   font: inherit;
 `
 const TypesButton = styled(Button)`

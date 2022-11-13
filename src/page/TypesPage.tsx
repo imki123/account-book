@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import produce from 'immer'
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import { getType, patchType, TypeInterface } from '../api/type'
 import Header from '../component/Header/Header'
 import AddIcon from '@mui/icons-material/Add'
@@ -9,6 +9,8 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import SaveIcon from '@mui/icons-material/Save'
 import LoadingDim from '../component/LoadingDim/LoadingDim'
 import { addSnackBar } from '../util/util'
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp'
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown'
 
 export default function TypesPage() {
   const [types, setTypes] = useState<TypeInterface[]>()
@@ -51,6 +53,39 @@ export default function TypesPage() {
     setTypes(changed)
   }
 
+  const orderUp = useCallback(
+    (i: number) => {
+      if (types) {
+        if (i > 0) {
+          const res = produce(types, (draft) => {
+            const temp = draft[i - 1]
+            draft[i - 1] = draft[i]
+            draft[i] = temp
+            return draft
+          })
+          setTypes(res)
+        }
+      }
+    },
+    [types],
+  )
+  const orderDown = useCallback(
+    (i: number) => {
+      if (types) {
+        if (i < types.length - 1) {
+          const res = produce(types, (draft) => {
+            const temp = draft[i + 1]
+            draft[i + 1] = draft[i]
+            draft[i] = temp
+            return draft
+          })
+          setTypes(res)
+        }
+      }
+    },
+    [types],
+  )
+
   return (
     <>
       <Header title='유형변경' backButton />
@@ -68,6 +103,8 @@ export default function TypesPage() {
               onChange={(e) => changeBackground(e, i)}
             />{' '}
             <ColorSpan background={background} />
+            <ArrowCircleUpIcon onClick={() => orderUp(i)} />
+            <ArrowCircleDownIcon onClick={() => orderDown(i)} />
             <RemoveIcon fontSize='small' onClick={(e) => removeType(i)} />
           </ListDiv>
         )),
@@ -111,6 +148,7 @@ const ColorSpan = styled.span<{ background?: string }>`
   width: 40px;
   height: 20px;
   margin-left: 4px;
+  margin-right: 5px;
   background: ${({ background }) =>
     background?.startsWith('#') ? background : '#' + background};
 `
@@ -118,6 +156,9 @@ const ListDiv = styled.div`
   padding: 4px;
   display: flex;
   align-items: center;
+  svg:not(:last-of-type) {
+    color: ${Colors.green100};
+  }
 `
 const TypeInput = styled.input`
   width: 100px;
@@ -148,7 +189,7 @@ const AddButton = styled.button`
   }
 `
 const RemoveIcon = styled(RemoveCircleOutlineIcon)`
-  margin-left: 5px;
+  margin-left: 15px;
   color: red;
 `
 const SaveButton = styled.button<{ disabled: boolean }>`
