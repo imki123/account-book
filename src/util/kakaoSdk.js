@@ -123,7 +123,7 @@ export const logoutUser = async () => {
   try {
     await postUserLogout()
   } catch (e) {
-    window.alert('BE 로그아웃 실패')
+    // window.alert('BE 로그아웃 실패')
   }
   try {
     await unlinkKakao()

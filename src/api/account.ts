@@ -15,17 +15,17 @@ export const postUserCheckEmail = (user: {
   username: string
   email: string
 }) => {
-  return axiosInstance.post('checkEmail', user)
+  return axiosInstance.post('/checkEmail', user)
 }
 
 export const postUserCheckToken = () => {
-  return axiosInstance.post('checkToken')
+  return axiosInstance.post('/checkToken')
 }
 
 export const postUserLogout = () => {
-  return axiosInstance.post('logout')
+  return axiosInstance.post('/logout')
 }
 
 export const getUser = () => {
-  return axiosInstance.get('')
+  return axiosInstance.get('/')
 }
