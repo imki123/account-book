@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/account-book/static/css/main.04797de0.css",
-    "main.js": "/account-book/static/js/main.73f6b8f3.js",
+    "main.js": "/account-book/static/js/main.d43986d3.js",
     "static/js/223.e4fc1241.chunk.js": "/account-book/static/js/223.e4fc1241.chunk.js",
     "static/js/367.5a83ff4b.chunk.js": "/account-book/static/js/367.5a83ff4b.chunk.js",
     "static/js/495.630fe3e0.chunk.js": "/account-book/static/js/495.630fe3e0.chunk.js",
@@ -9,7 +9,7 @@
     "static/js/326.4453130b.chunk.js": "/account-book/static/js/326.4453130b.chunk.js",
     "index.html": "/account-book/index.html",
     "main.04797de0.css.map": "/account-book/static/css/main.04797de0.css.map",
-    "main.73f6b8f3.js.map": "/account-book/static/js/main.73f6b8f3.js.map",
+    "main.d43986d3.js.map": "/account-book/static/js/main.d43986d3.js.map",
     "223.e4fc1241.chunk.js.map": "/account-book/static/js/223.e4fc1241.chunk.js.map",
     "367.5a83ff4b.chunk.js.map": "/account-book/static/js/367.5a83ff4b.chunk.js.map",
     "495.630fe3e0.chunk.js.map": "/account-book/static/js/495.630fe3e0.chunk.js.map",
@@ -18,6 +18,6 @@
   },
   "entrypoints": [
     "static/css/main.04797de0.css",
-    "static/js/main.73f6b8f3.js"
+    "static/js/main.d43986d3.js"
   ]
 }
