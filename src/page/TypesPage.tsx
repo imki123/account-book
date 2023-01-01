@@ -138,7 +138,7 @@ export default function TypesPage() {
 }
 
 const StyledTypesPage = styled.div`
-  ${MOBILE_PADDING}
+  ${MOBILE_PADDING};
 `
 const ListTitle = styled.div`
   padding-left: 20px;

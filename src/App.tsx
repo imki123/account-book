@@ -4,7 +4,6 @@ import React, { Suspense, useEffect, useState } from 'react'
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { getUser, postUserCheckToken } from './api/account'
 import LoadingDim from './component/LoadingDim/LoadingDim'
-import TypesPage from './page/TypesPage'
 import { Colors } from './util/Colors'
 
 /**
@@ -17,6 +16,7 @@ const HomePage = React.lazy(() => import('./page/HomePage'))
 const LoginPage = React.lazy(() => import('./page/LoginPage'))
 const SheetPage = React.lazy(() => import('./page/SheetPage'))
 const JoinPage = React.lazy(() => import('./page/JoinPage'))
+const TypesPage = React.lazy(() => import('./page/TypesPage'))
 
 const queryClient = new QueryClient({
   defaultOptions: {
