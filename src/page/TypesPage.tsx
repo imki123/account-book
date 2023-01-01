@@ -11,6 +11,7 @@ import LoadingDim from '../component/LoadingDim/LoadingDim'
 import { addSnackBar } from '../util/util'
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp'
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown'
+import { MOBILE_PADDING } from '../App'
 
 export default function TypesPage() {
   const [types, setTypes] = useState<TypeInterface[]>()
@@ -87,7 +88,7 @@ export default function TypesPage() {
   )
 
   return (
-    <>
+    <StyledTypesPage>
       <Header title='유형변경' backButton />
       <ListTitle>
         <span>유형이름</span>
@@ -132,9 +133,13 @@ export default function TypesPage() {
         <AddIcon />
       </AddButton>
       <LoadingDim loading={loading} />
-    </>
+    </StyledTypesPage>
   )
 }
+
+const StyledTypesPage = styled.div`
+  ${MOBILE_PADDING}
+`
 const ListTitle = styled.div`
   padding-left: 20px;
   span {

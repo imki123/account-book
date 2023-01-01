@@ -18,6 +18,7 @@ import { Colors } from '../util/Colors'
 import { addSnackBar, changeInputWidth } from '../util/util'
 import LoadingDim from '../component/LoadingDim/LoadingDim'
 import SheetSummary from '../component/SheetPage/SheetSummary'
+import { MOBILE_PADDING } from '../App'
 
 export interface SheetDataInterface {
   sheetId: number
@@ -146,7 +147,7 @@ export default function SheetPage() {
   }, [saveSheet, sheetData])
 
   return (
-    <>
+    <StyledSheetPage>
       <Header
         title={
           sheetData?.name !== undefined ? (
@@ -173,10 +174,12 @@ export default function SheetPage() {
         }}
       />
       <LoadingDim loading={loading} />
-    </>
+    </StyledSheetPage>
   )
 }
-
+const StyledSheetPage = styled.div`
+  ${MOBILE_PADDING}
+`
 const HeaderInput = styled.input`
   width: 100%;
   min-width: 50px;

@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import Header from '../component/Header/Header'
 import { postUserCheckEmail } from '../api/account'
 import LoadingDim from '../component/LoadingDim/LoadingDim'
+import { MOBILE_PADDING } from '../App'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -101,6 +102,7 @@ const StyledLoginPage = styled.div`
   justify-content: center;
   align-items: center;
   gap: 50px;
+  ${MOBILE_PADDING}
   padding-bottom: 100px;
 `
 const TitleMessage = styled.div`

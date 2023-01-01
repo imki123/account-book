@@ -15,6 +15,7 @@ import { addSnackBar } from '../util/util'
 import Button from '../component/Button/Button'
 import { logoutUser } from '../util/kakaoSdk'
 import OpenColor from 'open-color'
+import { MOBILE_PADDING } from '../App'
 
 export default function HomePage() {
   const navigate = useNavigate()
@@ -129,11 +130,11 @@ export default function HomePage() {
 }
 
 const StyledHomePage = styled.div`
-  height: 100%;
-  padding-bottom: 50px;
+  ${MOBILE_PADDING};
+  height: calc(100% - 60px);
+  overflow: auto;
 `
 const ListWrapper = styled.div`
-  width: 100%;
   text-align: left;
   margin: 0;
 `

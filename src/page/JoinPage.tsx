@@ -7,6 +7,7 @@ import SheetSummary from '../component/SheetPage/SheetSummary'
 import produce, { enableMapSet } from 'immer'
 import { useGetSheetsQuery } from '../api/reactQuery.ts/useGetSheetQuery'
 import styled from '@emotion/styled'
+import { MOBILE_PADDING } from '../App'
 
 export interface SheetDataInterface {
   sheetId: number
@@ -55,7 +56,7 @@ export default function JoinPage() {
   }, [checked, sheets])
 
   return (
-    <>
+    <StyledJoinPage>
       <Header
         title={'요약보기'}
         backButton
@@ -83,10 +84,12 @@ export default function JoinPage() {
         setSheetData={setSheetData}
         readOnly={true}
       />
-    </>
+    </StyledJoinPage>
   )
 }
-
+const StyledJoinPage = styled.div`
+  ${MOBILE_PADDING}
+`
 const CheckLabel = styled.label`
   display: flex;
   align-items: center;

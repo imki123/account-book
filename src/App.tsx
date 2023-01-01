@@ -91,6 +91,8 @@ function App() {
 
 export default App
 
+export const MOBILE_PADDING = 'padding: calc(27.5px + 20px) 20px 10px;'
+
 const UsernameDiv = styled.div`
   position: absolute;
   z-index: 1;
@@ -105,7 +107,6 @@ const MobileWrapper = styled.div`
   height: 100%;
   max-width: 1000px;
   margin: auto;
-  padding: calc(27.5px + 20px) 20px 10px;
   overflow: auto;
   font-size: 14px;
   @media (min-width: 1000px) {
