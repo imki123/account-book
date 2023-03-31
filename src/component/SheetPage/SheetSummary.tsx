@@ -90,7 +90,7 @@ const SummaryTitle = styled.div`
 `
 const SummaryDiv = styled.div`
   padding-top: 10px;
-  & > div:nth-of-type(2n) {
+  & > div:nth-of-type(2n-1) {
     background: #cec;
   }
 `
