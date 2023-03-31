@@ -20,7 +20,7 @@ export const getType = async () => {
   return res.data
 }
 
-export const patchType = async (typeArray: TypeInterface[]) => {
-  let res = await axiosInstance.patch<TypeInterface[]>('/', typeArray)
+export const patchType = async (types: TypeInterface[]) => {
+  let res = await axiosInstance.patch<TypeInterface[]>('/', { types })
   return res.data
 }
