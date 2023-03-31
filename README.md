@@ -12,7 +12,7 @@ yarn
 ## 실행방법
 
 ```
-yarn start
+yarn dev
 ```
 
 ## 배포방법

@@ -2,9 +2,9 @@ import Axios from 'axios'
 
 const { protocol, hostname } = window.location
 export const api_url =
-  process.env.REACT_APP_ENV === 'local'
-    ? `${protocol}//${hostname}:${process.env.REACT_APP_API_PORT}`
-    : process.env.REACT_APP_API_URL
+  import.meta.env.VITE_ENV === 'local'
+    ? `${protocol}//${hostname}:${import.meta.env.VITE_API_PORT}`
+    : import.meta.env.VITE_API_URL
 
 const axiosInstance = Axios.create({
   baseURL: api_url + '/accountBook/user',
