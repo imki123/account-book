@@ -2,6 +2,25 @@
 
 https://imki123.github.io/account-book
 
+## 설치방법
+
+```
+npm i -g yarn
+yarn
+```
+
+## 실행방법
+
+```
+yarn start
+```
+
+## 배포방법
+
+```
+yarn deploy
+```
+
 ## 기획
 
 - 월별 가계부 작성

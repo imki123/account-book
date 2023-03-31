@@ -106,7 +106,7 @@ export default function TypesPage() {
             <ColorSpan background={background} />
             <ArrowCircleUpIcon onClick={() => orderUp(i)} />
             <ArrowCircleDownIcon onClick={() => orderDown(i)} />
-            <RemoveIcon fontSize='small' onClick={(e) => removeType(i)} />
+            <RemoveIcon fontSize='small' onClick={() => removeType(i)} />
           </ListDiv>
         )),
       )}
