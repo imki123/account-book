@@ -16,8 +16,8 @@ export function getKakaoSdk() {
   document.body.append(script)
 }
 
-// SDK 로드 기다렸다가 callback 실행하기. 10초 이내에 로드 안되면 에러 표시
-function waitSdk(callback) {
+// SDK 로드 기다렸다가 callback 실행하기. 5초 이내에 로드 안되면 에러 표시
+function waitLoadSdk(callback) {
   let to
   const itv = setInterval(() => {
     if (window.Kakao) {
@@ -28,15 +28,16 @@ function waitSdk(callback) {
     }
   }, 500)
   to = setTimeout(() => {
+    window.alert('카카오 SDK 로드 실패')
     console.error('Kakao SDK 로드 실패')
     clearInterval(itv)
     clearTimeout(to)
-  }, 10 * 1000)
+  }, 5 * 1000)
 }
 
 // SDK 로드 후 카카오 초기화 세팅하기
 export function initKakaoSdk() {
-  waitSdk(() => {
+  waitLoadSdk(() => {
     Kakao.init(KAKAO_JS_KEY)
     if (Kakao.isInitialized()) console.log('Kakao SDK 초기화 성공')
     if (!Kakao.isInitialized()) console.error('Kakao SDK 초기화 실패')
@@ -45,7 +46,7 @@ export function initKakaoSdk() {
 
 // 카카오 로그인 후 앱 로그인
 export function kakaoAppLogin(callback, errorCallback) {
-  waitSdk(() => {
+  waitLoadSdk(() => {
     Kakao.Auth.login({
       success(res) {
         console.log('로그인 api 호출', res)
@@ -63,7 +64,7 @@ export function kakaoAppLogin(callback, errorCallback) {
 // 카카오 유저정보 가져오기
 export const getKakaoUser = () => {
   return new Promise((resolve, reject) => {
-    waitSdk(() => {
+    waitLoadSdk(() => {
       Kakao.API.request({
         url: '/v2/user/me',
         success(response) {
@@ -71,6 +72,7 @@ export const getKakaoUser = () => {
         },
         fail(error) {
           console.error(error)
+          window.alert('카카오 유저정보 가져오기 실패', JSON.stringify(error))
           reject(error)
         },
       })
@@ -81,10 +83,11 @@ export const getKakaoUser = () => {
 // 카카오 로그아웃
 export const logoutKakao = () => {
   return new Promise((resolve, reject) => {
-    waitSdk(() => {
+    waitLoadSdk(() => {
       try {
         if (!Kakao.Auth.getAccessToken()) {
           console.log('Not logged in.')
+          window.alert('카카오 로그아웃 실패', 'Not logged in.')
           return
         }
         Kakao.Auth.logout(function () {
@@ -92,6 +95,7 @@ export const logoutKakao = () => {
         })
       } catch (e) {
         reject('logout error')
+        window.alert('카카오 로그아웃 실패', JSON.stringify(e))
       }
     })
   })
@@ -100,7 +104,7 @@ export const logoutKakao = () => {
 // 카카오 연결 끊기
 export const unlinkKakao = () => {
   return new Promise((resolve, reject) => {
-    waitSdk(() => {
+    waitLoadSdk(() => {
       if (!Kakao.Auth.getAccessToken()) {
         console.log('Not logged in.')
         return reject('Not logged in.')
@@ -129,5 +133,6 @@ export const logoutUser = async () => {
     await unlinkKakao()
   } catch (e) {
     console.log('카카오 unlink 실패')
+    window.alert('카카오 unlink 실패', JSON.stringify(e))
   }
 }
