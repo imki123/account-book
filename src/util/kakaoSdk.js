@@ -127,12 +127,18 @@ export const logoutUser = async () => {
   try {
     await postUserLogout()
   } catch (e) {
-    // window.alert('BE 로그아웃 실패')
+    window.alert('BE 로그아웃 실패')
   }
   try {
     await unlinkKakao()
   } catch (e) {
-    console.log('카카오 unlink 실패')
-    window.alert('카카오 unlink 실패', JSON.stringify(e))
+    await logoutKakao()
+    try {
+      console.log('카카오 unlink 실패')
+      window.alert('카카오 unlink 실패', JSON.stringify(e))
+    } catch (error) {
+      console.log('카카오 logout 실패')
+      window.alert('카카오 logout 실패', JSON.stringify(error))
+    }
   }
 }
