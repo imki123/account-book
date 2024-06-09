@@ -5,6 +5,7 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { getUser, postUserCheckToken } from './api/account'
 import LoadingDim from './component/LoadingDim/LoadingDim'
 import { Colors } from './util/Colors'
+import path from 'path'
 
 /**
  * 라우트 페이지.
@@ -30,56 +31,73 @@ const queryClient = new QueryClient({
 function App() {
   const location = useLocation()
   const navigate = useNavigate()
-  // 로그인여부 체크해서 로그인 페이지로 보내기
   const [username, setUsername] = useState<string>()
   const [loading, setLoading] = useState<boolean>()
+  const [hasToken, setHasToken] = useState<boolean>(false)
 
-  useEffect(() => {
-    async function chechUserTokenAndNavigate() {
-      if (navigate && location.pathname) {
-        // console.log('App. pathname:', location.pathname)
-        setLoading(true)
-        try {
-          const checkedToken = await postUserCheckToken()
-          // TODO: checkedToken이 없다고 나옴 BE에서 확인 필요
-          // window.alert('isAvailableToken: ' + JSON.stringify(isAvailableToken))
-          if (checkedToken.data) {
-            // console.log('checkToken. 로그인 되어있음')
-            const user = await getUser()
-            // console.log('getUser. 유저정보 가져옴. pathname 이동')
-            setUsername(user.data.username)
-            if (location.pathname === '/login') navigate('/', { replace: true })
-            else navigate(location.pathname, { replace: true })
+  const pathnameRef = React.useRef('')
+
+  // 로그인여부 체크해서 로그인 페이지로 보내기
+  async function chechUserTokenAndNavigate() {
+    if (navigate && location.pathname) {
+      // console.log('App. pathname:', location.pathname)
+      setLoading(true)
+      try {
+        const checkedToken = await postUserCheckToken()
+        setHasToken(checkedToken.data)
+
+        // TODO: checkedToken이 없다고 나옴 BE에서 확인 필요
+        // window.alert('isAvailableToken: ' + JSON.stringify(isAvailableToken))
+        if (checkedToken.data) {
+          // console.log('checkToken. 로그인 되어있음')
+          const user = await getUser()
+          // console.log('getUser. 유저정보 가져옴. pathname 이동')
+          setUsername(user.data.username)
+          if (location.pathname === '/login') {
+            navigate('/', { replace: true })
           } else {
-            console.error('checkToken. 토큰 없음')
-            // window.alert('checkToken. 토큰 없음')
-            // navigate('/login', { replace: true })
+            navigate(location.pathname, { replace: true })
           }
-        } catch (e) {
-          // console.log('checkToken. 에러 발생. 로그인 실패')
-          window.alert('checkToken. 에러 발생. 로그인 실패' + JSON.stringify(e))
-          // navigate('/login', { replace: true })
-        } finally {
-          setLoading(false)
+        } else {
+          if (location.pathname === '/login') {
+            return
+          }
+          console.error('checkToken. 토큰 없음')
+          window.alert('checkToken. 토큰 없음')
+          navigate('/login', { replace: true })
         }
+      } catch (e) {
+        // console.log('checkToken. 에러 발생. 로그인 실패')
+        window.alert('checkToken. 에러 발생. 로그인 실패' + JSON.stringify(e))
+        navigate('/login', { replace: true })
+      } finally {
+        setLoading(false)
       }
     }
+  }
+
+  if (pathnameRef.current !== location.pathname) {
+    pathnameRef.current = location.pathname
     chechUserTokenAndNavigate()
-  }, [location.pathname, navigate])
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
       <Suspense fallback={<LoadingDim loading={true} />}>
         <MobileWrapper>
           {username && <UsernameDiv>{username}</UsernameDiv>}
-          <Routes>
-            <Route path='' element={<HomePage />} />
-            <Route path='login' element={<LoginPage />} />
-            <Route path='sheet/:sheetId' element={<SheetPage />} />
-            <Route path='types' element={<TypesPage />} />
-            <Route path='join' element={<JoinPage />} />
-            <Route path='*' element={<HomePage />} />
-          </Routes>
+          {!hasToken ? (
+            <LoginPage />
+          ) : (
+            <Routes>
+              <Route path='' element={<HomePage />} />
+              <Route path='login' element={<LoginPage />} />
+              <Route path='sheet/:sheetId' element={<SheetPage />} />
+              <Route path='types' element={<TypesPage />} />
+              <Route path='join' element={<JoinPage />} />
+              <Route path='*' element={<HomePage />} />
+            </Routes>
+          )}
         </MobileWrapper>
         <FakeInput className='fakeInput' />
         <FakeSelect className='fakeSelect'>
