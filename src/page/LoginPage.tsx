@@ -37,6 +37,7 @@ export default function LoginPage() {
           postUserCheckEmail(user)
             .then((res) => {
               // 로그인 성공. BE 쿠키 등록
+              // window.alert('로그인 성공!🎉, BE 쿠키 등록됨')
               setTimeout(() => {
                 navigate('/') // 홈으로 이동
               }, 500)

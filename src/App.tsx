@@ -35,34 +35,36 @@ function App() {
   const [loading, setLoading] = useState<boolean>()
 
   useEffect(() => {
-    if (navigate && location.pathname) {
-      // console.log('App. pathname:', location.pathname)
-      setLoading(true)
-      postUserCheckToken()
-        .then((res) => {
-          if (res.data) {
+    async function chechUserTokenAndNavigate() {
+      if (navigate && location.pathname) {
+        // console.log('App. pathname:', location.pathname)
+        setLoading(true)
+        try {
+          const checkedToken = await postUserCheckToken()
+          // TODO: checkedToken이 없다고 나옴 BE에서 확인 필요
+          // window.alert('isAvailableToken: ' + JSON.stringify(isAvailableToken))
+          if (checkedToken.data) {
             // console.log('checkToken. 로그인 되어있음')
-            getUser().then((res) => {
-              // console.log('getUser. 유저정보 가져옴. pathname 이동')
-              setUsername(res.data.username)
-              if (location.pathname === '/login')
-                navigate('/', { replace: true })
-              else navigate(location.pathname, { replace: true })
-            })
+            const user = await getUser()
+            // console.log('getUser. 유저정보 가져옴. pathname 이동')
+            setUsername(user.data.username)
+            if (location.pathname === '/login') navigate('/', { replace: true })
+            else navigate(location.pathname, { replace: true })
           } else {
             console.error('checkToken. 토큰 없음')
-            navigate('/login', { replace: true })
+            // window.alert('checkToken. 토큰 없음')
+            // navigate('/login', { replace: true })
           }
-        })
-        .catch((e) => {
+        } catch (e) {
           // console.log('checkToken. 에러 발생. 로그인 실패')
-          window.alert('checkToken. 에러 발생. 로그인 실패')
-          navigate('/login', { replace: true })
-        })
-        .finally(() => {
+          window.alert('checkToken. 에러 발생. 로그인 실패' + JSON.stringify(e))
+          // navigate('/login', { replace: true })
+        } finally {
           setLoading(false)
-        })
+        }
+      }
     }
+    chechUserTokenAndNavigate()
   }, [location.pathname, navigate])
 
   return (

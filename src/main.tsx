@@ -6,9 +6,10 @@ import { getKakaoSdk } from './util/kakaoSdk'
 import './index.css'
 
 // 카카오 sdk 불러오기
+// FIXME: ios safari에서 로드 실패함
 getKakaoSdk()
 
-console.info('ENV:', import.meta.env.VITE_ENV)
+window.console.info('ENV:', import.meta.env.VITE_ENV)
 
 if (window.location.pathname === '/') {
   window.location.href = '/account-book'

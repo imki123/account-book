@@ -10,13 +10,14 @@ export function getKakaoSdk() {
   const script = document.createElement('script')
   script.src = SDK_URL
   script.onload = initKakaoSdk
-  script.onError = () => {
+  script.onError = (e) => {
     console.error('Kakao SDK 로드 실패')
+    window.alert('카카오 SDK 로드 실패' + JSON.stringify(e))
   }
   document.body.append(script)
 }
 
-// SDK 로드 기다렸다가 callback 실행하기. 5초 이내에 로드 안되면 에러 표시
+// SDK 로드 기다렸다가 callback 실행하기. 10초 이내에 로드 안되면 에러 표시
 function waitLoadSdk(callback) {
   let to
   const itv = setInterval(() => {
@@ -32,15 +33,20 @@ function waitLoadSdk(callback) {
     console.error('Kakao SDK 로드 실패')
     clearInterval(itv)
     clearTimeout(to)
-  }, 5 * 1000)
+  }, 10 * 1000)
 }
 
 // SDK 로드 후 카카오 초기화 세팅하기
 export function initKakaoSdk() {
   waitLoadSdk(() => {
     Kakao.init(KAKAO_JS_KEY)
-    if (Kakao.isInitialized()) console.log('Kakao SDK 초기화 성공')
-    if (!Kakao.isInitialized()) console.error('Kakao SDK 초기화 실패')
+    if (Kakao.isInitialized()) {
+      console.log('Kakao SDK 초기화 성공')
+      // window.alert('Kakao SDK 초기화 성공')
+    } else {
+      console.error('Kakao SDK 초기화 실패')
+      // window.alert('Kakao SDK 초기화 실패')
+    }
   })
 }
 
@@ -50,6 +56,7 @@ export function kakaoAppLogin(callback, errorCallback) {
     Kakao.Auth.login({
       success(res) {
         console.log('로그인 api 호출', res)
+        // window.alert('카카오 로그인 성공 🎉')
         callback?.()
       },
       fail(error) {
@@ -134,12 +141,12 @@ export const logoutUser = async () => {
     await unlinkKakao()
   } catch (e) {
     console.log('카카오 unlink 실패')
-    window.alert('카카오 unlink 실패', JSON.stringify(e))
+    // window.alert('카카오 unlink 실패', JSON.stringify(e))
     try {
       await logoutKakao()
     } catch (error) {
       console.log('카카오 logout 실패')
-      window.alert('카카오 logout 실패', JSON.stringify(error))
+      // window.alert('카카오 logout 실패', JSON.stringify(error))
       throw error
     }
     throw e
