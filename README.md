@@ -1,23 +1,23 @@
 # 고영이 가계부
 
-https://imki123.github.io/account-book
+Web-app: <https://imki123.github.io/account-book>
 
 ## 설치방법
 
-```
+```sh
 npm i -g yarn
 yarn
 ```
 
 ## 실행방법
 
-```
+```sh
 yarn dev
 ```
 
 ## 배포방법
 
-```
+```sh
 yarn deploy
 ```
 
@@ -48,3 +48,4 @@ yarn deploy
 - 220728 전체적인 페이지 수정, SheetPage 추가. 행 추가, 제거 기능 추가
 - 220730 시트페이지 api 추가.
 - 220731 gh-pages 추가. 모달, 리프레시 버튼 추가, 404.html 추가, BE 서버 연동
+- 240609 gh single page 개선
