@@ -89,10 +89,16 @@ export default function HomePage() {
   }
 
   const handleLogout = async () => {
-    setLoading(true)
-    await logoutUser()
-    setLoading(false)
-    navigate('/login')
+    try {
+      setLoading(true)
+      await logoutUser()
+      navigate('/login')
+    } catch (e) {
+      console.error(e)
+      window.alert('로그아웃 실패' + JSON.stringify(e))
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
