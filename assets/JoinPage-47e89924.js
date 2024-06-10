@@ -1,0 +1,6 @@
+import{u as S,r as u,j as h,a as r,R as b,n as m,M as g}from"./index-2a6b3420.js";import{H as k}from"./Header-aca7bf29.js";import{u as f,q as v,a as x,S as j}from"./SheetSummary-e69368d0.js";import{C,p as E}from"./type-72ca4024.js";import{g as I}from"./open-color-d21ec5f6.js";import"./util-3a891df5.js";const q=n=>f({queryKey:[v.getSheet],queryFn:I,...n});C();function G(){const n=S(),{data:t}=q({staleTime:10*1e3}),[o,d]=u.useState(new Set),[l,c]=u.useState(),p=a=>{const i=E(e=>(a.target.checked?e==null||e.add(Number(a.target.value)):e==null||e.delete(Number(a.target.value)),e),o);d(i)};return u.useEffect(()=>{if(t){const a=[];Array.from(o).sort().forEach(s=>{a.push(t==null?void 0:t.filter(y=>y.sheetId===s)[0])});let e=[];a.forEach(s=>{s.table&&(e=e.concat(s.table).concat([["","","----- 구분선 -----",""]]))}),c({table:e,sheetId:1,name:"joined",order:1})}},[o,t]),h(D,{children:[r(k,{title:"요약보기",backButton:!0,backFunction:()=>n("/",{replace:!0})}),b.Children.toArray(t&&(t==null?void 0:t.map(a=>r("div",{children:h(N,{children:[r("input",{type:"checkbox",name:"sheet",value:a.sheetId,onChange:p}),r("span",{children:a.name})]})})))),r(x,{sheetData:l,setSheetData:c}),r(j,{sheetData:l,setSheetData:c,readOnly:!0})]})}const D=m.div`
+  ${g}
+`,N=m.label`
+  display: flex;
+  align-items: center;
+`;export{G as default};
