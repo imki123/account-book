@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import React, { useMemo, useRef } from 'react'
-import { useGetTypeQuery } from '../../api/reactQuery.ts/useGetTypeQuery'
+import { useGetTypeQuery } from '../../api/reactQuery/useGetTypeQuery'
 import { SheetDataInterface } from '../../page/SheetPage'
 import { localeBigInt, parseToNumber, setFixed } from '../../util/util'
 

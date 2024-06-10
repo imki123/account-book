@@ -13,7 +13,7 @@ import LoadingDim from '../component/LoadingDim/LoadingDim'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import { addSnackBar } from '../util/util'
 import Button from '../component/Button/Button'
-import { logoutUser } from '../util/kakaoSdk'
+import { removeSessionAndLogoutKakao } from '../util/kakaoSdk'
 import OpenColor from 'open-color'
 import { MOBILE_PADDING } from '../App'
 
@@ -91,7 +91,7 @@ export default function HomePage() {
   const handleLogout = async () => {
     try {
       setLoading(true)
-      await logoutUser()
+      await removeSessionAndLogoutKakao()
       navigate('/login')
     } catch (e) {
       console.error(e)

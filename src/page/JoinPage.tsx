@@ -5,7 +5,7 @@ import Header from '../component/Header/Header'
 import SheetTable from '../component/SheetPage/SheetTable'
 import SheetSummary from '../component/SheetPage/SheetSummary'
 import produce, { enableMapSet } from 'immer'
-import { useGetSheetsQuery } from '../api/reactQuery.ts/useGetSheetQuery'
+import { useGetSheetsQuery } from '../api/reactQuery/useGetSheetQuery'
 import styled from '@emotion/styled'
 import { MOBILE_PADDING } from '../App'
 

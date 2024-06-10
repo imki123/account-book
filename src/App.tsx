@@ -1,11 +1,13 @@
 import styled from '@emotion/styled'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import React, { Suspense, useEffect, useState } from 'react'
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
-import { getUser, postUserCheckToken } from './api/account'
+import { getUser, postCheckSession } from './api/accountBook'
 import LoadingDim from './component/LoadingDim/LoadingDim'
 import { Colors } from './util/Colors'
-import path from 'path'
+import { queryClient } from './api/reactQuery/queryClient'
+import { ACCOUNT_BOOK_ACCESS_TOKEN } from './constant/constant'
+import { axiosInstance } from './api/axiosInstance'
 
 /**
  * 라우트 페이지.
@@ -19,15 +21,6 @@ const SheetPage = React.lazy(() => import('./page/SheetPage'))
 const JoinPage = React.lazy(() => import('./page/JoinPage'))
 const TypesPage = React.lazy(() => import('./page/TypesPage'))
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      suspense: true,
-      useErrorBoundary: true,
-    },
-  },
-})
-
 function App() {
   const location = useLocation()
   const navigate = useNavigate()
@@ -38,37 +31,44 @@ function App() {
   const pathnameRef = React.useRef('')
 
   // 로그인여부 체크해서 로그인 페이지로 보내기
-  async function chechUserTokenAndNavigate() {
+  async function chechSessionAndNavigate() {
     if (navigate && location.pathname) {
       // console.log('App. pathname:', location.pathname)
       setLoading(true)
       try {
-        const checkedToken = await postUserCheckToken()
-        setHasToken(checkedToken.data)
+        // 로컬스토리지의 세션 가져오기
+        axiosInstance.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${localStorage.getItem(ACCOUNT_BOOK_ACCESS_TOKEN)}`
 
-        // TODO: checkedToken이 없다고 나옴 BE에서 확인 필요
-        // window.alert('isAvailableToken: ' + JSON.stringify(isAvailableToken))
-        if (checkedToken.data) {
-          // console.log('checkToken. 로그인 되어있음')
+        // 세션이 변경됐으면 업데이트 하기
+        const checkedSession = await postCheckSession()
+        if (
+          checkedSession.data &&
+          checkedSession.data !==
+            localStorage.getItem(ACCOUNT_BOOK_ACCESS_TOKEN)
+        ) {
+          localStorage.setItem(ACCOUNT_BOOK_ACCESS_TOKEN, checkedSession.data)
+          axiosInstance.defaults.headers.common[
+            'Authorization'
+          ] = `Bearer ${localStorage.getItem(ACCOUNT_BOOK_ACCESS_TOKEN)}`
+        }
+
+        setHasToken(checkedSession.data)
+        if (checkedSession.data) {
+          // console.log('checkSession. 로그인 되어있음')
           const user = await getUser()
-          // console.log('getUser. 유저정보 가져옴. pathname 이동')
           setUsername(user.data.username)
-          if (location.pathname === '/login') {
-            navigate('/', { replace: true })
-          } else {
-            navigate(location.pathname, { replace: true })
-          }
+          navigate(location.pathname, { replace: true })
         } else {
           if (location.pathname === '/login') {
             return
           }
-          console.error('checkToken. 토큰 없음')
-          window.alert('checkToken. 토큰 없음')
+          console.error('checkSession fail')
           navigate('/login', { replace: true })
         }
       } catch (e) {
-        // console.log('checkToken. 에러 발생. 로그인 실패')
-        window.alert('checkToken. 에러 발생. 로그인 실패' + JSON.stringify(e))
+        window.alert('checkSession. 에러 발생. 로그인 실패' + JSON.stringify(e))
         navigate('/login', { replace: true })
       } finally {
         setLoading(false)
@@ -78,7 +78,7 @@ function App() {
 
   if (pathnameRef.current !== location.pathname) {
     pathnameRef.current = location.pathname
-    chechUserTokenAndNavigate()
+    chechSessionAndNavigate()
   }
 
   return (

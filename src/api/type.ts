@@ -1,10 +1,5 @@
 import Axios from 'axios'
-import { api_url } from './account'
-
-const axiosInstance = Axios.create({
-  baseURL: api_url + '/accountBook/type',
-  withCredentials: true,
-})
+import { axiosInstance } from './axiosInstance'
 
 export interface TypeInterface {
   type: string
@@ -16,11 +11,11 @@ export interface getTypeResponse {
 }
 
 export const getType = async () => {
-  let res = await axiosInstance.get<getTypeResponse>('/')
+  let res = await axiosInstance.get<getTypeResponse>('/type/')
   return res.data
 }
 
 export const patchType = async (types: TypeInterface[]) => {
-  let res = await axiosInstance.patch<TypeInterface[]>('/', { types })
+  let res = await axiosInstance.patch<TypeInterface[]>('/type/', { types })
   return res.data
 }

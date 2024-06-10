@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
-import { postUserLogout } from '../api/account'
+import { postLogout } from '../api/accountBook'
+import { ACCOUNT_BOOK_ACCESS_TOKEN } from '../constant/constant'
 let Kakao = window.Kakao
 
 const KAKAO_JS_KEY = import.meta.env.VITE_KAKAO_JS_KEY
@@ -55,7 +56,6 @@ export function kakaoAppLogin(callback, errorCallback) {
   waitLoadSdk(() => {
     Kakao.Auth.login({
       success(res) {
-        console.log('로그인 api 호출', res)
         // window.alert('카카오 로그인 성공 🎉')
         callback?.()
       },
@@ -129,10 +129,11 @@ export const unlinkKakao = () => {
   })
 }
 
-// BE쿠키제거, 카카오 언링크
-export const logoutUser = async () => {
+export const removeSessionAndLogoutKakao = async () => {
+  // 로컬스토리지 세션 제거, BE 세션 제거, 카카오 언링크
   try {
-    await postUserLogout()
+    localStorage.removeItem(ACCOUNT_BOOK_ACCESS_TOKEN)
+    await postLogout()
   } catch (e) {
     window.alert('BE 로그아웃 실패')
     throw e
