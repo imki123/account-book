@@ -1,24 +1,24 @@
 # 고영이 가계부
 
-Web-app: <https://imki123.github.io/account-book>
+- Web-app: <https://imki123.github.io/account-book>
 
 ## 설치방법
 
 ```sh
-npm i -g yarn
-yarn
+npm i -g pnpm
+pnpm i
 ```
 
 ## 실행방법
 
 ```sh
-yarn dev
+pnpm dev
 ```
 
 ## 배포방법
 
 ```sh
-yarn deploy
+pnpm deploy
 ```
 
 ## 기획
