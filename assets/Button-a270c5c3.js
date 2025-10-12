@@ -1,4 +1,4 @@
-import{a as r,n as t,h as i}from"./index-2a6b3420.js";function f({onClick:n,children:e,...o}){return r(a,{onClick:n,...o,children:r(d,{children:e})})}const a=t.button`
+import{a as r,s as t,f as i}from"./index-b887f616.js";function s({onClick:n,children:e,...o}){return r(a,{onClick:n,...o,children:r(d,{children:e})})}const a=t.button`
   border: 0px;
   background: #33f;
   color: #fff;
@@ -23,4 +23,4 @@ import{a as r,n as t,h as i}from"./index-2a6b3420.js";function f({onClick:n,chil
   gap: 8px;
   height: 100%;
   font: inherit;
-`;export{f as B};
+`;export{s as B};
