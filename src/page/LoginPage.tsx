@@ -11,10 +11,16 @@ export default function LoginPage() {
   return (
     <StyledLoginPage>
       <Header title='고영이 가계부' />
-      <TitleMessage>
-        <Message>구글 로그인이 필요해요</Message>
-      </TitleMessage>
+
       <div id='googleLoginDiv'></div>
+
+      <TitleMessage>
+        <div>구글 로그인이 필요해요</div>
+
+        <div>허가된 이메일만 로그인이 가능합니다. 관리자에게 문의해주세요.</div>
+
+        <div>관리자: popping2606@gmail.com</div>
+      </TitleMessage>
     </StyledLoginPage>
   )
 }
@@ -31,7 +37,5 @@ const StyledLoginPage = styled.div`
 `
 const TitleMessage = styled.div`
   text-align: center;
-`
-const Message = styled.div`
   margin-top: 20px;
 `

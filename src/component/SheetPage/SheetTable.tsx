@@ -12,7 +12,7 @@ import {
   localeBigInt,
   parseToBigInt,
 } from '../../util/util'
-import { getType, TypeInterface } from '../../api/type'
+import { typeApi, TypeInterface } from '../../api/typeApi'
 import OpenColor from 'open-color'
 
 interface SheetTableInterface {
@@ -39,8 +39,8 @@ export default function SheetTable({
   const [beforeSetWidth, setBeforeSetWidth] = useState(true)
 
   useEffect(() => {
-    getType().then((res) => {
-      setTypes(res.types)
+    typeApi.getType().then((res) => {
+      setTypes(res.data.types)
     })
   }, [])
 

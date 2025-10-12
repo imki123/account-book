@@ -1,4 +1,5 @@
-import { postLogout } from '../api/accountBook'
+import { AxiosError } from 'axios'
+import { userApi } from '../api/userApi'
 import { ACCOUNT_BOOK_ACCESS_TOKEN } from '../constant/constant'
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
@@ -106,7 +107,7 @@ export const logoutGoogle = () => {
 export const removeGoogleTokenAndLogout = async () => {
   try {
     localStorage.removeItem(ACCOUNT_BOOK_ACCESS_TOKEN)
-    await postLogout()
+    await userApi.postLogout()
   } catch (e) {
     window.alert('BE 로그아웃 실패')
     throw e

@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Link, useNavigate } from 'react-router-dom'
 // import { data } from '../dummy/sheetData'
 import Header from '../component/Header/Header'
-import { deleteSheet, getSheets, patchOrder, postSheets } from '../api/sheet'
+import { sheetApi } from '../api/sheetApi'
 import { SheetDataInterface } from './SheetPage'
 import AddIcon from '@mui/icons-material/Add'
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp'
@@ -25,8 +25,8 @@ export default function HomePage() {
   // sheets 불러오기
   const getSheetsAndSet = useCallback(() => {
     setLoading(true)
-    getSheets().then((res) => {
-      setSheetLists(res)
+    sheetApi.getSheets().then((res) => {
+      setSheetLists(res.data)
       setLoading(false)
     })
   }, [])
@@ -34,7 +34,7 @@ export default function HomePage() {
   // sheet 생성
   const handleAddButton = useCallback(() => {
     setLoading(true)
-    postSheets().then(() => {
+    sheetApi.postSheets().then(() => {
       getSheetsAndSet()
       setLoading(false)
       addSnackBar('추가 완료')
@@ -50,7 +50,7 @@ export default function HomePage() {
       if (sheetLists) {
         if (i !== 0) {
           setLoading(true)
-          await patchOrder({
+          await sheetApi.patchOrder({
             fromId: sheetLists[i].sheetId,
             toId: sheetLists[i - 1].sheetId,
           })
@@ -67,7 +67,7 @@ export default function HomePage() {
       if (sheetLists) {
         if (i !== sheetLists.length - 1) {
           setLoading(true)
-          await patchOrder({
+          await sheetApi.patchOrder({
             fromId: sheetLists[i].sheetId,
             toId: sheetLists[i + 1].sheetId,
           })
@@ -82,7 +82,7 @@ export default function HomePage() {
 
   const handleDeleteSheet = async (sheetId: number, sheetName: string) => {
     if (window.confirm(`${sheetName}을(를) 삭제하시겠습니까?`)) {
-      await deleteSheet(sheetId)
+      await sheetApi.deleteSheet(sheetId)
       await getSheetsAndSet()
       addSnackBar('삭제 완료')
     }

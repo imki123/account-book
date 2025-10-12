@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import produce from 'immer'
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
-import { getType, patchType, TypeInterface } from '../api/type'
+import { typeApi, TypeInterface } from '../api/typeApi'
 import Header from '../component/Header/Header'
 import AddIcon from '@mui/icons-material/Add'
 import { Colors } from '../util/Colors'
@@ -18,8 +18,8 @@ export default function TypesPage() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    getType().then((res) => {
-      setTypes(res.types)
+    typeApi.getType().then((res) => {
+      setTypes(res.data.types)
     })
   }, [])
 
@@ -115,7 +115,8 @@ export default function TypesPage() {
         onClick={() => {
           if (types) {
             setLoading(true)
-            patchType(types)
+            typeApi
+              .patchType(types)
               .then((res) => {
                 setLoading(false)
                 addSnackBar('저장 완료')

@@ -10,7 +10,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import Header from '../component/Header/Header'
 import produce from 'immer'
 
-import { getSheet, patchSheet } from '../api/sheet'
+import { sheetApi } from '../api/sheetApi'
 import RefreshButton from '../component/Button/RefreshButton'
 import SheetTable from '../component/SheetPage/SheetTable'
 import { animationDuration } from '../constant/constant'
@@ -43,9 +43,9 @@ export default function SheetPage() {
   const getSheetAndSet = useCallback(() => {
     if (params.sheetId) {
       setLoading(true)
-      getSheet(Number(params.sheetId)).then((res) => {
+      sheetApi.getSheet(Number(params.sheetId)).then((res) => {
         setLoading(false)
-        if (res) setSheetData(res)
+        if (res.data) setSheetData(res.data)
       })
     }
   }, [params.sheetId])
@@ -126,7 +126,7 @@ export default function SheetPage() {
   const saveSheet = useCallback(() => {
     if (params.sheetId && sheetData) {
       // setLoading(true)
-      patchSheet(Number(params.sheetId), sheetData).then((res) => {
+      sheetApi.patchSheet(Number(params.sheetId), sheetData).then((res) => {
         // setLoading(false)
         addSnackBar('자동 저장')
       })

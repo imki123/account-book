@@ -2,14 +2,14 @@ import styled from '@emotion/styled'
 import { QueryClientProvider } from '@tanstack/react-query'
 import React, { Suspense, useEffect, useState } from 'react'
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
-import { getUser, postCheckToken } from './api/accountBook'
+import { userApi } from './api/userApi'
 import LoadingDim from './component/LoadingDim/LoadingDim'
 import { Colors } from './util/Colors'
 import { queryClient } from './api/reactQuery/queryClient'
 import { ACCOUNT_BOOK_ACCESS_TOKEN } from './constant/constant'
 import { axiosInstance } from './api/axiosInstance'
 import { initGoogle } from './util/googleLogin'
-import { postLogin } from './api/accountBook'
+import { AxiosError } from 'axios'
 
 /**
  * 라우트 페이지.
@@ -32,11 +32,6 @@ function App() {
 
   const pathnameRef = React.useRef('')
 
-  // 구글 로그인 후 콜백 처리
-  function afterLogin() {
-    checkTokenAndNavigate()
-  }
-
   // 구글 로그인 함수
   async function loginGoogle(credential: string) {
     try {
@@ -48,7 +43,7 @@ function App() {
         email: payload.email,
       }
 
-      const loginResponse = await postLogin(user)
+      const loginResponse = await userApi.postLogin(user)
 
       if (loginResponse.data.token) {
         localStorage.setItem(
@@ -82,7 +77,7 @@ function App() {
     document.body.appendChild(script)
   }, [])
 
-  async function checkTokenAndNavigate() {
+  async function afterLogin() {
     if (navigate && location.pathname) {
       setLoading(true)
       try {
@@ -96,7 +91,7 @@ function App() {
           return
         }
 
-        const checkedToken = await postCheckToken()
+        const checkedToken = await userApi.postCheckToken()
 
         if (checkedToken.data && checkedToken.data.token !== currentToken) {
           localStorage.setItem(
@@ -107,7 +102,7 @@ function App() {
 
         setHasToken(!!checkedToken.data.token)
         if (checkedToken.data) {
-          const user = await getUser()
+          const user = await userApi.getUser()
           setUsername(user.data.username)
 
           // 로그인 페이지에서 로그인 성공 시 홈으로 이동
@@ -122,8 +117,20 @@ function App() {
           }
           navigate('/login', { replace: true })
         }
-      } catch (e) {
-        window.alert('checkToken. 에러 발생. 로그인 실패' + JSON.stringify(e))
+      } catch (err) {
+        const error = err as AxiosError<{ error: string }>
+        console.error('로그인 처리 중 오류:', error)
+
+        if (error.response?.data.error === 'Email not authorized') {
+          window.alert(
+            '허가된 이메일만 로그인이 가능합니다. 관리자에게 문의해주세요.\n관리자: popping2606@gmail.com',
+          )
+        }
+
+        window.alert(
+          'checkToken. 에러 발생. 로그인 실패' + JSON.stringify(error),
+        )
+
         navigate('/login', { replace: true })
       } finally {
         setLoading(false)
@@ -133,7 +140,7 @@ function App() {
 
   if (pathnameRef.current !== location.pathname) {
     pathnameRef.current = location.pathname
-    checkTokenAndNavigate()
+    afterLogin()
   }
 
   return (
