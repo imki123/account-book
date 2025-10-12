@@ -13,7 +13,7 @@ import LoadingDim from '../component/LoadingDim/LoadingDim'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import { addSnackBar } from '../util/util'
 import Button from '../component/Button/Button'
-import { removeTokenAndLogoutKakao } from '../util/kakaoSdk'
+import { removeGoogleTokenAndLogout } from '../util/googleLogin'
 import OpenColor from 'open-color'
 import { MOBILE_PADDING } from '../App'
 
@@ -91,7 +91,7 @@ export default function HomePage() {
   const handleLogout = async () => {
     try {
       setLoading(true)
-      await removeTokenAndLogoutKakao()
+      await removeGoogleTokenAndLogout()
       navigate('/login')
     } catch (e) {
       console.error(e)

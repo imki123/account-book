@@ -8,6 +8,8 @@ import { Colors } from './util/Colors'
 import { queryClient } from './api/reactQuery/queryClient'
 import { ACCOUNT_BOOK_ACCESS_TOKEN } from './constant/constant'
 import { axiosInstance } from './api/axiosInstance'
+import { initGoogle } from './util/googleLogin'
+import { postLogin } from './api/accountBook'
 
 /**
  * 라우트 페이지.
@@ -29,6 +31,56 @@ function App() {
   const [hasToken, setHasToken] = useState<boolean>(false)
 
   const pathnameRef = React.useRef('')
+
+  // 구글 로그인 후 콜백 처리
+  function afterLogin() {
+    checkTokenAndNavigate()
+  }
+
+  // 구글 로그인 함수
+  async function loginGoogle(credential: string) {
+    try {
+      // JWT 토큰을 디코딩하여 사용자 정보 추출
+      const payload = JSON.parse(atob(credential.split('.')[1]))
+
+      const user = {
+        username: payload.name,
+        email: payload.email,
+      }
+
+      const loginResponse = await postLogin(user)
+
+      if (loginResponse.data.token) {
+        localStorage.setItem(
+          ACCOUNT_BOOK_ACCESS_TOKEN,
+          loginResponse.data.token,
+        )
+        return true
+      } else {
+        throw new Error('토큰을 받을 수 없습니다')
+      }
+    } catch (error) {
+      console.error('구글 로그인 실패:', error)
+      throw error
+    }
+  }
+
+  // 구글 SDK 초기화
+  useEffect(() => {
+    // 구글 SDK 스크립트 로드
+    const script = document.createElement('script')
+    script.src = 'https://accounts.google.com/gsi/client'
+    script.onload = () => {
+      // SDK 로드 후 약간의 지연을 두고 초기화
+      setTimeout(() => {
+        initGoogle(loginGoogle, afterLogin)
+      }, 100)
+    }
+    script.onerror = () => {
+      console.error('Google SDK 로드 실패')
+    }
+    document.body.appendChild(script)
+  }, [])
 
   async function checkTokenAndNavigate() {
     if (navigate && location.pathname) {
@@ -57,7 +109,13 @@ function App() {
         if (checkedToken.data) {
           const user = await getUser()
           setUsername(user.data.username)
-          navigate(location.pathname, { replace: true })
+
+          // 로그인 페이지에서 로그인 성공 시 홈으로 이동
+          if (location.pathname === '/login') {
+            navigate('/', { replace: true })
+          } else {
+            navigate(location.pathname, { replace: true })
+          }
         } else {
           if (location.pathname === '/login') {
             return
@@ -83,6 +141,7 @@ function App() {
       <Suspense fallback={<LoadingDim loading={true} />}>
         <MobileWrapper>
           {username && <UsernameDiv>{username}</UsernameDiv>}
+
           {!hasToken ? (
             <LoginPage />
           ) : (
@@ -96,10 +155,12 @@ function App() {
             </Routes>
           )}
         </MobileWrapper>
+
         <FakeInput className='fakeInput' />
         <FakeSelect className='fakeSelect'>
           <option></option>
         </FakeSelect>
+
         <LoadingDim loading={loading} />
       </Suspense>
     </QueryClientProvider>

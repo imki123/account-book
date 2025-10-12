@@ -2,7 +2,7 @@ import { css, SerializedStyles } from '@emotion/react'
 import styled from '@emotion/styled'
 import { ReactNode } from 'react'
 
-export type ButtonTypes = 'gray' | 'blue' | 'kakao'
+export type ButtonTypes = 'gray' | 'blue' | 'google'
 export interface ButtonInterface {
   buttonType?: ButtonTypes
   height?: 44 | 38 | 32
@@ -36,8 +36,8 @@ const StyledButton = styled.button<ButtonInterface>`
 
   ${({ buttonType }) => {
     if (buttonType === 'gray') return `background: #333`
-    if (buttonType === 'kakao')
-      return `background: #fee500; color: rgba(0,0,0,0.85); padding: 0; height: 45px;`
+    if (buttonType === 'google')
+      return `background: #4285f4; color: #fff; padding: 0; height: 45px;`
   }}
 
   ${({ height }) => height && `height: ${height}px;`}
