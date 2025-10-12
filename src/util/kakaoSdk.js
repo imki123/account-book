@@ -129,8 +129,8 @@ export const unlinkKakao = () => {
   })
 }
 
-export const removeSessionAndLogoutKakao = async () => {
-  // 로컬스토리지 세션 제거, BE 세션 제거, 카카오 언링크
+export const removeTokenAndLogoutKakao = async () => {
+  // 로컬스토리지 토큰 제거, BE 토큰 제거, 카카오 언링크
   try {
     localStorage.removeItem(ACCOUNT_BOOK_ACCESS_TOKEN)
     await postLogout()

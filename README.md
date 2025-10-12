@@ -18,7 +18,7 @@ pnpm dev
 ## 배포방법
 
 ```sh
-pnpm deploy
+pnpm gh-deploy
 ```
 
 ## 기획

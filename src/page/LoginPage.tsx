@@ -5,7 +5,7 @@ import styled from '@emotion/styled'
 import {
   getKakaoUser,
   kakaoAppLogin,
-  removeSessionAndLogoutKakao,
+  removeTokenAndLogoutKakao,
   unlinkKakao,
 } from '../util/kakaoSdk'
 import { useNavigate } from 'react-router-dom'
@@ -69,30 +69,25 @@ export default function LoginPage() {
         }
 
         try {
-          const isAuthorizedUser = await postLogin(user)
-          console.log('isAuthorizedUser:', isAuthorizedUser)
-          if (isAuthorizedUser.data.session) {
-            // 로그인 성공. 로컬스토리지 세션 저장
+          const loginResponse = await postLogin(user)
+
+          if (loginResponse.data.token) {
             localStorage.setItem(
               ACCOUNT_BOOK_ACCESS_TOKEN,
-              isAuthorizedUser.data.session,
+              loginResponse.data.token,
             )
-            // axios 헤더에 인증 토큰 추가
-            axiosInstance.defaults.headers.common[
-              'Authorization'
-            ] = `Bearer ${isAuthorizedUser.data.session}`
 
             setTimeout(() => {
               // 잠시 후 홈으로 이동
               navigate('/')
             }, 500)
           } else {
-            await removeSessionAndLogoutKakao()
+            await removeTokenAndLogoutKakao()
             window.alert('앱 로그인에 실패했습니다.😔 관리자에게 문의해주세요.')
           }
         } catch (error) {
           window.alert(JSON.stringify(error))
-          await removeSessionAndLogoutKakao()
+          await removeTokenAndLogoutKakao()
           if (error instanceof AxiosError && error?.response?.status === 403) {
             window.alert(
               '승인되지 않은 사용자입니다.⛔️ 관리자에게 문의해주세요.',
