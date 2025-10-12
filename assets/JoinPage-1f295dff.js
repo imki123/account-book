@@ -1,0 +1,6 @@
+import{u as b,r as u,a as h,j as s,R as S,s as m,M as g}from"./index-b799896a.js";import{H as k}from"./Header-ae959c5a.js";import{u as f,q as v,a as x,S as j}from"./SheetSummary-63eb79a8.js";import{C,p as E}from"./typeApi-21f956fb.js";import{s as I}from"./open-color-35c0203e.js";import"./util-cb2f9063.js";const q=n=>f({queryKey:[v.getSheet],queryFn:()=>I.getSheets().then(e=>e.data),...n});C();function H(){const n=b(),{data:e}=q({staleTime:10*1e3}),[o,d]=u.useState(new Set),[i,c]=u.useState(),p=a=>{const l=E(t=>(a.target.checked?t==null||t.add(Number(a.target.value)):t==null||t.delete(Number(a.target.value)),t),o);d(l)};return u.useEffect(()=>{if(e){const a=[];Array.from(o).sort().forEach(r=>{a.push(e==null?void 0:e.filter(y=>y.sheetId===r)[0])});let t=[];a.forEach(r=>{r.table&&(t=t.concat(r.table).concat([["","","----- 구분선 -----",""]]))}),c({table:t,sheetId:1,name:"joined",order:1})}},[o,e]),h(A,{children:[s(k,{title:"요약보기",backButton:!0,backFunction:()=>n("/",{replace:!0})}),S.Children.toArray(e&&(e==null?void 0:e.map(a=>s("div",{children:h(D,{children:[s("input",{type:"checkbox",name:"sheet",value:a.sheetId,onChange:p}),s("span",{children:a.name})]})})))),s(x,{sheetData:i,setSheetData:c}),s(j,{sheetData:i,setSheetData:c,readOnly:!0})]})}const A=m.div`
+  ${g}
+`,D=m.label`
+  display: flex;
+  align-items: center;
+`;export{H as default};
